@@ -16,7 +16,7 @@ namespace VindemiatrixCollective.Universe.Tests
             Speed        maxSpeed              = Relativity.SpeedFromFractionOfC(0.048f); // page 20, 59
             Acceleration acceleration          = Acceleration.FromMetersPerSecondSquared(0.429); // page 68
 
-            RelativisticTravelData result = Relativity.CalculateTravel(distanceAlphaCentauri, maxSpeed, acceleration);
+            var result = Relativity.CalculateTravel(distanceAlphaCentauri, maxSpeed, acceleration);
 
             Debug.Log(result);
 

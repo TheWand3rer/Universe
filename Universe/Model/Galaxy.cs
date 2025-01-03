@@ -37,7 +37,7 @@ namespace VindemiatrixCollective.Universe.Model
             this.name = name;
         }
 
-        public void AddStarSystem(StarSystem system)
+        public void AddSystem(StarSystem system)
         {
             Systems.Add(system.Name, system);
         }

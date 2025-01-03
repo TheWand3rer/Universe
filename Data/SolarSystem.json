@@ -13,7 +13,11 @@
           "Planets": {
             "Mercury": {
               "Attributes": {
-                "Type": "Planet"
+                "Type": "Planet",
+                "Class": "Barren",
+                "Size": "Tiny",
+                "SurfaceMaterial": "System/Planets/Mercury",
+                "AtmosphereType": "None"
               },
               "PhysicalData": {
                 "Mass": 3.302e+23,
@@ -40,7 +44,11 @@
             "Venus": {
               "Attributes": {
                 "Type": "Planet",
-                "Retrograde": true
+                "Retrograde": true,
+                "Class": "Venusian",
+                "Size": "Average",
+                "SurfaceMaterial": "System/Planets/Venus",
+                "AtmosphereType": "CarbonDioxide"
               },
               "PhysicalData": {
                 "Mass": 4.8685e+24,
@@ -66,9 +74,13 @@
             },
             "Earth": {
               "Attributes": {
-                "Type": "Planet"
+                "Type": "Planet",
+                "Class": "Terrestrial",
+                "Size": "Average",
+                "SurfaceMaterial": "System/Planets/Earth",
+                "AtmosphereType": "Oxygen"
               },
-              "Moons": {
+              "Satellites": {
                 "Moon": {
                   "Attributes": {
                     "Type": "Satellite",
@@ -124,7 +136,11 @@
             "Mars": {
               "Attributes": {
                 "Type": "Planet",
-                "Class": "Martian"
+                "Class": "Martian",
+                "Size": "Small",
+                "SurfaceMaterial": "System/Planets/Mars",
+                "AtmosphereType": "CarbonDioxide",
+                "AtmosphereVariant": "Traces"
               },
               "PhysicalData": {
                 "Mass": 6.4171e+23,
@@ -150,9 +166,13 @@
             },
             "Jupiter": {
               "Attributes": {
-                "Type": "Planet"
+                "Type": "Planet",
+                "Class": "Jovian",
+                "Size": "GasGiant",
+                "SurfaceMaterial": "System/Planets/Jupiter",
+                "AtmosphereType": "Hydrogen"
               },
-              "Moons": {
+              "Satellites": {
                 "Io": {
                   "Attributes": {
                     "Type": "Satellite",
@@ -181,7 +201,11 @@
                 },
                 "Europa": {
                   "Attributes": {
-                    "Type": "Satellite"
+                    "Type": "Satellite",
+                    "Class": "Barren",
+                    "Size": "Tiny",
+                    "SurfaceMaterial": "System/Planets/Europa",
+                    "AtmosphereType": "None"
                   },
                   "RangeMultiplier": 100,
                   "PhysicalData": {
@@ -226,7 +250,12 @@
             },
             "Saturn": {
               "Attributes": {
-                "Type": "Planet"
+                "Type": "Planet",
+                "Class": "Jovian",
+                "Size": "GasGiant",
+                "SurfaceMaterial": "System/Planets/Saturn",
+                "AtmosphereType": "Hydrogen",
+                "Rings": "Rings/Saturn"
               },
               "PhysicalData": {
                 "Mass": 5.6834e+26,
@@ -252,7 +281,13 @@
             },
             "Uranus": {
               "Attributes": {
-                "Type": "Planet"
+                "Type": "Planet",
+                "Retrograde": true,
+                "Class": "Neptunian",
+                "Size": "GasGiant",
+                "SurfaceMaterial": "System/Planets/Uranus",
+                "AtmosphereType": "Hydrogen",
+                "AtmosphereColor": "#6F9EA4"
               },
               "PhysicalData": {
                 "Mass": 8.6813e+25,
@@ -278,7 +313,12 @@
             },
             "Neptune": {
               "Attributes": {
-                "Type": "Planet"
+                "Type": "Planet",
+                "Class": "Neptunian",
+                "Size": "GasGiant",
+                "SurfaceMaterial": "System/Planets/Neptune",
+                "AtmosphereType": "Hydrogen",
+                "AtmosphereColor": "#233C87"
               },
               "PhysicalData": {
                 "Mass": 1.02409e+26,
@@ -304,7 +344,10 @@
             },
             "Pluto": {
               "Attributes": {
-                "Type": "Planet"
+                "Type": "Planet",
+                "Class": "Ice",
+                "Size": "Tiny",
+                "SurfaceMaterial": "System/Planets/Pluto"
               },
               "PhysicalData": {
                 "Mass": 1.307e+22,

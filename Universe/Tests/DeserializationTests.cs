@@ -57,6 +57,21 @@ namespace VindemiatrixCollective.Universe.Tests
             Assert.AreEqual("Sol", earth.ParentBody.StarSystem.Name, nameof(StarSystem));
         }
 
+        public void X()
+        {
+            Galaxy     galaxy = new Galaxy("Milky Way");
+            StarSystem sol    = new StarSystem("Sol");
+
+            // Star.Sol and Planet.Earth are included as examples with hardcoded values at J2000.
+            // You should create stars and planets with the appropriate constructors or factory methods
+            Star   sun   = Star.Sun;
+            Planet earth = Planet.Earth;
+
+            galaxy.AddSystem(sol);
+            sun.AddPlanet(earth);
+            sol.AddStar(sun);
+        }
+
         private void ComparePlanet(Planet expected, Planet actual)
         {
             PhysicalData physicalEx     = expected.PhysicalData;

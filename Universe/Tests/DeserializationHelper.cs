@@ -26,7 +26,7 @@ namespace VindemiatrixCollective.Universe.Tests
             return galaxy;
         }
 
-        public void LoadSol(ref Galaxy galaxy, string path = "Data/systems")
+        public void LoadSol(ref Galaxy galaxy, string path = "Data/SolarSystem")
         {
             JsonSerializerSettings settings = new();
             Galaxy additionalData = DeserializeFile<Galaxy>(path,
@@ -41,7 +41,7 @@ namespace VindemiatrixCollective.Universe.Tests
 
         }
 
-        public Galaxy LoadSol(string path = "Data/systems")
+        public Galaxy LoadSol(string path = "Data/SolarSystem")
         {
             Galaxy galaxy = new Galaxy("Milky Way");
             LoadSol(ref galaxy);

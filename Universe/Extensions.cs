@@ -1,4 +1,5 @@
 using VindemiatrixCollective.Universe.CelestialMechanics;
+using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
 
 public static class VectorExtensions
 {
@@ -20,5 +21,16 @@ public static class VectorExtensions
     public static Vector3d FromKmToMetres(this Vector3d vKm)
     {
         return vKm * 1000;
+    }
+
+    /// <summary>
+    /// Converts this vector to AU. Assumes the original vector is in m.
+    /// </summary>
+    /// <param name="vMetres"></param>
+    /// <param name="unitsPerAU">Use to scale this vector, in terms of Unity units per AU.</param>
+    /// <returns></returns>
+    public static Vector3d FromMetrestoAU(this Vector3d vMetres, float unitsPerAU = 1f)
+    {
+        return OrbitalMechanics.MetresToAu(vMetres, unitsPerAU);
     }
 }

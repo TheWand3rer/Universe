@@ -286,25 +286,32 @@ namespace VindemiatrixCollective.Universe.Tests
             earth.OrbitState.SetAttractor(Common.Sun);
             mars.OrbitState.SetAttractor(Common.Sun);
 
-            TransferPlanner tp        = new CelestialMechanics.Manoeuvres.TransferPlanner(earth, mars);
-            DateTime        startDate = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var      tp        = new CelestialMechanics.Manoeuvres.TransferPlanner(earth, mars);
+            DateTime startDate = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             tp.CalculateTransferWindows(startDate, 200, 50);
             Common.timer.Stop();
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"Calculated 200 transfers in {Common.timer.ElapsedMilliseconds} ms");
 
-            TransferData transfer = tp.OrderByDeltaV().First();
-            Manoeuvre    m        = transfer.Manoeuvre;
+            var tWindows = tp.BestByDeltaV().Take(5).ToArray();
 
-            sb.AppendLine($"Fastest transfer:");
-            sb.AppendLine($"dt: {m.ComputeTotalDuration().Days} d | dv: {m.ComputeTotalCost().KilometersPerSecond:F3} km/s");
+            sb.AppendLine($"Calculated {tWindows.Length} transfers");
+            //sb.AppendLine($"Fastest transfers:");
+            //foreach (Manoeuvre m in tWindows)
+            //{
+            //    sb.AppendLine($"dt: {m.ComputeTotalDuration().Days} d | dv: {m.ComputeTotalCost().KilometersPerSecond:F3} km/s");
+            //}
 
-            transfer = tp.OrderByTransferTime().First();
-            m = transfer.Manoeuvre;
-            
-            sb.AppendLine($"Cheapest transfer:");
-            sb.AppendLine($"dt: {m.ComputeTotalDuration().Days} d | dv: {m.ComputeTotalCost().KilometersPerSecond:F3} km/s");
-            sb.AppendLine(transfer.TransferOrbit(1).ToString());
+            tWindows = tp.BestByTransferTime().Take(5).ToArray();
+            //sb.AppendLine($"Cheapest transfers:");
+            //foreach (Manoeuvre m in tWindows)
+            //{
+            //    sb.AppendLine($"dt: {m.ComputeTotalDuration().Days} d | dv: {m.ComputeTotalCost().KilometersPerSecond:F3} km/s");
+            //}
+
+            TransferData t      = tWindows[0];
+            var          tOrbit = t.TransferOrbit();
+            sb.AppendLine(tOrbit.ToString());
             
             Debug.Log(sb);
         }

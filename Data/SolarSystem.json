@@ -1,0 +1,333 @@
+{
+  "Name": "Milky Way",
+  "Systems": {
+    "Sol": {
+      "Stars": {
+        "A": {
+          "Mass": 1.0,
+          "Luminosity": 1.0,
+          "Age": 4.6,
+          "Temperature": 5770.0,
+          "Radius": 1.0,
+          "SpectralClass": "G2V",
+          "Planets": {
+            "Mercury": {
+              "Attributes": {
+                "Type": "Planet"
+              },
+              "PhysicalData": {
+                "Mass": 3.302e+23,
+                "Density": 5.427,
+                "Radius": 2440.53,
+                "Gravity": 3.701,
+                "Temperature": 440.0,
+                "HillSphereRadius": 94.4,
+                "GravitationalParameter": 22031.86855
+              },
+              "OrbitalData": {
+                "SemiMajorAxis": 0.3870982121841599,
+                "Eccentricity": 0.2056302933705569,
+                "Period": 87.96909804206014,
+                "Inclination": 3.381086931543888,
+                "LongitudeAscendingNode": 313.4194629619007,
+                "ArgumentPeriapsis": 109.5742047222923,
+                "MeanAnomaly": 174.795882916958,
+                "TrueAnomaly": 176.4950862746721,
+                "AxialTilt": 2.11,
+                "SiderealRotationPeriod": 4222.6104000000005
+              }
+            },
+            "Venus": {
+              "Attributes": {
+                "Type": "Planet",
+                "Retrograde": true
+              },
+              "PhysicalData": {
+                "Mass": 4.8685e+24,
+                "Density": 5.204,
+                "Radius": 6051.893,
+                "Gravity": 8.87,
+                "Temperature": 735.0,
+                "HillSphereRadius": 167.1,
+                "GravitationalParameter": 324858.592
+              },
+              "OrbitalData": {
+                "SemiMajorAxis": 0.7233269274796513,
+                "Eccentricity": 0.006755786251885929,
+                "Period": 224.698330074763,
+                "Inclination": 3.857944513182229,
+                "LongitudeAscendingNode": 240.2975100801661,
+                "ArgumentPeriapsis": 236.8981836121347,
+                "MeanAnomaly": 50.11477187404284,
+                "TrueAnomaly": 50.71202823959879,
+                "AxialTilt": 177.3,
+                "SiderealRotationPeriod": 2801.9759999999997
+              }
+            },
+            "Earth": {
+              "Attributes": {
+                "Type": "Planet"
+              },
+              "Moons": {
+                "Moon": {
+                  "Attributes": {
+                    "Type": "Satellite",
+                    "Class": "Barren",
+                    "Size": "Tiny",
+                    "SurfaceMaterial": "System/Planets/Luna",
+                    "AtmosphereType": "None",
+                    "RangeMultiplier": 50
+                  },
+                  "PhysicalData": {
+                    "Mass": 7.349e+22,
+                    "Density": 3.3437,
+                    "Radius": 1738.0,
+                    "Gravity": 1.62,
+                    "GravitationalParameter": 4902.800066
+                  },
+                  "OrbitalData": {
+                    "SemiMajorAxis": 384400.0,
+                    "Eccentricity": 0.0549,
+                    "Period": 27.321582,
+                    "SiderealRotationPeriod": 708.7344,
+                    "Inclination": 5.145,
+                    "LongitudeAscendingNode": 241.2713606974586,
+                    "ArgumentPeriapsis": 328.980187284116,
+                    "MeanAnomaly": 238.5779166596645,
+                    "TrueAnomaly": 235.5936224066131,
+                    "AxialTilt": 6.67
+                  }
+                }
+              },
+              "PhysicalData": {
+                "Mass": 5.97219e+24,
+                "Density": 5.51,
+                "Radius": 6378.137,
+                "Gravity": 9.7803267715,
+                "Temperature": 287.6,
+                "HillSphereRadius": 234.9,
+                "GravitationalParameter": 398600.435436
+              },
+              "OrbitalData": {
+                "SemiMajorAxis": 1.000448828934185,
+                "Eccentricity": 0.01711862906746885,
+                "Period": 365.5022838235192,
+                "Inclination": 7.251513445651153,
+                "LongitudeAscendingNode": 241.097743921078,
+                "ArgumentPeriapsis": 206.0459434316863,
+                "MeanAnomaly": 358.6172562416435,
+                "TrueAnomaly": 358.5688856532555,
+                "AxialTilt": 23.4392911,
+                "SiderealRotationPeriod": 23.9344695944
+              }
+            },
+            "Mars": {
+              "Attributes": {
+                "Type": "Planet",
+                "Class": "Martian"
+              },
+              "PhysicalData": {
+                "Mass": 6.4171e+23,
+                "Density": 3.933,
+                "Radius": 3396.19,
+                "Gravity": 3.71,
+                "Temperature": 210.0,
+                "HillSphereRadius": 319.8,
+                "GravitationalParameter": 42828.375214
+              },
+              "OrbitalData": {
+                "SemiMajorAxis": 1.523678992938855,
+                "Eccentricity": 0.09331510145826083,
+                "Period": 686.9712731789837,
+                "Inclination": 5.650993606269039,
+                "LongitudeAscendingNode": 249.4238472638976,
+                "ArgumentPeriapsis": 72.0620330470033,
+                "MeanAnomaly": 19.35648274725784,
+                "TrueAnomaly": 23.33319664407214,
+                "AxialTilt": 25.19,
+                "SiderealRotationPeriod": 24.622962
+              }
+            },
+            "Jupiter": {
+              "Attributes": {
+                "Type": "Planet"
+              },
+              "Moons": {
+                "Io": {
+                  "Attributes": {
+                    "Type": "Satellite",
+                    "Class": "Barren",
+                    "Size": "Tiny",
+                    "SurfaceMaterial": "System/Planets/Io",
+                    "AtmosphereType": "None",
+                    "RangeMultiplier": 100
+                  },
+                  "PhysicalData": {
+                    "Density": 3.528,
+                    "Radius": 1821.49,
+                    "GravitationalParameter": 5959.9155
+                  },
+                  "OrbitalData": {
+                    "SemiMajorAxis": 422000.0,
+                    "Eccentricity": 0.00472,
+                    "Period": 1.77,
+                    "SiderealRotationPeriod": 42.480000000000004,
+                    "Inclination": 0.0375,
+                    "LongitudeAscendingNode": 241.1210503807339,
+                    "ArgumentPeriapsis": 127.3992554807201,
+                    "MeanAnomaly": 33.54986953430662,
+                    "TrueAnomaly": 13.08436484643558
+                  }
+                },
+                "Europa": {
+                  "Attributes": {
+                    "Type": "Satellite"
+                  },
+                  "RangeMultiplier": 100,
+                  "PhysicalData": {
+                    "Density": 3.013,
+                    "Radius": 1560.8,
+                    "GravitationalParameter": 3202.7121
+                  },
+                  "OrbitalData": {
+                    "SemiMajorAxis": 671000.0,
+                    "Eccentricity": 0.00981,
+                    "Period": 3.55,
+                    "SiderealRotationPeriod": 85.19999999999999,
+                    "Inclination": 0.462,
+                    "LongitudeAscendingNode": 194.6981247648628,
+                    "ArgumentPeriapsis": 352.1262296644621,
+                    "MeanAnomaly": 188.1655156055447,
+                    "TrueAnomaly": 180.0415232622323
+                  }
+                }
+              },
+              "PhysicalData": {
+                "Mass": 1.89818722e+30,
+                "Density": 1.3262,
+                "Radius": 69911.0,
+                "Gravity": 24.79,
+                "Temperature": 165.0,
+                "HillSphereRadius": 740.0,
+                "GravitationalParameter": 126686531.9
+              },
+              "OrbitalData": {
+                "SemiMajorAxis": 5.204336211826348,
+                "Eccentricity": 0.04878759429164067,
+                "Period": 4334.502482619944,
+                "Inclination": 6.091061991934647,
+                "LongitudeAscendingNode": 235.9514122128969,
+                "ArgumentPeriapsis": 124.909019555332,
+                "MeanAnomaly": 18.81562710723801,
+                "TrueAnomaly": 20.72855615535343,
+                "AxialTilt": 3.13,
+                "SiderealRotationPeriod": 9.9259
+              }
+            },
+            "Saturn": {
+              "Attributes": {
+                "Type": "Planet"
+              },
+              "PhysicalData": {
+                "Mass": 5.6834e+26,
+                "Density": 0.687,
+                "Radius": 58232.0,
+                "Gravity": 10.44,
+                "Temperature": 134.0,
+                "HillSphereRadius": 1100.0,
+                "GravitationalParameter": 37931206.234
+              },
+              "OrbitalData": {
+                "SemiMajorAxis": 9.581929200478724,
+                "Eccentricity": 0.05563834267345075,
+                "Period": 10832.17850474218,
+                "Inclination": 5.507157709767306,
+                "LongitudeAscendingNode": 224.9804897817481,
+                "ArgumentPeriapsis": 209.8228514039305,
+                "MeanAnomaly": 320.4255572592745,
+                "TrueAnomaly": 316.1382469801451,
+                "AxialTilt": 26.73,
+                "SiderealRotationPeriod": 10.656
+              }
+            },
+            "Uranus": {
+              "Attributes": {
+                "Type": "Planet"
+              },
+              "PhysicalData": {
+                "Mass": 8.6813e+25,
+                "Density": 1.271,
+                "Radius": 25362.0,
+                "Gravity": 8.87,
+                "Temperature": 76.0,
+                "HillSphereRadius": 2700.0,
+                "GravitationalParameter": 5793951.256
+              },
+              "OrbitalData": {
+                "SemiMajorAxis": 19.23015708640139,
+                "Eccentricity": 0.04439245542666318,
+                "Period": 30800.88496355555,
+                "Inclination": 6.479477155065422,
+                "LongitudeAscendingNode": 241.3112758594122,
+                "ArgumentPeriapsis": 274.6190689654276,
+                "MeanAnomaly": 142.8889650360197,
+                "TrueAnomaly": 145.8267121145813,
+                "AxialTilt": 97.77,
+                "SiderealRotationPeriod": 17.24
+              }
+            },
+            "Neptune": {
+              "Attributes": {
+                "Type": "Planet"
+              },
+              "PhysicalData": {
+                "Mass": 1.02409e+26,
+                "Density": 1.638,
+                "Radius": 24624.0,
+                "Gravity": 11.15,
+                "Temperature": 72.0,
+                "HillSphereRadius": 4700.0,
+                "GravitationalParameter": 6835099.97
+              },
+              "OrbitalData": {
+                "SemiMajorAxis": 30.10077825423617,
+                "Eccentricity": 0.01126932255243268,
+                "Period": 60318.95792278731,
+                "Inclination": 6.433825672102597,
+                "LongitudeAscendingNode": 227.924298954679,
+                "ArgumentPeriapsis": 155.2336632960012,
+                "MeanAnomaly": 267.2982359930496,
+                "TrueAnomaly": 266.0092669094208,
+                "AxialTilt": 28.32,
+                "SiderealRotationPeriod": 16.11
+              }
+            },
+            "Pluto": {
+              "Attributes": {
+                "Type": "Planet"
+              },
+              "PhysicalData": {
+                "Mass": 1.307e+22,
+                "Density": 1.86,
+                "Radius": 1188.3,
+                "Gravity": 0.611,
+                "GravitationalParameter": 869.326
+              },
+              "OrbitalData": {
+                "SemiMajorAxis": 39.57126152242964,
+                "Eccentricity": 0.249448495227426,
+                "Period": 90921.85108674591,
+                "Inclination": 11.9408584866069,
+                "LongitudeAscendingNode": 114.854629175041,
+                "ArgumentPeriapsis": 95.08388669638265,
+                "MeanAnomaly": 14.14365453678677,
+                "TrueAnomaly": 24.03037696671122,
+                "SiderealRotationPeriod": 153.282
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

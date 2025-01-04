@@ -19,7 +19,7 @@ These are the features currently available in `Universe`:
 
 * A game agnostic "galactic" object model: for each celestial body, it only contains physical and orbital data, based on the [UnitsNet](https://github.com/angularsen/UnitsNet) library to avoid (minimise) confusion and mistakes.
 * Uses `double` for internal calculations and can output in `float` for Unity.
-* The model is supports Galaxies / (n-ary) Star Systems / Stars / Planets (and moons). Each orbiter is a `CelestialBody`.
+* The model supports Galaxies / (n-ary) Star Systems / Stars / Planets (and moons). Each orbiter is a `CelestialBody`.
 * A Kepler simulation model that calculates the position of any object in the solar system given their orbital data and time from the [J2000 epoch](https://en.wikipedia.org/wiki/Epoch_(astronomy)#Julian_years_and_J2000).
 * An interplanetary mission planner that calculates possible transfers given a set of launch windows.
 * A set of functions to calculate mission profiles for *relativistic rockets*, to obtain the acceleration and cruise time for both the observer and the ship, and the total duration of the mission given speeds that approach fractions of c.
@@ -47,7 +47,7 @@ public T DeserializeFile<T>(string filename, params JsonConverter[] converters)
     return data;
 }
 
-public Galaxy LoadSol(ref Galaxy galaxy, string path = "Data/systems")
+public Galaxy LoadSol(ref Galaxy galaxy, string path = "Data/SolarSystem.json")
 {
     JsonSerializerSettings settings = new();
     Galaxy additionalData = DeserializeFile<Galaxy>(path,

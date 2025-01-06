@@ -168,7 +168,6 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
                 double y    = compute_y(p0, ll);
                 double fVal = tofEquation_y(p0, y, T0, ll, M);
                 double T    = fVal + T0;
-                T = fVal + T0;
                 double fDer  = tofEquation_p(p0, y, T, ll);
                 double fDer2 = tofEquation_p2(p0, y, T, fDer, ll);
                 double fDer3 = tofEquation_p3(p0, y, T, fDer, fDer2, ll);
@@ -319,12 +318,12 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
             {
                 double eta = y - ll * x;
                 double s1  = (1 - ll - x * eta) * 0.5;
-                double Q   = 4 / 3d * Hypergeometric2f1b(s1);
+                double Q   = 4 / 3d * hypergeometric2f1b(s1);
                 T   = (math.pow(eta, 3) * Q + 4 * ll * eta) * 0.5;
             }
             else
             {
-                double psi = ComputePsi(x, y, ll);
+                double psi = computePsi(x, y, ll);
                 // np.divide(
                 // np.divide(psi + M * pi, np.sqrt(np.abs(1 - x**2))) - x + ll * y,
                 // (1 - x**2)
@@ -341,7 +340,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
         /// The auxiliary angle psi is computed using Eq.(17) by the appropriate inverse function.
         /// </summary>
         /// <returns>The angle psi.</returns>
-        double ComputePsi(double x, double y, double ll)
+        double computePsi(double x, double y, double ll)
         {
             if (x is >= -1 and < 1)
             {
@@ -359,7 +358,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
                 return 0;
         }
 
-        double Hypergeometric2f1b(double x, double rtol = 1e8)
+        double hypergeometric2f1b(double x, double rtol = 1e8)
         {
             if (x >= 0)
                 return double.PositiveInfinity;

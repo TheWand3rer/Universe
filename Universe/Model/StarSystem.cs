@@ -32,19 +32,25 @@ namespace VindemiatrixCollective.Universe.Model
             return Stars.ContainsKey(starName);
         }
 
-        public IEnumerable<Planet> SelectAllPlanets() => Stars.Values.SelectMany(star => star);
+        public IEnumerable<Planet> CelestialBodyEnumerator()
+        {
+            foreach (Star star in this)
+            {
+                foreach (Planet planet in star)
+                {
+                    yield return planet;
+
+                    foreach (Planet satellite in planet)
+                    {
+                        yield return satellite;
+                    }
+                }
+            }
+        }
 
         public Planet SelectPlanet(string filter)
         {
-            foreach (Star star in Stars.Values)
-            {
-                if (star.HasOrbiter(filter))
-                {
-                    return star[filter];
-                }
-            }
-
-            return null;
+            return CelestialBodyEnumerator().FirstOrDefault(p => p.Name == filter);
         }
 
         public StarSystem() : this(nameof(StarSystem))

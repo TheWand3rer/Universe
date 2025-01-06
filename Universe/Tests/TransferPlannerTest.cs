@@ -286,7 +286,7 @@ namespace VindemiatrixCollective.Universe.Tests
             earth.OrbitState.SetAttractor(Common.Sun);
             mars.OrbitState.SetAttractor(Common.Sun);
 
-            TransferPlanner tp        = new CelestialMechanics.Manoeuvres.TransferPlanner(earth, mars);
+            TransferPlanner tp        = new TransferPlanner(earth, mars);
             DateTime        startDate = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             tp.CalculateTransferWindows(startDate, 200, 50);
             Common.timer.Stop();

@@ -41,18 +41,26 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
 
         public IEnumerable<TransferData> OrderByDeltaV()
         {
-            transfers.Sort((m1, m2) => m2.Manoeuvre.ComputeTotalCost().CompareTo(m1.Manoeuvre.ComputeTotalCost()));
+            transfers.Sort((m1, m2) => m1.Manoeuvre.ComputeTotalCost().CompareTo(m2.Manoeuvre.ComputeTotalCost()));
             return transfers;
         }
 
         public IEnumerable<TransferData> OrderByTransferTime()
         {
-            transfers.Sort((m1, m2) => m1.Manoeuvre.ComputeTotalCost().CompareTo(m2.Manoeuvre.ComputeTotalCost()));
+            transfers.Sort((m1, m2) => m1.Manoeuvre.ComputeTotalDuration().CompareTo(m2.Manoeuvre.ComputeTotalDuration()));
             return transfers;
         }
 
         private void CalculateTransfer(DateTime launch, DateTime arrival)
         {
+            if (DepartureBody == null)
+                throw new InvalidOperationException($"{nameof(DepartureBody)} cannot be null");
+            if (TargetBody == null)
+                throw new InvalidOperationException($"{nameof(TargetBody)} cannot be null");
+            if (launch > arrival)
+                throw new ArgumentException($"Launch date cannot be after arrival date");
+
+
             OrbitState orbitDeparture = DepartureBody.OrbitState.PropagateAsNew(launch);
             OrbitState orbitArrival   = TargetBody.OrbitState.PropagateAsNew(arrival);
 

@@ -31,9 +31,9 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             }
         }
 
-        public static GravitationalParameter Sun => new GravitationalParameter(1.32712440041279419e20);
-        public static GravitationalParameter Earth => new GravitationalParameter(3.9860044188e14);
-        public static GravitationalParameter Mars => new GravitationalParameter(4.2828372e13);
+        public static GravitationalParameter Sun => new(1.32712440041279419e20);
+        public static GravitationalParameter Earth => new(3.9860044188e14);
+        public static GravitationalParameter Mars => new(4.2828372e13);
 
         public static GravitationalParameter FromMass(Mass mass)
         {

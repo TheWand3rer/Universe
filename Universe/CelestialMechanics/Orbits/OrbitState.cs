@@ -86,7 +86,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             sb.AppendLine($"OrbitState at {epoch: dd/MM/yyyy}:");
             sb.AppendLine($"  {nameof(SemiMajorAxis)}: {SemiMajorAxis.AstronomicalUnits:F2} AU");

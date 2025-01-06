@@ -40,14 +40,14 @@ namespace VindemiatrixCollective.Universe.Model
 
         public LuminosityClass LuminosityClass;
         public string Extra;
-        public string Signature => $"{Type}{SubType}{LuminosityClass}";
+        public readonly string Signature => $"{Type}{SubType}{LuminosityClass}";
 
         public readonly string Description => $"{ColorFromStarType(Type)} {FindStarClass(LuminosityClass.ToString().SplitCamelCase())}";
 
         public SpectralClass(StarType type = StarType.Unknown,
                              int subType = 0,
                              LuminosityClass luminosityClass = LuminosityClass.Undefined,
-                             string extra = default(string))
+                             string extra = null)
         {
             Type = type;
             SubType = subType;
@@ -58,19 +58,16 @@ namespace VindemiatrixCollective.Universe.Model
         public static SpectralClass Sol => new(StarType.G, 2, LuminosityClass.V);
         public static SpectralClass Undefined => new(StarType.Unknown);
 
-        public override string ToString()
-        {
-            return Signature;
-        }
+        public readonly override string ToString() => Signature;
 
         public SpectralClass(string spectralClass)
         {
             Type = StarType.Unknown;
             LuminosityClass = LuminosityClass.Undefined;
             SubType = 0;
-            Extra = default(string);
+            Extra = null;
 
-            Regex           regex   = new Regex(@"(([OBAFGKM]+)([0-9]*)([IVX]*)(\w)*)[\/\-\+]*");
+            Regex           regex   = new(@"(([OBAFGKM]+)([0-9]*)([IVX]*)(\w)*)[\/\-\+]*");
             MatchCollection matches = regex.Matches(spectralClass);
 
             if (matches.Count == 0)
@@ -112,107 +109,50 @@ namespace VindemiatrixCollective.Universe.Model
 
         public static StarType FindStarType(char t)
         {
-            StarType starType;
-            switch (t)
+            StarType starType = t switch
             {
-                case 'O':
-                    starType = StarType.O;
-                    break;
-
-                case 'B':
-                    starType = StarType.B;
-                    break;
-
-                case 'A':
-                    starType = StarType.A;
-                    break;
-
-                case 'F':
-                    starType = StarType.F;
-                    break;
-
-                case 'G':
-                    starType = StarType.G;
-                    break;
-
-                case 'K':
-                    starType = StarType.K;
-                    break;
-
-                case 'M':
-                    starType = StarType.M;
-                    break;
-
-                default:
-                    starType = StarType.Unknown;
-                    break;
-            }
+                'O' => StarType.O,
+                'B' => StarType.B,
+                'A' => StarType.A,
+                'F' => StarType.F,
+                'G' => StarType.G,
+                'K' => StarType.K,
+                'M' => StarType.M,
+                _ => StarType.Unknown
+            };
 
             return starType;
         }
 
         public static string ColorFromStarType(StarType starType)
         {
-            switch (starType)
+            return starType switch
             {
-                case StarType.W:
-                    return "Wolf-Rayet";
-                case StarType.O:
-                    return "Blue";
-                case StarType.B:
-                    return "Blue-White";
-                case StarType.A:
-                    return "White";
-                case StarType.F:
-                    return "Yellow-White";
-                case StarType.G:
-                    return "Yellow";
-                case StarType.K:
-                    return "Orange";
-                case StarType.M:
-                    return "Red";
-                case StarType.L:
-                    return "Brown";
-                case StarType.T:
-                    return "Cool Brown";
-                default:
-                    return "Error";
-            }
+                StarType.W => "Wolf-Rayet",
+                StarType.O => "Blue",
+                StarType.B => "Blue-White",
+                StarType.A => "White",
+                StarType.F => "Yellow-White",
+                StarType.G => "Yellow",
+                StarType.K => "Orange",
+                StarType.M => "Red",
+                StarType.L => "Brown",
+                StarType.T => "Cool Brown",
+                _ => "Error"
+            };
         }
 
         public static StarClass FindStarClass(string luminosityClass)
         {
-            StarClass starClass;
-            switch (luminosityClass)
+            StarClass starClass = luminosityClass switch
             {
-                case "V":
-                    starClass = StarClass.Dwarf;
-                    break;
-
-                case "IV":
-                    starClass = StarClass.SubGiant;
-                    break;
-
-                case "III":
-                case "IIIa":
-                case "IIIb":
-                    starClass = StarClass.Giant;
-                    break;
-
-                case "II":
-                    starClass = StarClass.BrightGiant;
-                    break;
-
-                case "Ia":
-                case "Ib":
-                case "Iab":
-                    starClass = StarClass.SuperGiant;
-                    break;
-
-                default:
-                    starClass = StarClass.Unknown;
-                    break;
-            }
+                "V" => StarClass.Dwarf,
+                "IV" => StarClass.SubGiant,
+                "III" or "IIIa" or "IIIb" => StarClass.Giant,
+                "II" => StarClass.BrightGiant,
+                "Ia" or "Ib" or "Iab" => StarClass.SuperGiant,
+                _ => StarClass.Unknown
+            };
 
             return starClass;
         }
@@ -220,37 +160,16 @@ namespace VindemiatrixCollective.Universe.Model
 
         public static LuminosityClass FindLuminosityClass(string luminosityClass)
         {
-            LuminosityClass luminosity;
-            switch (luminosityClass)
+            LuminosityClass luminosity = luminosityClass switch
             {
-                default:
-                case "V":
-                    luminosity = LuminosityClass.V;
-                    break;
-
-                case "IV":
-                    luminosity = LuminosityClass.IV;
-                    break;
-
-                case "III":
-                case "IIIa":
-                case "IIIb":
-                    luminosity = LuminosityClass.III;
-                    break;
-
-                case "II":
-                    luminosity = LuminosityClass.II;
-                    break;
-
-                case "Ia":
-                    luminosity = LuminosityClass.Ia;
-                    break;
-
-                case "Ib":
-                case "Iab":
-                    luminosity = LuminosityClass.Ib;
-                    break;
-            }
+                "V" => LuminosityClass.V,
+                "IV" => LuminosityClass.IV,
+                "III" or "IIIa" or "IIIb" => LuminosityClass.III,
+                "II" => LuminosityClass.II,
+                "Ia" => LuminosityClass.Ia,
+                "Ib" or "Iab" => LuminosityClass.Ib,
+                _ => LuminosityClass.V
+            };
 
             return luminosity;
         }
@@ -258,29 +177,19 @@ namespace VindemiatrixCollective.Universe.Model
         // Where 0 = Ia0, 1 = Ia, 2 = Ib, 3 = II, ...,  8 = VII
         public static LuminosityClass FindLuminosityClassByIndex(int index)
         {
-            switch (index)
+            return index switch
             {
-                case 0:
-                    return LuminosityClass.Ia0;
-                case 1:
-                    return LuminosityClass.Ia;
-                case 2:
-                    return LuminosityClass.Ib;
-                case 3:
-                    return LuminosityClass.II;
-                case 4:
-                    return LuminosityClass.III;
-                case 5:
-                    return LuminosityClass.IV;
-                case 6:
-                    return LuminosityClass.V;
-                case 7:
-                    return LuminosityClass.VI;
-                case 8:
-                    return LuminosityClass.VII;
-                default:
-                    return LuminosityClass.Undefined;
-            }
+                0 => LuminosityClass.Ia0,
+                1 => LuminosityClass.Ia,
+                2 => LuminosityClass.Ib,
+                3 => LuminosityClass.II,
+                4 => LuminosityClass.III,
+                5 => LuminosityClass.IV,
+                6 => LuminosityClass.V,
+                7 => LuminosityClass.VI,
+                8 => LuminosityClass.VII,
+                _ => LuminosityClass.Undefined
+            };
         }
     }
 

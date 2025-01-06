@@ -50,7 +50,7 @@ namespace VindemiatrixCollective.Universe.Model
 
         public static Star Create(string name, PhysicalData data)
         {
-            Star star = new Star(name)
+            Star star = new(name)
             {
                 PhysicalData = data
             };

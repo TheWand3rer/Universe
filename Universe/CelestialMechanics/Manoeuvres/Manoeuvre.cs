@@ -9,7 +9,7 @@ using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
 
 namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
 {
-    public struct Impulse
+    public readonly struct Impulse
     {
         public Duration DeltaTime { get; }
         public Vector3d DeltaVelocity { get; }
@@ -83,7 +83,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach (Impulse i in impulses)
             {
                 sb.AppendLine(i.ToString());

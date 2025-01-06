@@ -90,7 +90,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             Length   distanceAcceleration = CalculateAccelerationDistance(acceleration, rapidity);
             Length   distanceCruise       = distance - (decelerate ? 2 : 1) * distanceAcceleration;
 
-            Duration observerTimeAcceleration = CalculateObserverTimeAcceleration(acceleration, shipMaxSpeed, rapidity);
+            Duration observerTimeAcceleration = CalculateObserverTimeAcceleration(acceleration, rapidity);
             Duration observerTimeCruise       = distanceCruise / shipMaxSpeed;
             
             Duration shipTimeCruise           = observerTimeCruise / gamma;
@@ -137,7 +137,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             return 1 / Math.Sqrt(1 - ((v * v) / (c * c)));
         }
 
-        public static Duration CalculateObserverTimeAcceleration(Acceleration acceleration, Speed shipMaxSpeed, double rapidity)
+        public static Duration CalculateObserverTimeAcceleration(Acceleration acceleration, double rapidity)
         {
             double a = acceleration.MetersPerSecondSquared;
             double c = UniversalConstants.Celestial.LightSpeedMetresPerSecond;

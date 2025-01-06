@@ -120,7 +120,6 @@ namespace VindemiatrixCollective.Universe.Model
         /// <param name="orbiterName">The name of the <see cref="CelestialBody"/> to find.</param>
         /// <param name="recursive">If true, will also search descendants.</param>
         /// <returns></returns>
-
         public bool HasOrbiter(string orbiterName, bool recursive = false)
         {
             bool result = Orbiters.ContainsKey(orbiterName);

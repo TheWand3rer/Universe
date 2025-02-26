@@ -34,7 +34,7 @@ namespace VindemiatrixCollective.Universe.Model
 
         public static PhysicalData Create(Density density, Length radius, GravitationalParameter gm)
         {
-            Mass         mass    = Mass.FromKilograms((4 / 3d) * UniversalConstants.Tri.Pi * Math.Pow(radius.Meters, 3) * density.GramsPerCubicMeter);
+            Mass         mass    = Mass.FromKilograms((4 / 3d) * UniversalConstants.Tri.Pi * Math.Pow(radius.Meters, 3) * density.KilogramsPerCubicMeter);
             Acceleration gravity = Acceleration.FromMetersPerSecondSquared(gm.M3S2 / Math.Pow(radius.Meters, 2));
             return Create(mass, radius, gravity, density);
         }

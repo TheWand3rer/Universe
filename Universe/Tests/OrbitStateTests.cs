@@ -101,6 +101,19 @@ namespace VindemiatrixCollective.Universe.Tests
         }
 
         [Test]
+        public void LunarPeriod()
+        {
+            Planet earth = Planet.Earth;
+            Planet moon  = Planet.Moon;
+
+            earth.AddPlanets(new[] { moon });
+            moon.OrbitState.Propagate(Duration.FromDays(1));
+
+            // Half a day of tolerance
+            Assert.AreEqual(27, moon.OrbitState.Period.Days, 5e-1, nameof(OrbitState.Period));
+        }
+
+        [Test]
         public void PropagationElements()
         {
             Star sun = Common.Sun;
@@ -136,58 +149,5 @@ namespace VindemiatrixCollective.Universe.Tests
             Common.VectorsAreEqual(rExp, r1, 1e2, nameof(OrbitState.Position));  // 100 m precision
             Common.VectorsAreEqual(vExp, v1, 1e-1, nameof(OrbitState.Velocity)); // 10 cm / s
         }
-		
-		[Test]
-		public void LunarPeriod()
-		{
-			var eMass = Mass.FromEarthMasses(1);
-			var eRadius = Length.FromKilometers(6371.0);
-
-			var volume = 4 / 3 * Math.PI * Math.Pow(eRadius.Meters, 3);
-
-			var earth = new Planet
-			{
-				Name = "Earth",
-				PhysicalData = PhysicalData.Create(
-					Density.FromKilogramsPerCubicMeter(eMass.Kilograms / volume),
-					eRadius,
-					GravitationalParameter.FromMass(eMass)),
-				OrbitalData = OrbitalData.From(
-					Length.FromAstronomicalUnits(1.00000102),
-					Ratio.FromDecimalFractions(0.0167086),
-					Angle.FromDegrees(0.00005),
-					Angle.FromDegrees(348.7394),
-					Angle.FromDegrees(114.20783),
-					Angle.FromDegrees(358.617),
-					Duration.FromDays(365.256363004),
-					Duration.FromHours(23.934469),
-					Angle.FromDegrees(23.43702)),
-			};
-
-			var moon = new Planet
-			{
-				Name = "Luna",
-				PhysicalData = PhysicalData.Create(
-					Mass.FromKilograms(7.346e22),
-					Length.FromKilometers(1737.4),
-					Acceleration.FromMetersPerSecondSquared(1.622),
-					Density.FromGramsPerCubicCentimeter(3.34)),
-				OrbitalData = OrbitalData.From(
-					Length.FromKilometers(384399),
-					Ratio.FromDecimalFractions(0.09548768),
-					Angle.FromDegrees(5.145),
-					Angle.FromDegrees(12.75405),
-					Angle.FromDegrees(194.3756907),
-					Angle.FromDegrees(208.4219455),
-					Duration.FromDays(27.321661),
-					Duration.FromDays(27.321661),
-					Angle.FromDegrees(1.5424)),
-			};
-			earth.AddPlanets(new[] { moon });
-
-			moon.OrbitState.Propagate(Duration.FromDays(1));
-
-			Assert.AreEqual(27, moon.OrbitState.Period.Days, 7, nameof(OrbitState.Period));
-		}
     }
 }

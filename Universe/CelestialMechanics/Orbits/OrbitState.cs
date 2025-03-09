@@ -307,8 +307,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             b = a; // if circular a = b, will be overriden later
 
             const double tol        = 1e-8;
-            bool         equatorial = e < tol;
-            bool         circular   = Math.Abs(i) < tol;
+			bool         circular = e < tol;
+			bool         equatorial   = Math.Abs(i) < tol;
 
             if (equatorial && !circular)
             {

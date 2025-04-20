@@ -1,0 +1,2366 @@
+{
+  "Name": "Milky Way",
+  "Systems": {
+    "96 G. Psc": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K2V",
+          "Luminosity": 0.24479356408119202,
+          "Mass": 0.7,
+          "Temperature": 4620.0,
+          "Age": 24.392420598661094,
+          "Radius": 1.02
+        }
+      },
+      "Coordinates": "7.258368, 1.555495, 0.686093"
+    },
+    "Achird": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "G0V",
+          "Luminosity": 1.2752636671066284,
+          "Mass": 1.1,
+          "Temperature": 6000.0,
+          "Age": 7.8798561094677044,
+          "Radius": 1.25
+        }
+      },
+      "Coordinates": "3.098462, 0.674227, 5.038376"
+    },
+    "Adhil": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K0III",
+          "Luminosity": 42.422866821289063,
+          "Mass": 2.3,
+          "Temperature": 4114.0,
+          "Age": 1.2464659232434541,
+          "Radius": 23.9
+        }
+      },
+      "Coordinates": "43.1177, 16.19407, 46.91656"
+    },
+    "Algenib": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "B2IV",
+          "Luminosity": 926.403076171875,
+          "Mass": 15.8,
+          "Temperature": 24380.0,
+          "Age": 0.010077603858088195,
+          "Radius": 8.08
+        }
+      },
+      "Coordinates": "115.6642, 6.687324, 31.44213"
+    },
+    "Alpha Lyncis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M0III",
+          "Luminosity": 187.24058532714844,
+          "Mass": 5.6,
+          "Temperature": 3700.0,
+          "Age": 0.1347503594911538,
+          "Radius": 65.8
+        }
+      },
+      "Coordinates": "-39.51234, 32.84603, 35.17204"
+    },
+    "Alpha Sculptoris": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "B7III",
+          "Luminosity": 941.0224609375,
+          "Mass": 10.1,
+          "Temperature": 15330.0,
+          "Age": 0.030845837443758097,
+          "Radius": 4.66
+        }
+      },
+      "Coordinates": "200.7706, 52.48959, -116.7278"
+    },
+    "Alpheratz": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "B9V",
+          "Luminosity": 114.49855041503906,
+          "Mass": 3.4,
+          "Temperature": 11710.0,
+          "Age": 0.4691402634486509,
+          "Radius": 2.73
+        }
+      },
+      "Coordinates": "25.97457, 0.951042, 14.46126"
+    },
+    "Ankaa": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K0III",
+          "Luminosity": 64.446601867675781,
+          "Mass": 2.3,
+          "Temperature": 4114.0,
+          "Age": 1.2464659232434541,
+          "Radius": 23.9
+        }
+      },
+      "Coordinates": "19.08365, 2.198282, -17.48328"
+    },
+    "Anser": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M0V",
+          "Luminosity": 121.22718048095703,
+          "Mass": 0.5,
+          "Temperature": 3500.0,
+          "Age": 56.568542494923804,
+          "Radius": 0.99
+        }
+      },
+      "Coordinates": "31.26875, -76.71214, 38.04074"
+    },
+    "Antares": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M1V",
+          "Luminosity": 9453.66015625,
+          "Mass": 0.5,
+          "Temperature": 3333.0,
+          "Age": 56.568542494923804,
+          "Radius": 0.768
+        }
+      },
+      "Coordinates": "-58.5426, -140.3076, -75.57477"
+    },
+    "Barnard's Star": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M4V",
+          "Luminosity": 0.00044258800335228443,
+          "Mass": 0.3,
+          "Temperature": 2833.0,
+          "Age": 202.86020648339488,
+          "Radius": 0.44
+        }
+      },
+      "Coordinates": "-0.017373, -1.816613, 0.149123"
+    },
+    "Beta 1 Tucanae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "B9V",
+          "Luminosity": 26.915348052978516,
+          "Mass": 3.4,
+          "Temperature": 11710.0,
+          "Age": 0.4691402634486509,
+          "Radius": 2.73
+        }
+      },
+      "Coordinates": "18.64771, 2.582977, -36.8811"
+    },
+    "Beta 2 Tucanae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "A2V",
+          "Luminosity": 35.809642791748047,
+          "Mass": 2.5,
+          "Temperature": 9400.0,
+          "Age": 1.0119288512538815,
+          "Radius": 2.44
+        }
+      },
+      "Coordinates": "23.2554, 3.222589, -46.00905"
+    },
+    "Beta 3 Tucanae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "A0V",
+          "Luminosity": 16.951183319091797,
+          "Mass": 2.9,
+          "Temperature": 9900.0,
+          "Age": 0.69824045126599721,
+          "Radius": 2.88
+        }
+      },
+      "Coordinates": "20.45029, 2.940715, -40.60397"
+    },
+    "Beta Hydri": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "G2IV",
+          "Luminosity": 3.6074473857879639,
+          "Mass": 1.4,
+          "Temperature": 5780.0,
+          "Age": 4.3120115037169215,
+          "Radius": 2.62
+        }
+      },
+      "Coordinates": "1.635267, 0.184517, -7.275205"
+    },
+    "Beta Phoenicis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "G8III",
+          "Luminosity": 409260672.0,
+          "Mass": 2.2,
+          "Temperature": 4229.0,
+          "Age": 1.392974922444715,
+          "Radius": 21.4
+        }
+      },
+      "Coordinates": "65728.04, 19495.77, -72799.31"
+    },
+    "Betelgeuse": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2V",
+          "Luminosity": 13415.2880859375,
+          "Mass": 0.4,
+          "Temperature": 3167.0,
+          "Age": 98.821176880261859,
+          "Radius": 0.614
+        }
+      },
+      "Coordinates": "3.189296, 151.3644, 19.68214"
+    },
+    "Brachium": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M3V",
+          "Luminosity": 341.35006713867188,
+          "Mass": 0.3,
+          "Temperature": 3000.0,
+          "Age": 202.86020648339488,
+          "Radius": 0.509
+        }
+      },
+      "Coordinates": "-55.51919, -57.52708, -37.76065"
+    },
+    "Capella": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M1V",
+          "Luminosity": 139.315673828125,
+          "Mass": 0.5,
+          "Temperature": 3333.0,
+          "Age": 56.568542494923804,
+          "Radius": 0.768
+        }
+      },
+      "Coordinates": "1.712633, 8.954439, 9.440007"
+    },
+    "Caph": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "F2III",
+          "Luminosity": 30.060762405395508,
+          "Mass": 4.9,
+          "Temperature": 7120.0,
+          "Age": 0.18815241626515014,
+          "Radius": 3.01
+        }
+      },
+      "Coordinates": "8.600014, 0.344589, 14.4095"
+    },
+    "Castula": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "G8III",
+          "Luminosity": 46.387397766113281,
+          "Mass": 2.2,
+          "Temperature": 4229.0,
+          "Age": 1.392974922444715,
+          "Radius": 21.4
+        }
+      },
+      "Coordinates": "30.4377, 7.68286, 52.6216"
+    },
+    "Chi Aquarii": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M3III",
+          "Luminosity": 328.09530639648438,
+          "Mass": 4.8,
+          "Temperature": 3130.0,
+          "Age": 0.19810567039394031,
+          "Radius": 150.0
+        }
+      },
+      "Coordinates": "182.9714, -34.86313, -25.27152"
+    },
+    "Chi Pegasi": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2III",
+          "Luminosity": 134.64802551269531,
+          "Mass": 5.1,
+          "Temperature": 3320.0,
+          "Age": 0.17024507603615832,
+          "Radius": 108.0
+        }
+      },
+      "Coordinates": "105.7048, 6.744268, 38.98495"
+    },
+    "Chi Piscis Austrini": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K0III",
+          "Luminosity": 164.89215087890625,
+          "Mass": 2.3,
+          "Temperature": 4114.0,
+          "Age": 1.2464659232434541,
+          "Radius": 23.9
+        }
+      },
+      "Coordinates": "104.5139, 33.68338, 42.22742"
+    },
+    "Delta 1 Apodis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M5III",
+          "Luminosity": 638.5574951171875,
+          "Mass": 4.3,
+          "Temperature": 2750.0,
+          "Age": 0.26081277564651817,
+          "Radius": 323.0
+        }
+      },
+      "Coordinates": "-19.29259, -41.53706, -229.1121"
+    },
+    "Delta 2 Gruis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M4V",
+          "Luminosity": 200.63191223144531,
+          "Mass": 0.3,
+          "Temperature": 2833.0,
+          "Age": 202.86020648339488,
+          "Radius": 0.44
+        }
+      },
+      "Coordinates": "67.51953, -28.05134, -69.99024"
+    },
+    "Delta 2 Lyrae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M4II",
+          "Luminosity": 910.3323974609375,
+          "Mass": 6.7,
+          "Temperature": 2940.0,
+          "Age": 0.086062308898001288,
+          "Radius": 604.0
+        }
+      },
+      "Coordinates": "42.52774, -175.4378, 135.5305"
+    },
+    "Delta Andromedae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K3III",
+          "Luminosity": 44.874538421630859,
+          "Mass": 2.6,
+          "Temperature": 3900.0,
+          "Age": 0.91741667595568355,
+          "Radius": 35.9
+        }
+      },
+      "Coordinates": "27.36347, 4.742224, 16.59517"
+    },
+    "Delta Piscis Austrini": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K5III",
+          "Luminosity": 132.80058288574219,
+          "Mass": 2.8,
+          "Temperature": 3700.0,
+          "Age": 0.76226314370815917,
+          "Radius": 52.3
+        }
+      },
+      "Coordinates": "92.45928, 19.94075, 12.59529"
+    },
+    "Delta Reticuli": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2III",
+          "Luminosity": 339.78170776367188,
+          "Mass": 5.1,
+          "Temperature": 3320.0,
+          "Age": 0.17024507603615832,
+          "Radius": 108.0
+        }
+      },
+      "Coordinates": "38.96927, 66.65174, -141.6104"
+    },
+    "Delta Sagittae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2II",
+          "Luminosity": 974.540771484375,
+          "Mass": 7.4,
+          "Temperature": 3320.0,
+          "Age": 0.06713062656079323,
+          "Radius": 285.0
+        }
+      },
+      "Coordinates": "77.99368, -154.0875, 57.90022"
+    },
+    "Diphda": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K0III",
+          "Luminosity": 116.09138488769531,
+          "Mass": 2.3,
+          "Temperature": 4114.0,
+          "Age": 1.2464659232434541,
+          "Radius": 23.9
+        }
+      },
+      "Coordinates": "27.58364, 5.310463, -9.119792"
+    },
+    "Epsilon Andromedae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "G5III",
+          "Luminosity": 40.364540100097656,
+          "Mass": 2.0,
+          "Temperature": 4400.0,
+          "Age": 1.7677669529663689,
+          "Radius": 19.2
+        }
+      },
+      "Coordinates": "43.17658, 7.332959, 24.58834"
+    },
+    "Epsilon Muscae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M5III",
+          "Luminosity": 176.84793090820313,
+          "Mass": 4.3,
+          "Temperature": 2750.0,
+          "Age": 0.26081277564651817,
+          "Radius": 323.0
+        }
+      },
+      "Coordinates": "-34.57853, -2.656314, -85.66794"
+    },
+    "Epsilon Octantis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M6III",
+          "Luminosity": 63.6795539855957,
+          "Mass": 4.2,
+          "Temperature": 2560.0,
+          "Age": 0.27661566693552525,
+          "Radius": 512.0
+        }
+      },
+      "Coordinates": "13.41646, -6.254205, -87.88887"
+    },
+    "Epsilon Phoenicis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K0III",
+          "Luminosity": 47.774925231933594,
+          "Mass": 2.3,
+          "Temperature": 4114.0,
+          "Age": 1.2464659232434541,
+          "Radius": 23.9
+        }
+      },
+      "Coordinates": "30.82377, 1.266396, -31.66533"
+    },
+    "Epsilon Piscis Austrini": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K0III",
+          "Luminosity": 53.015151977539063,
+          "Mass": 2.3,
+          "Temperature": 4114.0,
+          "Age": 1.2464659232434541,
+          "Radius": 23.9
+        }
+      },
+      "Coordinates": "53.14447, 14.97414, 7.651854"
+    },
+    "Eta 2 Doradus": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2V",
+          "Luminosity": 332.96609497070313,
+          "Mass": 0.4,
+          "Temperature": 3167.0,
+          "Age": 98.821176880261859,
+          "Radius": 0.614
+        }
+      },
+      "Coordinates": "-3.983859, 81.09541, -178.9016"
+    },
+    "Eta 2 Pictoris": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2III",
+          "Luminosity": 154.02812194824219,
+          "Mass": 5.1,
+          "Temperature": 3320.0,
+          "Age": 0.17024507603615832,
+          "Radius": 108.0
+        }
+      },
+      "Coordinates": "20.98099, 85.68861, -103.5768"
+    },
+    "Eta Andromedae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "G8III",
+          "Luminosity": 75.093093872070313,
+          "Mass": 2.2,
+          "Temperature": 4229.0,
+          "Age": 1.392974922444715,
+          "Radius": 21.4
+        }
+      },
+      "Coordinates": "62.61915, 15.96336, 27.98802"
+    },
+    "Eta Ceti": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K2III",
+          "Luminosity": 51.951728820800781,
+          "Mass": 2.5,
+          "Temperature": 4000.0,
+          "Age": 1.0119288512538815,
+          "Radius": 30.8
+        }
+      },
+      "Coordinates": "35.73335, 11.02543, -6.716585"
+    },
+    "Eta Phoenicis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "A0IV",
+          "Luminosity": 89.618980407714844,
+          "Mass": 5.1,
+          "Temperature": 9900.0,
+          "Age": 0.17024507603615832,
+          "Radius": 3.3
+        }
+      },
+      "Coordinates": "39.89795, 7.638724, -63.6741"
+    },
+    "Eta Sagittarii": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2III",
+          "Luminosity": 100.36909484863281,
+          "Mass": 5.1,
+          "Temperature": 3320.0,
+          "Age": 0.17024507603615832,
+          "Radius": 108.0
+        }
+      },
+      "Coordinates": "2.754228, -35.73883, -26.77798"
+    },
+    "Eta Sculptoris": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2V",
+          "Luminosity": 190.02029418945313,
+          "Mass": 0.4,
+          "Temperature": 3167.0,
+          "Age": 98.821176880261859,
+          "Radius": 0.614
+        }
+      },
+      "Coordinates": "115.2887, 14.11907, -75.44938"
+    },
+    "Fulu": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "B2IV",
+          "Luminosity": 962.05523681640625,
+          "Mass": 15.8,
+          "Temperature": 24380.0,
+          "Age": 0.010077603858088195,
+          "Radius": 8.08
+        }
+      },
+      "Coordinates": "105.7436, 17.20789, 146.9015"
+    },
+    "Gacrux": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M4III",
+          "Luminosity": 148.45677185058594,
+          "Mass": 4.6,
+          "Temperature": 2940.0,
+          "Age": 0.22034612671084924,
+          "Radius": 209.0
+        }
+      },
+      "Coordinates": "-14.6069, -1.998688, -22.80075"
+    },
+    "Gamma 3 Octantis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K1V",
+          "Luminosity": 40.625617980957031,
+          "Mass": 0.8,
+          "Temperature": 4760.0,
+          "Age": 17.469281074217108,
+          "Radius": 1.01
+        }
+      },
+      "Coordinates": "10.55193, 0.46238, -77.34631"
+    },
+    "Gamma Cassiopeiae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "B0IV",
+          "Luminosity": 3407.218505859375,
+          "Mass": 22.9,
+          "Temperature": 28000.0,
+          "Age": 0.0039848437246483952,
+          "Radius": 12.1
+        }
+      },
+      "Coordinates": "79.83672, 20.16802, 146.8371"
+    },
+    "Gamma Chamaeleontis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M0III",
+          "Luminosity": 324.19027709960938,
+          "Mass": 5.6,
+          "Temperature": 3700.0,
+          "Age": 0.1347503594911538,
+          "Radius": 65.8
+        }
+      },
+      "Coordinates": "-23.59024, 9.118277, -125.5182"
+    },
+    "Gamma Hydri": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2III",
+          "Luminosity": 186.20870971679688,
+          "Mass": 5.1,
+          "Temperature": 3320.0,
+          "Age": 0.17024507603615832,
+          "Radius": 108.0
+        }
+      },
+      "Coordinates": "9.756821, 14.91553, -63.14994"
+    },
+    "Gamma Phoenicis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K5II",
+          "Luminosity": 193.37484741210938,
+          "Mass": 3.9,
+          "Temperature": 3700.0,
+          "Age": 0.33291892409062029,
+          "Radius": 151.0
+        }
+      },
+      "Coordinates": "48.29105, 19.60048, -49.14411"
+    },
+    "Gamma Reticuli": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M4III",
+          "Luminosity": 291.07171630859375,
+          "Mass": 4.6,
+          "Temperature": 2940.0,
+          "Age": 0.22034612671084924,
+          "Radius": 209.0
+        }
+      },
+      "Coordinates": "33.37023, 58.32481, -127.2301"
+    },
+    "Giausar": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M0III",
+          "Luminosity": 269.4014892578125,
+          "Mass": 5.6,
+          "Temperature": 3700.0,
+          "Age": 0.1347503594911538,
+          "Radius": 65.8
+        }
+      },
+      "Coordinates": "-35.77359, 4.486959, 95.57056"
+    },
+    "Gudja": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M1III",
+          "Luminosity": 276.1849365234375,
+          "Mass": 5.3,
+          "Temperature": 3510.0,
+          "Age": 0.15463589988005319,
+          "Radius": 85.0
+        }
+      },
+      "Coordinates": "-60.30314, -93.51803, 36.45959"
+    },
+    "Iota Ceti": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K2III",
+          "Luminosity": 232.48771667480469,
+          "Mass": 2.5,
+          "Temperature": 4000.0,
+          "Age": 1.0119288512538815,
+          "Radius": 30.8
+        }
+      },
+      "Coordinates": "82.88033, 7.042663, -12.91235"
+    },
+    "Iota Sculptoris": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K0III",
+          "Luminosity": 75.718147277832031,
+          "Mass": 2.3,
+          "Temperature": 4114.0,
+          "Age": 1.2464659232434541,
+          "Radius": 23.9
+        }
+      },
+      "Coordinates": "88.23954, 8.310005, -49.09093"
+    },
+    "Iota Tucanae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "G5III",
+          "Luminosity": 54.400138854980469,
+          "Mass": 2.0,
+          "Temperature": 4400.0,
+          "Age": 1.7677669529663689,
+          "Radius": 19.2
+        }
+      },
+      "Coordinates": "42.22755, 12.77158, -82.19208"
+    },
+    "Kappa 1 Sculptoris": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "F3V",
+          "Luminosity": 35.481338500976563,
+          "Mass": 1.5,
+          "Temperature": 6980.0,
+          "Age": 3.6288736930121148,
+          "Radius": 1.57
+        }
+      },
+      "Coordinates": "68.34331, 2.790097, -36.35057"
+    },
+    "Kappa 2 Sculptoris": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K2III",
+          "Luminosity": 353.50860595703125,
+          "Mass": 2.5,
+          "Temperature": 4000.0,
+          "Age": 1.0119288512538815,
+          "Radius": 30.8
+        }
+      },
+      "Coordinates": "214.9526, 10.86427, -113.4751"
+    },
+    "Kappa Cassiopeiae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "B1V",
+          "Luminosity": 187068208.0,
+          "Mass": 14.2,
+          "Temperature": 26190.0,
+          "Age": 0.0131607045336807,
+          "Radius": 6.97
+        }
+      },
+      "Coordinates": "45034.19, 6529.619, 89046.54"
+    },
+    "Kappa Phoenicis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "A7V",
+          "Luminosity": 13.231223106384277,
+          "Mass": 1.8,
+          "Temperature": 8150.0,
+          "Age": 2.3004814583331177,
+          "Radius": 1.81
+        }
+      },
+      "Coordinates": "17.10692, 1.964466, -16.44357"
+    },
+    "Kappa Tucanae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "F6IV",
+          "Luminosity": 7.6348409652709961,
+          "Mass": 2.8,
+          "Temperature": 6560.0,
+          "Age": 0.76226314370815917,
+          "Radius": 3.23
+        }
+      },
+      "Coordinates": "7.143194, 2.45156, -19.54746"
+    },
+    "Kapteyn's Star": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M0V",
+          "Luminosity": 0.0038089039735496044,
+          "Mass": 0.5,
+          "Temperature": 3500.0,
+          "Age": 56.568542494923804,
+          "Radius": 0.99
+        }
+      },
+      "Coordinates": "0.578997, 2.705174, -2.76822"
+    },
+    "Kruger 60": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2V",
+          "Luminosity": 0.00203422992490232,
+          "Mass": 0.4,
+          "Temperature": 3167.0,
+          "Age": 98.821176880261859,
+          "Radius": 0.614
+        }
+      },
+      "Coordinates": "1.968033, -0.83547, 3.381486"
+    },
+    "Lacaille 8760": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M1V",
+          "Luminosity": 0.02860223688185215,
+          "Mass": 0.5,
+          "Temperature": 3333.0,
+          "Age": 56.568542494923804,
+          "Radius": 0.768
+        }
+      },
+      "Coordinates": "2.330004, -2.003156, -2.476477"
+    },
+    "Lacaille 9352": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2V",
+          "Luminosity": 0.010734949260950089,
+          "Mass": 0.4,
+          "Temperature": 3167.0,
+          "Age": 98.821176880261859,
+          "Radius": 0.614
+        }
+      },
+      "Coordinates": "2.581532, -0.621353, -1.918773"
+    },
+    "Lalande 21185": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2V",
+          "Luminosity": 0.0057016429491341114,
+          "Mass": 0.4,
+          "Temperature": 3167.0,
+          "Age": 98.821176880261859,
+          "Radius": 0.614
+        }
+      },
+      "Coordinates": "-1.998, 0.504305, 1.495504"
+    },
+    "Lambda 1 Phoenicis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "A0V",
+          "Luminosity": 30.478950500488281,
+          "Mass": 2.9,
+          "Temperature": 9900.0,
+          "Age": 0.69824045126599721,
+          "Radius": 2.88
+        }
+      },
+      "Coordinates": "34.5585, 4.767165, -39.85461"
+    },
+    "Lambda 1 Sculptoris": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "B9V",
+          "Luminosity": 69.758956909179688,
+          "Mass": 3.4,
+          "Temperature": 11710.0,
+          "Age": 0.4691402634486509,
+          "Radius": 2.73
+        }
+      },
+      "Coordinates": "111.6756, 21.05836, -90.27811"
+    },
+    "Lambda 1 Tucanae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "F7IV",
+          "Luminosity": 7.4954895973205566,
+          "Mass": 2.7,
+          "Temperature": 6420.0,
+          "Age": 0.83481566454071943,
+          "Radius": 2.95
+        }
+      },
+      "Coordinates": "21.5843, 5.023683, -59.28472"
+    },
+    "Lambda 2 Phoenicis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "F6V",
+          "Luminosity": 6.6008520126342773,
+          "Mass": 1.3,
+          "Temperature": 6560.0,
+          "Age": 5.1896924219350824,
+          "Radius": 1.41
+        }
+      },
+      "Coordinates": "23.01616, 3.613111, -25.8759"
+    },
+    "Lambda 2 Sculptoris": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K1III",
+          "Luminosity": 41.00152587890625,
+          "Mass": 2.4,
+          "Temperature": 4057.0,
+          "Age": 1.1206549034164981,
+          "Radius": 26.4
+        }
+      },
+      "Coordinates": "79.84779, 15.59376, -64.5323"
+    },
+    "Lambda 2 Tucanae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "G7III",
+          "Luminosity": 26.6195068359375,
+          "Mass": 2.2,
+          "Temperature": 4286.0,
+          "Age": 1.392974922444715,
+          "Radius": 21.2
+        }
+      },
+      "Coordinates": "23.11152, 5.655909, -63.73048"
+    },
+    "Lambda Aquarii": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2III",
+          "Luminosity": 391.2010498046875,
+          "Mass": 5.1,
+          "Temperature": 3320.0,
+          "Age": 0.17024507603615832,
+          "Radius": 108.0
+        }
+      },
+      "Coordinates": "112.0098, -33.91664, -15.57301"
+    },
+    "Lambda Cassiopeiae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "B8V",
+          "Luminosity": 148.18354797363281,
+          "Mass": 3.8,
+          "Temperature": 13520.0,
+          "Age": 0.35525566207934689,
+          "Radius": 2.73
+        }
+      },
+      "Coordinates": "66.52975, 9.282854, 94.25235"
+    },
+    "Lambda Gruis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M0III",
+          "Luminosity": 78.198783874511719,
+          "Mass": 5.6,
+          "Temperature": 3700.0,
+          "Age": 0.1347503594911538,
+          "Radius": 65.8
+        }
+      },
+      "Coordinates": "50.32521, -27.29174, -47.26537"
+    },
+    "Lambda Hydri": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K5III",
+          "Luminosity": 33.790920257568359,
+          "Mass": 2.8,
+          "Temperature": 3700.0,
+          "Age": 0.76226314370815917,
+          "Radius": 52.3
+        }
+      },
+      "Coordinates": "16.51203, 3.554214, -62.6999"
+    },
+    "Lambda Ursae Minoris": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M1III",
+          "Luminosity": 192.48637390136719,
+          "Mass": 5.3,
+          "Temperature": 3510.0,
+          "Age": 0.15463589988005319,
+          "Radius": 85.0
+        }
+      },
+      "Coordinates": "-0.852391, -4.483378, 271.7008"
+    },
+    "Luyten's Star": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M5V",
+          "Luminosity": 0.0014588140184059739,
+          "Mass": 0.2,
+          "Temperature": 2667.0,
+          "Age": 559.01699437494744,
+          "Radius": 0.381
+        }
+      },
+      "Coordinates": "-1.409549, 3.514856, 0.346358"
+    },
+    "Menkar": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2III",
+          "Luminosity": 489.77880859375,
+          "Mass": 5.1,
+          "Temperature": 3320.0,
+          "Age": 0.17024507603615832,
+          "Radius": 108.0
+        }
+      },
+      "Coordinates": "53.34256, 54.41438, 5.448321"
+    },
+    "Minelauva": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M3III",
+          "Luminosity": 141.90574645996094,
+          "Mass": 4.8,
+          "Temperature": 3130.0,
+          "Age": 0.19810567039394031,
+          "Radius": 150.0
+        }
+      },
+      "Coordinates": "-58.94191, -14.58759, 3.604756"
+    },
+    "Mira": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M5V",
+          "Luminosity": 18.897310256958008,
+          "Mass": 0.2,
+          "Temperature": 2667.0,
+          "Age": 559.01699437494744,
+          "Radius": 0.381
+        }
+      },
+      "Coordinates": "75.13115, 52.28879, -4.761374"
+    },
+    "Mirach": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M0III",
+          "Luminosity": 474.24197387695313,
+          "Mass": 5.6,
+          "Temperature": 3700.0,
+          "Age": 0.1347503594911538,
+          "Radius": 65.8
+        }
+      },
+      "Coordinates": "46.94637, 14.74181, 35.25513"
+    },
+    "Mu 1 Cancri": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M3III",
+          "Luminosity": 187.5858154296875,
+          "Mass": 4.8,
+          "Temperature": 3130.0,
+          "Age": 0.19810567039394031,
+          "Radius": 150.0
+        }
+      },
+      "Coordinates": "-110.3435, 179.5247, 87.86929"
+    },
+    "Mu Andromedae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "A5V",
+          "Luminosity": 39.373134613037109,
+          "Mass": 1.9,
+          "Temperature": 8650.0,
+          "Age": 2.0096295016897829,
+          "Radius": 1.89
+        }
+      },
+      "Coordinates": "30.18067, 7.630372, 24.76158"
+    },
+    "Mu Cassiopeiae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "G5V",
+          "Luminosity": 0.42501083016395569,
+          "Mass": 0.9,
+          "Temperature": 5450.0,
+          "Age": 13.013488313450122,
+          "Radius": 1.06
+        }
+      },
+      "Coordinates": "4.149699, 1.274102, 6.181126"
+    },
+    "Mu Cephei": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2V",
+          "Luminosity": 177010896.0,
+          "Mass": 0.4,
+          "Temperature": 3167.0,
+          "Age": 98.821176880261859,
+          "Radius": 0.614
+        }
+      },
+      "Coordinates": "42908.72, -29076.6, 85518.38"
+    },
+    "Mu Coronae Borealis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2III",
+          "Luminosity": 275.67666625976563,
+          "Mass": 5.1,
+          "Temperature": 3320.0,
+          "Age": 0.17024507603615832,
+          "Radius": 108.0
+        }
+      },
+      "Coordinates": "-87.05653, -119.0007, 119.4414"
+    },
+    "Mu Phoenicis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "G8III",
+          "Luminosity": 72.177192687988281,
+          "Mass": 2.2,
+          "Temperature": 4229.0,
+          "Age": 1.392974922444715,
+          "Radius": 21.4
+        }
+      },
+      "Coordinates": "51.42027, 9.373821, -54.28574"
+    },
+    "Nu 1 Coronae Borealis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2III",
+          "Luminosity": 279.51171875,
+          "Mass": 5.1,
+          "Temperature": 3320.0,
+          "Age": 0.17024507603615832,
+          "Radius": 108.0
+        }
+      },
+      "Coordinates": "-67.47127, -148.6656, 109.2891"
+    },
+    "Nu Andromedae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "B5V",
+          "Luminosity": 481.72589111328125,
+          "Mass": 5.9,
+          "Temperature": 18950.0,
+          "Age": 0.11826874024599515,
+          "Radius": 3.26
+        }
+      },
+      "Coordinates": "139.4069, 30.78716, 124.4502"
+    },
+    "Nu Cassiopeiae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "B9III",
+          "Luminosity": 152.19486999511719,
+          "Mass": 8.1,
+          "Temperature": 11710.0,
+          "Age": 0.053553449849588985,
+          "Radius": 4.33
+        }
+      },
+      "Coordinates": "77.71596, 16.81474, 98.08037"
+    },
+    "Nu Phoenicis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "F8V",
+          "Luminosity": 2.0455024242401123,
+          "Mass": 1.2,
+          "Temperature": 6280.0,
+          "Age": 6.33938145260609,
+          "Radius": 1.35
+        }
+      },
+      "Coordinates": "10.02361, 3.411601, -10.78664"
+    },
+    "Nu Tucanae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M4III",
+          "Luminosity": 74.8858871459961,
+          "Mass": 4.6,
+          "Temperature": 2940.0,
+          "Age": 0.22034612671084924,
+          "Radius": 209.0
+        }
+      },
+      "Coordinates": "38.81729, -15.48632, -78.54102"
+    },
+    "Nu Virginis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M0III",
+          "Luminosity": 171.08029174804688,
+          "Mass": 5.6,
+          "Temperature": 3700.0,
+          "Age": 0.1347503594911538,
+          "Radius": 65.8
+        }
+      },
+      "Coordinates": "-89.33588, 5.519063, 10.24443"
+    },
+    "Omega 2 Cygni": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2III",
+          "Luminosity": 87.01617431640625,
+          "Mass": 5.1,
+          "Temperature": 3320.0,
+          "Age": 0.17024507603615832,
+          "Radius": 108.0
+        }
+      },
+      "Coordinates": "49.03005, -63.14451, 92.68333"
+    },
+    "Omega Andromedae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "F5IV",
+          "Luminosity": 8.3406515121459961,
+          "Mass": 2.8,
+          "Temperature": 6700.0,
+          "Age": 0.76226314370815917,
+          "Radius": 3.55
+        }
+      },
+      "Coordinates": "18.64178, 7.499275, 20.38096"
+    },
+    "Omega Phoenicis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "G8III",
+          "Luminosity": 45.164791107177734,
+          "Mass": 2.2,
+          "Temperature": 4229.0,
+          "Age": 1.392974922444715,
+          "Radius": 21.4
+        }
+      },
+      "Coordinates": "63.30259, 17.56439, -101.1694"
+    },
+    "Omega Virginis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M4III",
+          "Luminosity": 162.18101501464844,
+          "Mass": 4.6,
+          "Temperature": 2940.0,
+          "Age": 0.22034612671084924,
+          "Radius": 209.0
+        }
+      },
+      "Coordinates": "-150.2394, 14.16203, 21.56919"
+    },
+    "Omicron 1 Orionis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M3V",
+          "Luminosity": 453.31491088867188,
+          "Mass": 0.3,
+          "Temperature": 3000.0,
+          "Age": 202.86020648339488,
+          "Radius": 0.509
+        }
+      },
+      "Coordinates": "56.13166, 185.1364, 49.13454"
+    },
+    "Omicron Cassiopeiae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "B5III",
+          "Luminosity": 652.829833984375,
+          "Mass": 12.3,
+          "Temperature": 18950.0,
+          "Age": 0.018846782619875772,
+          "Radius": 5.4
+        }
+      },
+      "Coordinates": "140.6902, 27.80975, 160.8741"
+    },
+    "Omicron Indi": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M0III",
+          "Luminosity": 149.83041381835938,
+          "Mass": 5.6,
+          "Temperature": 3700.0,
+          "Age": 0.1347503594911538,
+          "Radius": 65.8
+        }
+      },
+      "Coordinates": "49.0362, -31.00347, -156.2437"
+    },
+    "Omicron Pavonis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2III",
+          "Luminosity": 618.87078857421875,
+          "Mass": 5.1,
+          "Temperature": 3320.0,
+          "Age": 0.17024507603615832,
+          "Radius": 108.0
+        }
+      },
+      "Coordinates": "69.5776, -61.91418, -257.6558"
+    },
+    "Phi 1 Ceti": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K0III",
+          "Luminosity": 55.258617401123047,
+          "Mass": 2.3,
+          "Temperature": 4114.0,
+          "Age": 1.2464659232434541,
+          "Radius": 23.9
+        }
+      },
+      "Coordinates": "69.10385, 13.4919, -13.18876"
+    },
+    "Phi 2 Ceti": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "F7IV",
+          "Luminosity": 1.8484171628952026,
+          "Mass": 2.7,
+          "Temperature": 6420.0,
+          "Age": 0.83481566454071943,
+          "Radius": 2.95
+        }
+      },
+      "Coordinates": "15.11317, 3.359263, -2.909778"
+    },
+    "Phi 2 Hydrae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M1III",
+          "Luminosity": 185.01203918457031,
+          "Mass": 5.3,
+          "Temperature": 3510.0,
+          "Age": 0.15463589988005319,
+          "Radius": 85.0
+        }
+      },
+      "Coordinates": "-207.9511, 79.53603, -65.2922"
+    },
+    "Phi 3 Ceti": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K4III",
+          "Luminosity": 179.96995544433594,
+          "Mass": 2.7,
+          "Temperature": 3800.0,
+          "Age": 0.83481566454071943,
+          "Radius": 44.2
+        }
+      },
+      "Coordinates": "160.7382, 40.09503, -33.00218"
+    },
+    "Phi 4 Ceti": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "G7III",
+          "Luminosity": 47.293342590332031,
+          "Mass": 2.2,
+          "Temperature": 4286.0,
+          "Age": 1.392974922444715,
+          "Radius": 21.2
+        }
+      },
+      "Coordinates": "92.97298, 24.36115, -19.34455"
+    },
+    "Phi Andromedae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "B7III",
+          "Luminosity": 831.7637939453125,
+          "Mass": 10.1,
+          "Temperature": 15330.0,
+          "Age": 0.030845837443758097,
+          "Radius": 4.66
+        }
+      },
+      "Coordinates": "142.4013, 44.55907, 161.3682"
+    },
+    "Phi Aquarii": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2III",
+          "Luminosity": 68.548820495605469,
+          "Mass": 5.1,
+          "Temperature": 3320.0,
+          "Age": 0.17024507603615832,
+          "Radius": 108.0
+        }
+      },
+      "Coordinates": "60.39326, -12.19863, -6.529062"
+    },
+    "Phi Cassiopeiae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "F0V",
+          "Luminosity": 91201080.0,
+          "Mass": 1.6,
+          "Temperature": 7400.0,
+          "Age": 3.0881617775081831,
+          "Radius": 1.77
+        }
+      },
+      "Coordinates": "49467.14, 18024.6, 85018.33"
+    },
+    "Phi Pegasi": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2III",
+          "Luminosity": 165.805908203125,
+          "Mass": 5.1,
+          "Temperature": 3320.0,
+          "Age": 0.17024507603615832,
+          "Radius": 108.0
+        }
+      },
+      "Coordinates": "133.9468, -4.391908, 46.46133"
+    },
+    "Phi Piscis Austrini": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K0III",
+          "Luminosity": 220.80047607421875,
+          "Mass": 2.3,
+          "Temperature": 4114.0,
+          "Age": 1.2464659232434541,
+          "Radius": 23.9
+        }
+      },
+      "Coordinates": "118.0134, 39.34314, 56.91142"
+    },
+    "Pi 1 Hydri": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M1III",
+          "Luminosity": 292.14602661132813,
+          "Mass": 5.3,
+          "Temperature": 3510.0,
+          "Age": 0.15463589988005319,
+          "Radius": 85.0
+        }
+      },
+      "Coordinates": "74.83274, 49.64459, -220.5106"
+    },
+    "Pi Andromedae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "B5V",
+          "Luminosity": 538.5177001953125,
+          "Mass": 5.9,
+          "Temperature": 18950.0,
+          "Age": 0.11826874024599515,
+          "Radius": 3.26
+        }
+      },
+      "Coordinates": "150.6459, 24.45384, 101.8579"
+    },
+    "Pi Aurigae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M3II",
+          "Luminosity": 881.4547119140625,
+          "Mass": 7.1,
+          "Temperature": 3130.0,
+          "Age": 0.0744481873676653,
+          "Radius": 414.0
+        }
+      },
+      "Coordinates": "0.045456, 160.2424, 165.5696"
+    },
+    "Pi Cassiopeiae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "A5V",
+          "Luminosity": 26.278465270996094,
+          "Mass": 1.9,
+          "Temperature": 8650.0,
+          "Age": 2.0096295016897829,
+          "Radius": 1.89
+        }
+      },
+      "Coordinates": "35.93465, 6.898434, 39.27256"
+    },
+    "Pi Eridani": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M1III",
+          "Luminosity": 320.33175659179688,
+          "Mass": 5.3,
+          "Temperature": 3510.0,
+          "Age": 0.15463589988005319,
+          "Radius": 85.0
+        }
+      },
+      "Coordinates": "79.52312, 120.3085, -30.92127"
+    },
+    "Pi Geminorum": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M0III",
+          "Luminosity": 315.06488037109375,
+          "Mass": 5.6,
+          "Temperature": 3700.0,
+          "Age": 0.1347503594911538,
+          "Radius": 65.8
+        }
+      },
+      "Coordinates": "-76.53925, 151.0216, 111.7057"
+    },
+    "Pi Leonis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2III",
+          "Luminosity": 181.30091857910156,
+          "Mass": 5.1,
+          "Temperature": 3320.0,
+          "Age": 0.17024507603615832,
+          "Radius": 108.0
+        }
+      },
+      "Coordinates": "-106.8451, 61.55444, 17.42685"
+    },
+    "Pi Tucanae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "B9V",
+          "Luminosity": 52.287754058837891,
+          "Mass": 3.4,
+          "Temperature": 11710.0,
+          "Age": 0.4691402634486509,
+          "Radius": 2.73
+        }
+      },
+      "Coordinates": "33.82951, 3.056494, -91.45705"
+    },
+    "Propus": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M3III",
+          "Luminosity": 574.38092041015625,
+          "Mass": 4.8,
+          "Temperature": 3130.0,
+          "Age": 0.19810567039394031,
+          "Radius": 150.0
+        }
+      },
+      "Coordinates": "-7.067151, 108.7134, 45.14074"
+    },
+    "Alpha Centauri": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M5V",
+          "Luminosity": 5.7703200582182035e-5,
+          "Mass": 0.2,
+          "Temperature": 2667.0,
+          "Age": 4.850559001699437494744,
+          "Radius": 0.381
+        }
+      },
+      "Coordinates": "-0.472264, -0.361451, -1.151219"
+    },
+    "Psi 1 Piscis Austrini": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "A1V",
+          "Luminosity": 45.708820343017578,
+          "Mass": 2.7,
+          "Temperature": 9650.0,
+          "Age": 0.83481566454071943,
+          "Radius": 2.59
+        },
+        "B": {
+          "SpectralClass": "A0V",
+          "Luminosity": 38.725765228271484,
+          "Mass": 2.9,
+          "Temperature": 9900.0,
+          "Age": 0.69824045126599721,
+          "Radius": 2.88
+        }
+      },
+      "Coordinates": "75.26405, 22.18089, 30.86555"
+    },
+    "Psi 2 Piscis Austrini": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "A3V",
+          "Luminosity": 11.630542755126953,
+          "Mass": 2.4,
+          "Temperature": 9150.0,
+          "Age": 1.1206549034164981,
+          "Radius": 2.2
+        }
+      },
+      "Coordinates": "42.30818, 12.92537, 16.75087"
+    },
+    "Psi 3 Piscis Austrini": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "G0III",
+          "Luminosity": 68.675209045410156,
+          "Mass": 1.8,
+          "Temperature": 5743.0,
+          "Age": 2.3004814583331177,
+          "Radius": 6.38
+        }
+      },
+      "Coordinates": "103.7357, 32.61819, 38.84658"
+    },
+    "Psi Cassiopeiae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K0III",
+          "Luminosity": 40.3273811340332,
+          "Mass": 2.3,
+          "Temperature": 4114.0,
+          "Age": 1.2464659232434541,
+          "Radius": 23.9
+        }
+      },
+      "Coordinates": "20.73092, 8.159197, 55.50417"
+    },
+    "Psi Leonis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2III",
+          "Luminosity": 219.17953491210938,
+          "Mass": 5.1,
+          "Temperature": 3320.0,
+          "Age": 0.17024507603615832,
+          "Radius": 108.0
+        }
+      },
+      "Coordinates": "-150.5057, 101.7739, 45.37253"
+    },
+    "Psi Pegasi": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M3III",
+          "Luminosity": 261.09585571289063,
+          "Mass": 4.8,
+          "Temperature": 3130.0,
+          "Age": 0.19810567039394031,
+          "Radius": 150.0
+        }
+      },
+      "Coordinates": "132.1487, -1.292351, 62.02242"
+    },
+    "Psi Phoenicis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M4III",
+          "Luminosity": 167.8031005859375,
+          "Mass": 4.6,
+          "Temperature": 2940.0,
+          "Age": 0.22034612671084924,
+          "Radius": 209.0
+        }
+      },
+      "Coordinates": "63.69378, 34.45551, -75.7861"
+    },
+    "Psi Virginis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M3III",
+          "Luminosity": 300.05441284179688,
+          "Mass": 4.8,
+          "Temperature": 3130.0,
+          "Age": 0.19810567039394031,
+          "Radius": 150.0
+        }
+      },
+      "Coordinates": "-160.0285, -38.68002, -27.66594"
+    },
+    "Rasalgethi": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M5II",
+          "Luminosity": 818.08795166015625,
+          "Mass": 6.4,
+          "Temperature": 2750.0,
+          "Age": 0.096505055547130722,
+          "Radius": 976.0
+        }
+      },
+      "Coordinates": "-20.99551, -104.7099, 27.40086"
+    },
+    "Revati": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "A7IV",
+          "Luminosity": 20.398582458496094,
+          "Mass": 3.6,
+          "Temperature": 8150.0,
+          "Age": 0.4066715097953163,
+          "Radius": 2.27
+        }
+      },
+      "Coordinates": "50.1288, 16.70757, 7.027196"
+    },
+    "Rho 2 Arietis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M6III",
+          "Luminosity": 50.211132049560547,
+          "Mass": 4.2,
+          "Temperature": 2560.0,
+          "Age": 0.27661566693552525,
+          "Radius": 512.0
+        }
+      },
+      "Coordinates": "73.64101, 70.99535, 33.89201"
+    },
+    "Rho Andromedae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "F5III",
+          "Luminosity": 17.717399597167969,
+          "Mass": 4.3,
+          "Temperature": 6700.0,
+          "Age": 0.26081277564651817,
+          "Radius": 3.55
+        }
+      },
+      "Coordinates": "38.10699, 3.521856, 29.86557"
+    },
+    "Rho Persei": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M3III",
+          "Luminosity": 364.08267211914063,
+          "Mass": 4.8,
+          "Temperature": 3130.0,
+          "Age": 0.19810567039394031,
+          "Radius": 150.0
+        }
+      },
+      "Coordinates": "50.77221, 53.1192, 59.16537"
+    },
+    "Rho Phoenicis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "F2III",
+          "Luminosity": 38.476894378662109,
+          "Mass": 4.9,
+          "Temperature": 7120.0,
+          "Age": 0.18815241626515014,
+          "Radius": 3.01
+        }
+      },
+      "Coordinates": "45.59525, 10.25159, -57.68394"
+    },
+    "Rho Piscis Austrini": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "F2V",
+          "Luminosity": 4.0105137825012207,
+          "Mass": 1.5,
+          "Temperature": 7120.0,
+          "Age": 3.6288736930121148,
+          "Radius": 1.65
+        }
+      },
+      "Coordinates": "22.14886, 8.753076, 8.280622"
+    },
+    "Rho Tucanae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "F6V",
+          "Luminosity": 10.337130546569824,
+          "Mass": 1.3,
+          "Temperature": 6560.0,
+          "Age": 5.1896924219350824,
+          "Radius": 1.41
+        }
+      },
+      "Coordinates": "16.74571, 3.139387, -37.33006"
+    },
+    "Rho Ursae Majoris": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M3III",
+          "Luminosity": 102.89635467529297,
+          "Mass": 4.8,
+          "Temperature": 3130.0,
+          "Age": 0.19810567039394031,
+          "Radius": 150.0
+        }
+      },
+      "Coordinates": "-26.2383, 25.66198, 89.17485"
+    },
+    "Ruchbah": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "A5V",
+          "Luminosity": 69.8232421875,
+          "Mass": 1.9,
+          "Temperature": 8650.0,
+          "Age": 2.0096295016897829,
+          "Radius": 1.89
+        }
+      },
+      "Coordinates": "14.08238, 5.53413, 26.45757"
+    },
+    "Sadalbari": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2III",
+          "Luminosity": 36.341262817382813,
+          "Mass": 5.1,
+          "Temperature": 3320.0,
+          "Age": 0.17024507603615832,
+          "Radius": 108.0
+        }
+      },
+      "Coordinates": "28.20918, -8.893887, 13.54286"
+    },
+    "Scheat": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2II",
+          "Luminosity": 332.35330200195313,
+          "Mass": 7.4,
+          "Temperature": 3320.0,
+          "Age": 0.06713062656079323,
+          "Radius": 285.0
+        }
+      },
+      "Coordinates": "51.43343, -12.87761, 28.29014"
+    },
+    "Schedar": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K0II",
+          "Luminosity": 542.00091552734375,
+          "Mass": 3.1,
+          "Temperature": 4114.0,
+          "Age": 0.59101127393034836,
+          "Radius": 95.0
+        }
+      },
+      "Coordinates": "37.98482, 6.784483, 58.37962"
+    },
+    "Sigma Andromedae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "A2V",
+          "Luminosity": 23.356082916259766,
+          "Mass": 2.5,
+          "Temperature": 9400.0,
+          "Age": 1.0119288512538815,
+          "Radius": 2.44
+        }
+      },
+      "Coordinates": "32.98862, 2.643715, 24.74446"
+    },
+    "Sigma Piscis Austrini": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "B9V",
+          "Luminosity": 97.185173034667969,
+          "Mass": 3.4,
+          "Temperature": 11710.0,
+          "Age": 0.4691402634486509,
+          "Radius": 2.73
+        }
+      },
+      "Coordinates": "108.7937, 30.58991, 70.08235"
+    },
+    "Sigma Sculptoris": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "A1V",
+          "Luminosity": 27.874044418334961,
+          "Mass": 2.7,
+          "Temperature": 9650.0,
+          "Age": 0.83481566454071943,
+          "Radius": 2.59
+        }
+      },
+      "Coordinates": "58.45676, 16.33257, -37.27008"
+    },
+    "Sigma Virginis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M2III",
+          "Luminosity": 457.08819580078125,
+          "Mass": 5.1,
+          "Temperature": 3320.0,
+          "Age": 0.17024507603615832,
+          "Radius": 108.0
+        }
+      },
+      "Coordinates": "-194.3933, -68.46117, 19.73544"
+    },
+    "Sol": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "G2V",
+          "Luminosity": 1.0,
+          "Mass": 1.0,
+          "Temperature": 5770.0,
+          "Age": 4.5999999046325684,
+          "Radius": 1.0
+        }
+      },
+      "Coordinates": "0, 0, 0"
+    },
+    "Tania Australis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M0III",
+          "Luminosity": 259.41793823242188,
+          "Mass": 5.6,
+          "Temperature": 3700.0,
+          "Age": 0.1347503594911538,
+          "Radius": 65.8
+        }
+      },
+      "Coordinates": "-48.16168, 21.8651, 46.79465"
+    },
+    "Tau 1 Serpentis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M1III",
+          "Luminosity": 336.0469970703125,
+          "Mass": 5.3,
+          "Temperature": 3510.0,
+          "Age": 0.15463589988005319,
+          "Radius": 85.0
+        }
+      },
+      "Coordinates": "-127.0134, -159.3776, 56.24263"
+    },
+    "Tau 4 Eridani": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M3V",
+          "Luminosity": 251.42010498046875,
+          "Mass": 0.3,
+          "Temperature": 3000.0,
+          "Age": 202.86020648339488,
+          "Radius": 0.509
+        }
+      },
+      "Coordinates": "55.88199, 66.31306, -34.61125"
+    },
+    "Tau 4 Serpentis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M5II",
+          "Luminosity": 91.790977478027344,
+          "Mass": 6.4,
+          "Temperature": 2750.0,
+          "Age": 0.096505055547130722,
+          "Radius": 976.0
+        }
+      },
+      "Coordinates": "-116.437, -160.9546, 53.60662"
+    },
+    "Tau Phoenicis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "G8III",
+          "Luminosity": 149.69248962402344,
+          "Mass": 2.2,
+          "Temperature": 4229.0,
+          "Age": 1.392974922444715,
+          "Radius": 21.4
+        }
+      },
+      "Coordinates": "119.7369, 0.562356, -136.8234"
+    },
+    "Tau Piscis Austrini": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K0III",
+          "Luminosity": 36.643756866455078,
+          "Mass": 2.3,
+          "Temperature": 4114.0,
+          "Age": 1.2464659232434541,
+          "Radius": 23.9
+        }
+      },
+      "Coordinates": "42.6135, 13.77623, 25.95013"
+    },
+    "Tejat": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M3III",
+          "Luminosity": 312.46401977539063,
+          "Mass": 4.8,
+          "Temperature": 3130.0,
+          "Age": 0.19810567039394031,
+          "Radius": 150.0
+        }
+      },
+      "Coordinates": "-6.562116, 65.28144, 27.19496"
+    },
+    "Theta Andromedae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "A2V",
+          "Luminosity": 111.89225006103516,
+          "Mass": 2.5,
+          "Temperature": 9400.0,
+          "Age": 1.0119288512538815,
+          "Radius": 2.44
+        }
+      },
+      "Coordinates": "73.71793, 5.507828, 59.18492"
+    },
+    "Theta Apodis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M6V",
+          "Luminosity": 59.047294616699219,
+          "Mass": 0.2,
+          "Temperature": 2500.0,
+          "Age": 559.01699437494744,
+          "Radius": 0.368
+        }
+      },
+      "Coordinates": "-22.06966, -13.43589, -110.132"
+    },
+    "Theta Cassiopeiae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "A7V",
+          "Luminosity": 26.816370010375977,
+          "Mass": 1.8,
+          "Temperature": 8150.0,
+          "Age": 2.3004814583331177,
+          "Radius": 1.81
+        }
+      },
+      "Coordinates": "22.28301, 7.143859, 33.60568"
+    },
+    "Theta Ceti": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K0III",
+          "Luminosity": 38.512348175048828,
+          "Mass": 2.3,
+          "Temperature": 4114.0,
+          "Age": 1.2464659232434541,
+          "Radius": 23.9
+        }
+      },
+      "Coordinates": "32.2415, 12.38013, -4.96651"
+    },
+    "Theta Octantis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K2III",
+          "Luminosity": 47.293342590332031,
+          "Mass": 2.5,
+          "Temperature": 4000.0,
+          "Age": 1.0119288512538815,
+          "Radius": 30.8
+        }
+      },
+      "Coordinates": "14.90203, 0.103716, -64.88886"
+    },
+    "Theta Pyxidis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M0III",
+          "Luminosity": 270.14691162109375,
+          "Mass": 5.6,
+          "Temperature": 3700.0,
+          "Age": 0.1347503594911538,
+          "Radius": 65.8
+        }
+      },
+      "Coordinates": "-106.698, 88.35205, -67.46216"
+    },
+    "Theta Sculptoris": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "F3V",
+          "Luminosity": 3.1622776985168457,
+          "Mass": 1.5,
+          "Temperature": 6980.0,
+          "Age": 3.6288736930121148,
+          "Radius": 1.57
+        }
+      },
+      "Coordinates": "17.37747, 0.890451, -12.24415"
+    },
+    "Theta Tucanae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "A7IV",
+          "Luminosity": 52.966342926025391,
+          "Mass": 3.6,
+          "Temperature": 8150.0,
+          "Age": 0.4066715097953163,
+          "Radius": 2.27
+        }
+      },
+      "Coordinates": "41.32231, 6.063137, -123.1497"
+    },
+    "Tiaki": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M5III",
+          "Luminosity": 380.890380859375,
+          "Mass": 4.3,
+          "Temperature": 2750.0,
+          "Age": 0.26081277564651817,
+          "Radius": 323.0
+        }
+      },
+      "Coordinates": "34.99348, -12.27726, -39.6082"
+    },
+    "Upsilon 1 Cassiopeiae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K2III",
+          "Luminosity": 103.27613830566406,
+          "Mass": 2.5,
+          "Temperature": 4000.0,
+          "Age": 1.0119288512538815,
+          "Radius": 30.8
+        }
+      },
+      "Coordinates": "50.42017, 12.33834, 86.29604"
+    },
+    "Upsilon Aurigae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M1III",
+          "Luminosity": 289.46762084960938,
+          "Mass": 5.3,
+          "Temperature": 3510.0,
+          "Age": 0.15463589988005319,
+          "Radius": 85.0
+        }
+      },
+      "Coordinates": "4.981894, 127.3732, 97.12612"
+    },
+    "Upsilon Capricorni": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M1III",
+          "Luminosity": 240.10433959960938,
+          "Mass": 5.3,
+          "Temperature": 3510.0,
+          "Age": 0.15463589988005319,
+          "Radius": 85.0
+        }
+      },
+      "Coordinates": "108.7189, -129.5098, -55.39456"
+    },
+    "Upsilon Phoenicis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "A3V",
+          "Luminosity": 23.270193099975586,
+          "Mass": 2.4,
+          "Temperature": 9150.0,
+          "Age": 1.1206549034164981,
+          "Radius": 2.2
+        }
+      },
+      "Coordinates": "40.8069, 12.43652, -37.72496"
+    },
+    "Upsilon Piscis Austrini": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "A3V",
+          "Luminosity": 98.718833923339844,
+          "Mass": 2.4,
+          "Temperature": 9150.0,
+          "Age": 1.1206549034164981,
+          "Radius": 2.2
+        }
+      },
+      "Coordinates": "78.9427, 28.52489, 43.25707"
+    },
+    "Wurren": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "B6V",
+          "Luminosity": 193.909912109375,
+          "Mass": 5.2,
+          "Temperature": 17140.0,
+          "Age": 0.16217788818547133,
+          "Radius": 3.07
+        }
+      },
+      "Coordinates": "49.89643, 15.3465, -75.23865"
+    },
+    "Xi Cassiopeiae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "B2V",
+          "Luminosity": 2013.7242431640625,
+          "Mass": 10.9,
+          "Temperature": 24380.0,
+          "Age": 0.025493751907052539,
+          "Radius": 5.59
+        }
+      },
+      "Coordinates": "274.2229, 50.90456, 338.4928"
+    },
+    "Xi Pavonis": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M1III",
+          "Luminosity": 327.18997192382813,
+          "Mass": 5.3,
+          "Temperature": 3510.0,
+          "Age": 0.15463589988005319,
+          "Radius": 85.0
+        }
+      },
+      "Coordinates": "6.937554, -68.21896, -126.2597"
+    },
+    "Xi Sculptoris": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K1III",
+          "Luminosity": 125.42958831787109,
+          "Mass": 2.4,
+          "Temperature": 4057.0,
+          "Age": 1.1206549034164981,
+          "Radius": 26.4
+        }
+      },
+      "Coordinates": "118.1717, 32.38609, -98.92699"
+    },
+    "Xi Telescopii": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M1II",
+          "Luminosity": 1018.5913696289063,
+          "Mass": 7.8,
+          "Temperature": 3510.0,
+          "Age": 0.058852307202451763,
+          "Radius": 213.0
+        }
+      },
+      "Coordinates": "105.4375, -169.7455, -264.0339"
+    },
+    "Yed Prior": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M1III",
+          "Luminosity": 193.909912109375,
+          "Mass": 5.3,
+          "Temperature": 3510.0,
+          "Age": 0.15463589988005319,
+          "Radius": 85.0
+        }
+      },
+      "Coordinates": "-23.29075, -46.89099, -3.380547"
+    },
+    "Zaurak": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "M1III",
+          "Luminosity": 219.58364868164063,
+          "Mass": 5.3,
+          "Temperature": 3510.0,
+          "Age": 0.15463589988005319,
+          "Radius": 85.0
+        }
+      },
+      "Coordinates": "30.76022, 52.23583, -14.56308"
+    },
+    "Zeta Andromedae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "K1II",
+          "Luminosity": 68.35968017578125,
+          "Mass": 3.3,
+          "Temperature": 4057.0,
+          "Age": 0.50549300510852191,
+          "Radius": 101.0
+        }
+      },
+      "Coordinates": "51.75502, 10.84489, 23.83935"
+    },
+    "Zeta Piscis Austrini": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "F7V",
+          "Luminosity": 20.417379379272461,
+          "Mass": 1.3,
+          "Temperature": 6420.0,
+          "Age": 5.1896924219350824,
+          "Radius": 1.35
+        }
+      },
+      "Coordinates": "88.38144, 29.46675, 12.39478"
+    },
+    "Zeta Sculptoris": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "B4V",
+          "Luminosity": 199.34254455566406,
+          "Mass": 6.7,
+          "Temperature": 20760.0,
+          "Age": 0.086062308898001288,
+          "Radius": 3.82
+        }
+      },
+      "Coordinates": "133.8074, 1.36158, -76.38958"
+    },
+    "Zeta Tucanae": {
+      "Stars": {
+        "A": {
+          "SpectralClass": "F9V",
+          "Luminosity": 1.3049683570861816,
+          "Mass": 1.1,
+          "Temperature": 6140.0,
+          "Age": 7.8798561094677044,
+          "Radius": 1.3
+        }
+      },
+      "Coordinates": "3.631914, 0.318885, -7.774227"
+    }
+  }
+}

@@ -6,12 +6,11 @@ using Newtonsoft.Json.Linq;
 namespace VindemiatrixCollective.Universe.Data
 {
     public class CoreObjectConverter<T> : JsonConverter
-    where T: new()
+        where T : class
     {
-        public override bool CanWrite => true;
-
         private readonly IConverterReader<T> readerImplementation;
         private readonly Type[] types;
+        public override bool CanWrite => true;
 
         public CoreObjectConverter(params Type[] types)
         {
@@ -35,25 +34,30 @@ namespace VindemiatrixCollective.Universe.Data
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            T target = new T();
-            readerImplementation.Read(reader, serializer, ref target);
-
+            JObject jo     = JObject.Load(reader);
+            T       target = readerImplementation.Create(jo);
+            readerImplementation.Read(jo, reader, serializer, ref target);
             return target;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            JObject jo = new JObject();
+            JObject jo = new();
             serializer.Serialize(writer, value);
             jo.WriteTo(writer);
         }
     }
 
     internal class DefaultReaderImplementation<T> : IConverterReader<T>
+        where T : class
     {
-        public void Read(JsonReader reader, JsonSerializer serializer, ref T target)
+        public T Create(JObject jo)
         {
-            JObject jo = JObject.Load(reader);
+            return Activator.CreateInstance<T>();
+        }
+
+        public void Read(JObject jo, JsonReader reader, JsonSerializer serializer, ref T target)
+        {
             serializer.Populate(jo.CreateReader(), target);
         }
     }

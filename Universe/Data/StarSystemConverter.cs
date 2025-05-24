@@ -8,32 +8,28 @@ namespace VindemiatrixCollective.Universe.Data
 {
     public class StarSystemConverter : IConverterReader<StarSystem>
     {
-        //public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        //{
-        //    StarSystem system = (StarSystem)value;
-        //    writer.WriteStartObject();
-        //    writer.WritePropertyName(nameof(StarSystem.Stars));
-        //    serializer.Serialize(writer, system.Stars);
-        //    writer.WritePropertyName(nameof(StarSystem.Coordinates));
-        //    writer.WriteValue(DataUtils.Vector3ToString(system.Coordinates));
-        //    writer.WriteEndObject();
-        //}
-
-        public void Read(JsonReader reader, JsonSerializer serializer, ref StarSystem starSystem)
+        public StarSystem Create(JObject jo)
         {
-            JObject jo = JObject.Load(reader);
-            starSystem.Name = ConverterExtensions.ParentNameFromContainer(reader, nameof(Galaxy.Systems));
-            string coordinates = (string)jo[nameof(StarSystem.Coordinates)];
+            return new StarSystem();
+        }
+
+        public void Read(JObject jo, JsonReader reader, JsonSerializer serializer, ref StarSystem starSystem)
+        {
+            starSystem.Name = reader.ParentNameFromContainer(nameof(Galaxy.Systems));
+            string coordinates = jo.Value<string>(nameof(StarSystem.Coordinates)) ?? jo.Value<string>("c");
 
             starSystem.Coordinates = !string.IsNullOrEmpty(coordinates)
                 ? ConverterExtensions.StringToVector3(coordinates)
                 : Vector3.zero;
 
-            JToken stars = jo[nameof(StarSystem.Stars)];
+            JToken orbiters = jo[nameof(StarSystem.Orbiters)];
 
-            if ((stars != null) && stars.HasValues)
+            if (orbiters is { HasValues: true })
             {
-                starSystem.AddStars(serializer.Deserialize<Dictionary<string, Star>>(stars.CreateReader()).Values);
+                foreach (CelestialBody orbiter in serializer.Deserialize<Dictionary<string, CelestialBody>>(orbiters.CreateReader()).Values)
+                {
+                    starSystem.AddOrbiter(orbiter);
+                }
             }
 
             starSystem.Init();

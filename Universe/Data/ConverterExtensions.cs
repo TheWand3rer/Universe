@@ -23,16 +23,23 @@ namespace VindemiatrixCollective.Universe.Data
         public static string KeyValueFromPath(this JsonReader reader)
         {
             string pattern = @"\[\'([A-Za-z0-0.]+)\']";
-            Match m = Regex.Match(reader.Path, pattern);
-            string name = m.Groups[1].Value;
+            Match  m       = Regex.Match(reader.Path, pattern);
+            string name    = m.Groups[1].Value;
             return name;
-
         }
 
         public static Vector3 StringToVector3(string input, char delimiter = ',')
         {
             string[] array = input.Split(delimiter);
-            return new Vector3(Single.Parse(array[0]), Single.Parse(array[1]), Single.Parse(array[2]));
+            return new Vector3(float.Parse(array[0]), float.Parse(array[1]), float.Parse(array[2]));
+        }
+
+        internal static void CheckValue(string fieldName, double? field)
+        {
+            if (!field.HasValue)
+            {
+                Debug.LogWarning($"No value entered for {fieldName}.");
+            }
         }
 
         internal static void CheckValue(string fieldName, float? field)

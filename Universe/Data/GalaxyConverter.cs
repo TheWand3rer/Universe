@@ -7,21 +7,25 @@ namespace VindemiatrixCollective.Universe.Data
 {
     public class GalaxyConverter : IConverterReader<Galaxy>
     {
-        public void Read(JsonReader reader, JsonSerializer serializer, ref Galaxy galaxy)
+        public Galaxy Create(JObject jo)
         {
-            JObject jo = JObject.Load(reader);
+            return new Galaxy();
+        }
+
+        public void Read(JObject jo, JsonReader reader, JsonSerializer serializer, ref Galaxy galaxy)
+        {
             galaxy.Name = (string)jo[nameof(Galaxy.Name)];
             JToken systems = jo[nameof(Galaxy.Systems)];
 
-            if ((systems != null) && systems.HasValues)
+            if (systems is { HasValues: true })
             {
-                galaxy.AddSystems(serializer.Deserialize<SortedList<string, StarSystem>>(systems.CreateReader()).Values);
-                foreach (var kvp in galaxy.Systems)
+                Dictionary<string, StarSystem> systemDict = serializer.Deserialize<Dictionary<string, StarSystem>>(systems.CreateReader());
+
+                foreach ((string key, StarSystem system) in systemDict)
                 {
-                    StarSystem system = kvp.Value;
-                    system.Id = StarSystem.MakeId(kvp.Key);
-                    system.Name = system.Name = kvp.Key;
-                    
+                    system.Id   = StarSystem.MakeId(key);
+                    system.Name = system.Name = key;
+                    galaxy.AddSystem(system);
                 }
             }
         }

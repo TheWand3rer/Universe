@@ -21,19 +21,19 @@ namespace VindemiatrixCollective.Universe.Data
 
         public void Read(JObject jo, JsonReader reader, JsonSerializer serializer, ref Star star)
         {
-            float? m   = (float?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(StellarData.Mass)}");
-            float? l   = (float?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(StellarData.Luminosity)}");
-            float? g   = (float?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(StellarData.Gravity)}");
-            float? r   = (float?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(StellarData.Radius)}");
-            float? t   = (float?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(StellarData.Temperature)}");
-            float? age = (float?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(StellarData.Age)}");
+            double? m   = (double?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(StellarData.Mass)}");
+            double? l   = (double?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(StellarData.Luminosity)}");
+            double? g   = (double?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(StellarData.Gravity)}");
+            double? r   = (double?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(StellarData.Radius)}");
+            double? t   = (double?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(StellarData.Temperature)}");
+            double? age = (double?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(StellarData.Age)}");
 
-            m   ??= (float?)jo.SelectToken($"{nameof(PhysicalData)}.m");
-            l   ??= (float?)jo.SelectToken($"{nameof(PhysicalData)}.l");
-            g   ??= (float?)jo.SelectToken($"{nameof(PhysicalData)}.g");
-            r   ??= (float?)jo.SelectToken($"{nameof(PhysicalData)}.r");
-            t   ??= (float?)jo.SelectToken($"{nameof(PhysicalData)}.t");
-            age ??= (float?)jo.SelectToken($"{nameof(PhysicalData)}.age");
+            m   ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.m");
+            l   ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.l");
+            g   ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.g");
+            r   ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.r");
+            t   ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.t");
+            age ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.age");
 
             star.SpectralClass = new SpectralClass(jo.Value<string>(nameof(SpectralClass)) ?? jo.Value<string>("SC"));
 
@@ -74,22 +74,27 @@ namespace VindemiatrixCollective.Universe.Data
 
             if (jo.ContainsKey(nameof(OrbitalData)))
             {
-                float? a    = (float?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.SemiMajorAxis)}");
-                float? e    = (float?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.Eccentricity)}");
-                float? P    = (float?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.Period)}");
-                float? i    = (float?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.Inclination)}");
-                float? lan  = (float?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.LongitudeAscendingNode)}");
-                float? argp = (float?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.ArgumentPeriapsis)}");
+                double? a    = (double?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.SemiMajorAxis)}");
+                double? e    = (double?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.Eccentricity)}");
+                double? P    = (double?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.Period)}");
+                double? i    = (double?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.Inclination)}");
+                double? lan  = (double?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.LongitudeAscendingNode)}");
+                double? argp = (double?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.ArgumentPeriapsis)}");
 
-                a    ??= (float)jo.SelectToken($"{nameof(OrbitalData)}.a");
-                e    ??= (float)jo.SelectToken($"{nameof(OrbitalData)}.e");
-                P    ??= (float)jo.SelectToken($"{nameof(OrbitalData)}.P");
-                i    ??= (float)jo.SelectToken($"{nameof(OrbitalData)}.i");
-                lan  ??= (float)jo.SelectToken($"{nameof(OrbitalData)}.lan");
-                argp ??= (float)jo.SelectToken($"{nameof(OrbitalData)}.argp");
+                a    ??= (double)jo.SelectToken($"{nameof(OrbitalData)}.a");
+                e    ??= (double)jo.SelectToken($"{nameof(OrbitalData)}.e");
+                P    ??= (double)jo.SelectToken($"{nameof(OrbitalData)}.P");
+                i    ??= (double)jo.SelectToken($"{nameof(OrbitalData)}.i");
+                lan  ??= (double)jo.SelectToken($"{nameof(OrbitalData)}.lan");
+                argp ??= (double)jo.SelectToken($"{nameof(OrbitalData)}.argp");
 
-                star.OrbitalData = new OrbitalData(a.Value * (float)UniversalConstants.Celestial.MetresPerAu,
-                                                   e.Value, i.Value, lan.Value, argp.Value, P.Value * 365);
+                star.OrbitalData = new OrbitalData(Length.FromAstronomicalUnits(a.Value * UniversalConstants.Celestial.MetresPerAu),
+                                                   Ratio.FromDecimalFractions(e.Value),
+                                                   Angle.FromDegrees(i.Value),
+                                                   Angle.FromDegrees(lan.Value),
+                                                   Angle.FromDegrees(argp.Value),
+                                                   Duration.FromSeconds(P.Value * UniversalConstants.Time.SecondsPerJulianYear),
+                                                   Duration.Zero, Angle.Zero, Angle.Zero, Angle.Zero);
             }
 
             star.Attributes[nameof(Type)] = nameof(CelestialBodyType.Star);
@@ -104,11 +109,11 @@ namespace VindemiatrixCollective.Universe.Data
             }
 
 #if UNITY_EDITOR
-            Tuple<string, float?>[] fields = { new(nameof(m), m), new(nameof(age), age), new(nameof(t), t), new(nameof(r), r), new(nameof(l), l) };
+            Tuple<string, double?>[] fields = { new(nameof(m), m), new(nameof(age), age), new(nameof(t), t), new(nameof(r), r), new(nameof(l), l) };
 
             if (ConverterOptions.VerboseLog)
             {
-                foreach (Tuple<string, float?> f in fields)
+                foreach (Tuple<string, double?> f in fields)
                 {
                     ConverterExtensions.CheckValue(f.Item1, f.Item2);
                 }

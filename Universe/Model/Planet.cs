@@ -72,7 +72,8 @@ namespace VindemiatrixCollective.Universe.Model
                                           Duration.FromDays(365.5022838235192),
                                           Duration.FromHours(23.9344695944),
                                           Angle.FromDegrees(23.4392911),
-                                          Angle.FromDegrees(358.5688856532555));
+                                          Angle.FromDegrees(358.5688856532555),
+                                          Angle.FromDegrees(358.6172562416435));
                 PhysicalData physical = new(Mass.FromEarthMasses(1),
                                             Length.FromKilometers(UniversalConstants.Physical.EarthRadiusKm),
                                             Acceleration.FromStandardGravity(1),
@@ -94,7 +95,8 @@ namespace VindemiatrixCollective.Universe.Model
                                           Duration.FromDays(27.321582),
                                           Duration.FromDays(708.7344),
                                           Angle.FromDegrees(6.67),
-                                          Angle.FromDegrees(235.5936224066131));
+                                          Angle.FromDegrees(235.5936224066131),
+                                          Angle.FromDegrees(238.5779166596645));
                 PhysicalData physical = new(Mass.FromKilograms(7.349e22),
                                             Length.FromKilometers(1738.0),
                                             Acceleration.FromMetersPerSecondSquared(1.62),
@@ -120,7 +122,8 @@ namespace VindemiatrixCollective.Universe.Model
                                           Duration.FromSeconds(5.935431800266414e07),
                                           Duration.FromHours(24.622962),
                                           Angle.FromDegrees(25.19),
-                                          Angle.FromDegrees(23.33));
+                                          Angle.FromDegrees(23.33),
+                                          Angle.FromDegrees(19.35648274725784));
                 PhysicalData physical = new(Mass.FromKilograms(0.64169e24),
                                             Length.FromKilometers(3396.2),
                                             Acceleration.FromMetersPerSecondSquared(3.73),

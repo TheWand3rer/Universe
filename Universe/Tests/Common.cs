@@ -36,7 +36,8 @@ namespace VindemiatrixCollective.Universe.Tests
                                           Angle.FromDegrees(127.39925384521484),
                                           Duration.FromSeconds(152853.5047),
                                           Duration.FromDays(1.77f), Angle.Zero,
-                                          Angle.FromDegrees(13.08436484643558f));
+                                          Angle.FromDegrees(13.08436484643558f),
+                                          Angle.FromDegrees(33.54986953430662));
 
                 PhysicalData physical = new(Density.FromGramsPerCubicCentimeter(3.528), Length.FromKilometers(1821.6),
                                             GravitationalParameter.FromMass(Mass.FromKilograms(8.931938e22)));

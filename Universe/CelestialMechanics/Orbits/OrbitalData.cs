@@ -40,17 +40,17 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
 
         public Ratio Eccentricity => Ratio.FromDecimalFractions(eccentricity);
 
-        internal OrbitalData(
-            double semiMajorAxisMetres, double eccentricity, double orbitalInclination, double lan, double argp, double orbitalPeriodDays,
-            double? siderealRotationHours = null, double? axialTilt = null, double? meanAnomaly = null, double? trueAnomaly = null)
+        private OrbitalData(
+            double semiMajorAxisMetres, double eccentricity, double orbitalInclination, double lan, double argp,
+            double? orbitalPeriodSeconds, double? siderealRotationSeconds = null, double? axialTilt = null, double? meanAnomaly = null, double? trueAnomaly = null)
         {
             semiMajorAxisM          = semiMajorAxisMetres;
             this.eccentricity       = eccentricity;
-            siderealRotationPeriodS = (siderealRotationHours ?? 0) * UniversalConstants.Time.SecondsPerHour;
+            siderealRotationPeriodS = siderealRotationSeconds ?? 0;
             inclination             = orbitalInclination;
             longitudeAscendingNode  = lan;
             argumentPeriapsis       = argp;
-            periodS                 = orbitalPeriodDays * UniversalConstants.Time.SecondsPerDay;
+            periodS                 = orbitalPeriodSeconds ?? 0;
 
             this.axialTilt     = axialTilt ?? 0;
             meanAnomalyAtEpoch = meanAnomaly ?? 0;
@@ -63,20 +63,16 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         }
 
         public OrbitalData(
-            Length semiMajorAxis, Ratio eccentricity, Angle inclination, Angle longitudeAscendingNode, Angle argumentPeriapsis, Duration orbitalPeriod,
-            Duration siderealPeriod, Angle axialTilt, Angle trueAnomaly)
-        {
-            semiMajorAxisM              = semiMajorAxis.Meters;
-            this.eccentricity           = eccentricity.Value;
-            this.inclination            = inclination.Degrees;
-            this.longitudeAscendingNode = longitudeAscendingNode.Degrees;
-            this.argumentPeriapsis      = argumentPeriapsis.Degrees;
-            periodS                     = orbitalPeriod.Seconds;
-
-            trueAnomalyAtEpoch      = trueAnomaly.Degrees;
-            siderealRotationPeriodS = siderealPeriod.Seconds;
-            this.axialTilt          = axialTilt.Degrees;
-        }
+            Length semiMajorAxis, Ratio eccentricity, Angle inclination, Angle longitudeAscendingNode, Angle argumentPeriapsis,
+            Duration? orbitalPeriod, Duration? siderealPeriod, Angle? axialTilt, Angle? trueAnomaly, Angle? meanAnomaly = null) : this(semiMajorAxis.Meters,
+         eccentricity.Value,
+         inclination.Degrees,
+         longitudeAscendingNode.Degrees, argumentPeriapsis.Degrees,
+         orbitalPeriod?.Seconds,
+         siderealPeriod?.Seconds,
+         axialTilt?.Degrees,
+         trueAnomaly?.Degrees,
+         meanAnomaly?.Degrees) { }
 
 
         /// <summary>
@@ -88,16 +84,11 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         /// <param name="lan">Longitude of the Ascending Node (deg)</param>
         /// <param name="argP">Argument of Periapsis (deg)</param>
         /// <param name="nu">True Anomaly (deg)</param>
-        /// <param name="period">Orbital period (s)</param>
-        /// <param name="siderealPeriod">Sidereal period (s)</param>
-        /// <param name="axialTilt">Inclination to orbit (deg)</param>
         /// <returns></returns>
-        public static OrbitalData FromClassicElements(
-            float a, float e, float i, float lan, float argP, float nu, float period = 0,
-            float siderealPeriod = 0, float axialTilt = 0)
+        public static OrbitalData FromClassicElements(float a, float e, float i, float lan, float argP, float nu)
         {
-            return new OrbitalData(a, e, i, lan, argP, period,
-                                   siderealPeriod, axialTilt, 0, nu);
+            return new OrbitalData(a, e, i, lan, argP,
+                                   0, 0, 0, 0, nu);
         }
     }
 }

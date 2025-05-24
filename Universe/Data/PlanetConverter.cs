@@ -69,7 +69,7 @@ namespace VindemiatrixCollective.Universe.Data
 
             planet.Attributes.CopyFrom(attributes);
 
-            double? semiMajorAxis;
+            double semiMajorAxis;
 
             if (semiMajorAxisToken.HasValues)
             {
@@ -82,9 +82,16 @@ namespace VindemiatrixCollective.Universe.Data
                 semiMajorAxis = semiMajorAxisToken.Value<double>() * UniversalConstants.Celestial.MetresPerAu;
             }
 
-
-            OrbitalData orbital = new(semiMajorAxis.Value, eccentricity.Value, orbitalInclination.Value, ascendingNode.Value, argumentPeriapsis.Value,
-                                      orbitalPeriod.Value, siderealRotation.Value, axialTilt, meanAnomaly, trueAnomaly.Value);
+            OrbitalData orbital = new(Length.FromMeters(semiMajorAxis),
+                                      Ratio.FromDecimalFractions(eccentricity.Value),
+                                      Angle.FromDegrees(orbitalInclination.Value),
+                                      Angle.FromDegrees(ascendingNode.Value),
+                                      Angle.FromDegrees(argumentPeriapsis.Value),
+                                      Duration.FromSeconds(orbitalPeriod.Value * UniversalConstants.Time.SecondsPerDay),
+                                      Duration.FromSeconds(siderealRotation.Value * UniversalConstants.Time.SecondsPerHour),
+                                      Angle.FromDegrees(axialTilt ?? 0),
+                                      Angle.FromDegrees(trueAnomaly.Value),
+                                      Angle.FromDegrees(meanAnomaly.Value));
 
             if (bool.TryParse(planet.Attributes.TryGet("Retrograde"), out bool retrograde))
             {

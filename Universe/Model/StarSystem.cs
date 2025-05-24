@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,95 +8,121 @@ using UnitsNet;
 using Unity.Properties;
 using UnityEngine;
 
+#endregion
+
 namespace VindemiatrixCollective.Universe.Model
 {
-    [Serializable]
-    public class StarSystem : IEnumerable<Star>
+    public class StarSystem : IEnumerable<CelestialBody>
     {
-        public Dictionary<string, Star> Stars { get; }
+#if UNITY_EDITOR
+        /// <summary>
+        ///     Convenience variable to see some values in the inspector.
+        /// </summary>
+        public string DistanceFromSolLy;
+#endif
 
-        public Star this[int index] => ToArray()[index];
-        public Star MainStar => ToArray().FirstOrDefault();
+        public CelestialBody this[string name] => _Orbiters[name];
 
-        public Star[] ToArray() => Stars.Values.OrderByDescending(star => star.PhysicalData.Mass.SolarMasses).ToArray();
+        public Galaxy Galaxy { get; internal set; }
 
-        [CreateProperty]
-        public string Name { get; set; }
-
-        public Length DistanceFromSol => Length.FromParsecs(Coordinates.magnitude);
-
-        public string Id { get; set; }
-
-        public Vector3 Coordinates { get; set; }
-
-        public bool ContainsStar(string starName)
+        public IEnumerable<CelestialBody> Hierarchy
         {
-            return Stars.ContainsKey(starName);
-        }
-
-        public IEnumerable<Planet> CelestialBodyEnumerator()
-        {
-            foreach (Star star in this)
+            get
             {
-                foreach (Planet planet in star)
+                foreach (CelestialBody body in _Orbiters.Values)
                 {
-                    yield return planet;
-
-                    foreach (Planet satellite in planet)
+                    foreach (CelestialBody orbiter in CelestialBody.PreOrderVisit(body))
                     {
-                        yield return satellite;
+                        yield return orbiter;
                     }
                 }
             }
         }
 
-        public Planet SelectPlanet(string filter)
-        {
-            return CelestialBodyEnumerator().FirstOrDefault(p => p.Name == filter);
-        }
+        public IEnumerable<CelestialBody> Orbiters => _Orbiters.Values;
 
-        public StarSystem() : this(nameof(StarSystem))
-        {
-        }
+        public IEnumerable<Star> Stars => _Orbiters.Values.OfType<Star>().OrderByDescending(o => o.PhysicalData.Mass);
+
+        public int StarCount => Stars.Count();
+
+        [CreateProperty] public Length DistanceFromSol => Length.FromParsecs(Coordinates.magnitude);
+
+        public Star this[int index] => Stars.ElementAt(index);
+
+        public Star Primary => Stars.FirstOrDefault();
+
+        public string Id { get; set; }
+
+        [CreateProperty] public string Name { get; set; }
+
+        public Vector3 Coordinates { get; set; }
+
+        protected Dictionary<string, CelestialBody> _Orbiters { get; }
+
+        public StarSystem() : this(nameof(StarSystem)) { }
 
         public StarSystem(string name)
         {
-            Name = name;
-            Stars = new Dictionary<string, Star>();
-            Id = MakeId(name);
+            Name      = name;
+            _Orbiters = new Dictionary<string, CelestialBody>();
+            Id        = MakeId(name);
         }
 
-        public StarSystem(string name, Star star) : this(name, new[] { star }) {}
+        public StarSystem(string name, Star primary) : this(name, new[] { primary }) { }
 
-        public StarSystem(string name, IEnumerable<Star> stars) : this(name)
+        public StarSystem(string name, IEnumerable<CelestialBody> orbiters) : this(name)
         {
-            Stars = stars.ToDictionary(star => star.Name, star => star);
+            _Orbiters = orbiters.ToDictionary(star => star.Name, star => star);
         }
 
-        public void AddStar(Star star)
+        public void AddOrbiter(CelestialBody body)
         {
-            star.StarSystem = this;
+            body.StarSystem = this;
+            _Orbiters.Add(body.Name, body);
 
-            char starChar = (char)(65 + Stars.Count);
-            Stars.Add(starChar.ToString(), star);
-
-            // TODO: implement a more elegant visit algorithm
-            foreach (Planet planet in star)
+            foreach (CelestialBody orbiter in Hierarchy)
             {
-                planet.StarSystem = this;
-                foreach (Planet moon in planet)
+                orbiter.StarSystem = this;
+            }
+        }
+
+        public bool ContainsStar(string starName)
+        {
+            return _Orbiters.ContainsKey(starName);
+        }
+
+        public IEnumerator<CelestialBody> GetEnumerator()
+        {
+            return _Orbiters?.Values.GetEnumerator() ?? Enumerable.Empty<CelestialBody>().GetEnumerator();
+        }
+
+        public void Init()
+        {
+#if UNITY_EDITOR
+            DistanceFromSolLy = DistanceFromSol.LightYears.ToString("0.00 LY");
+#endif
+        }
+
+        public CelestialBody[] ToArray()
+        {
+            return _Orbiters.Values.OrderByDescending(star => star.PhysicalData.Mass.SolarMasses).ToArray();
+        }
+
+        public void VisitHierarchy<TBody>(Action<TBody> callback)
+            where TBody : CelestialBody
+        {
+            foreach (CelestialBody body in Hierarchy)
+            {
+                if (body is TBody tBody)
                 {
-                    moon.StarSystem = this;
+                    callback.Invoke(tBody);
                 }
             }
         }
 
-        public void AddStars(IEnumerable<Star> stars)
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            foreach (Star star in stars)
-            {
-                AddStar(star);
-            }
+            return _Orbiters?.Values.GetEnumerator() ?? Enumerable.Empty<CelestialBody>().GetEnumerator();
         }
 
         public static string MakeId(string name)
@@ -114,30 +142,6 @@ namespace VindemiatrixCollective.Universe.Model
             }
 
             return id;
-        }
-
-        public void Init()
-        {
-#if UNITY_EDITOR
-            DistanceFromSolLy = DistanceFromSol.LightYears.ToString("0.00 LY");
-#endif
-        }
-
-#if UNITY_EDITOR
-        /// <summary>
-        /// Convenience variable to see some values in the inspector.
-        /// </summary>
-        public string DistanceFromSolLy;
-#endif
-
-        public IEnumerator<Star> GetEnumerator()
-        {
-            return Stars?.Values.GetEnumerator() ?? Enumerable.Empty<Star>().GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 }

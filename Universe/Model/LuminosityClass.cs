@@ -1,54 +1,54 @@
 ﻿namespace VindemiatrixCollective.Universe.Model
 {
     /// <summary>
-    /// Luminosity classes enumeration.
+    ///     Luminosity classes enumeration.
     /// </summary>
     public enum LuminosityClass
     {
         Undefined = -1,
 
         /// <summary>
-        /// Hypergiants.
+        ///     Hypergiants.
         /// </summary>
         Ia0 = 0,
 
         /// <summary>
-        /// Luminous supergiants.
+        ///     Luminous supergiants.
         /// </summary>
         Ia = 1,
 
         /// <summary>
-        /// Supergiants.
+        ///     Supergiants.
         /// </summary>
         Ib = 2,
 
         /// <summary>
-        /// Bright ggiants.
+        ///     Bright ggiants.
         /// </summary>
         II = 3,
 
         /// <summary>
-        /// Giants.
+        ///     Giants.
         /// </summary>
         III = 4,
 
         /// <summary>
-        /// Subgiants.
+        ///     Subgiants.
         /// </summary>
         IV = 5,
 
         /// <summary>
-        /// Main sequence stars (dwarf stars)
+        ///     Main sequence stars (dwarf stars)
         /// </summary>
         V = 6,
 
         /// <summary>
-        /// Subdwarf.
+        ///     Subdwarf.
         /// </summary>
         VI = 7,
 
         /// <summary>
-        /// White Dwarf.
+        ///     White Dwarf.
         /// </summary>
         VII = 8
     }

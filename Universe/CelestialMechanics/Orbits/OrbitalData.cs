@@ -1,10 +1,26 @@
-﻿using UnitsNet;
+﻿#region
+
+using UnitsNet;
 using Unity.Properties;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
 {
     public class OrbitalData
     {
+        public bool Retrograde;
+
+        private readonly double argumentPeriapsis;
+        private readonly double axialTilt;
+        private readonly double eccentricity;
+        private readonly double inclination;
+        private readonly double longitudeAscendingNode;
+        private readonly double meanAnomalyAtEpoch;
+        private readonly double periodS;
+        private readonly double semiMajorAxisM;
+        private readonly double siderealRotationPeriodS;
+        private readonly double trueAnomalyAtEpoch;
         public Angle ArgumentPeriapsis => Angle.FromDegrees(argumentPeriapsis);
         public Angle AxialTilt => Angle.FromDegrees(axialTilt);
         public Angle Inclination => Angle.FromDegrees(inclination);
@@ -12,117 +28,76 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         public Angle MeanAnomalyAtEpoch => Angle.FromDegrees(meanAnomalyAtEpoch);
         public Angle TrueAnomalyAtEpoch => Angle.FromDegrees(trueAnomalyAtEpoch);
 
-        [CreateProperty]
-        public Duration Period => Duration.FromSeconds(periodS);
+        [CreateProperty] public Duration Period => Duration.FromSeconds(periodS);
 
         public Duration SiderealRotationPeriod => Duration.FromSeconds(siderealRotationPeriodS);
 
         /// <summary>
-        /// Semi-major axis of the orbit.
+        ///     Semi-major axis of the orbit.
         /// </summary>
         [CreateProperty]
         public Length SemiMajorAxis => Length.FromMeters(semiMajorAxisM);
 
         public Ratio Eccentricity => Ratio.FromDecimalFractions(eccentricity);
 
-        public bool Retrograde;
-
-        private double argumentPeriapsis;
-        private double axialTilt;
-        private double eccentricity;
-        private double inclination;
-        private double longitudeAscendingNode;
-        private double meanAnomalyAtEpoch;
-        private double periodS;
-        private double semiMajorAxisM;
-        private double siderealRotationPeriodS;
-        private double trueAnomalyAtEpoch;
-
-        public static OrbitalData From(float semiMajorAxis, float orbitalPeriodDays,
-                                       float eccentricity, float siderealRotationHours, float orbitalInclination, float? axialTilt, float loan, float aoPe,
-                                       float? meanAnomaly, float? trueAnomaly)
+        internal OrbitalData(
+            double semiMajorAxisMetres, double eccentricity, double orbitalInclination, double lan, double argp, double orbitalPeriodDays,
+            double? siderealRotationHours = null, double? axialTilt = null, double? meanAnomaly = null, double? trueAnomaly = null)
         {
-            OrbitalData orbitalData = new()
-            {
-                semiMajorAxisM = semiMajorAxis,
-                periodS = orbitalPeriodDays * UniversalConstants.Time.SecondsPerDay,
-                eccentricity = eccentricity,
-                siderealRotationPeriodS = siderealRotationHours * UniversalConstants.Time.SecondsPerHour,
-                inclination = orbitalInclination,
-                axialTilt = axialTilt ?? 0,
-                longitudeAscendingNode = loan,
-                argumentPeriapsis = aoPe,
-                meanAnomalyAtEpoch = meanAnomaly ?? 0,
-                trueAnomalyAtEpoch = trueAnomaly ?? 0
-            };
+            semiMajorAxisM          = semiMajorAxisMetres;
+            this.eccentricity       = eccentricity;
+            siderealRotationPeriodS = (siderealRotationHours ?? 0) * UniversalConstants.Time.SecondsPerHour;
+            inclination             = orbitalInclination;
+            longitudeAscendingNode  = lan;
+            argumentPeriapsis       = argp;
+            periodS                 = orbitalPeriodDays * UniversalConstants.Time.SecondsPerDay;
 
-            if (orbitalData.inclination > 180)
+            this.axialTilt     = axialTilt ?? 0;
+            meanAnomalyAtEpoch = meanAnomaly ?? 0;
+            trueAnomalyAtEpoch = trueAnomaly ?? 0;
+
+            if (inclination > 180)
             {
-                orbitalData.inclination -= 180;
+                inclination -= 180;
             }
-            return orbitalData;
         }
 
-        /// <summary>
-        /// Creates an OrbitalData object.
-        /// </summary>
-        /// <param name="a">Semi-major axis (m)</param>
-        /// <param name="eccentricity">Eccentricity</param>
-        /// <param name="inclination">Inclination (deg)</param>
-        /// <param name="longitudeAscendingNode">Longitude of the Ascending Node (deg)</param>
-        /// <param name="argumentPeriapsis">Argument of Periapsis (deg)</param>
-        /// <param name="trueAnomaly">True Anomaly (deg)</param>
-        /// <param name="orbitalPeriod">Orbital period (s)</param>
-        /// <param name="siderealPeriod"></param>
-        /// <param name="axialTilt">Inclination to orbit (deg)</param>
-        /// <returns></returns>
-        public static OrbitalData From(Length semiMajorAxis, Ratio eccentricity, Angle inclination, Angle longitudeAscendingNode,
-                                       Angle argumentPeriapsis, Angle trueAnomaly, Duration orbitalPeriod, Duration siderealPeriod, Angle axialTilt)
+        public OrbitalData(
+            Length semiMajorAxis, Ratio eccentricity, Angle inclination, Angle longitudeAscendingNode, Angle argumentPeriapsis, Duration orbitalPeriod,
+            Duration siderealPeriod, Angle axialTilt, Angle trueAnomaly)
         {
-            OrbitalData orbitalData = new()
-            {
-                semiMajorAxisM = semiMajorAxis.Meters,
-                eccentricity = eccentricity.Value,
-                inclination = inclination.Degrees,
-                longitudeAscendingNode = longitudeAscendingNode.Degrees,
-                argumentPeriapsis = argumentPeriapsis.Degrees,
-                trueAnomalyAtEpoch = trueAnomaly.Degrees,
-                periodS = orbitalPeriod.Seconds,
-                siderealRotationPeriodS = siderealPeriod.Seconds,
-                axialTilt = axialTilt.Degrees
-            };
-            return orbitalData;
+            semiMajorAxisM              = semiMajorAxis.Meters;
+            this.eccentricity           = eccentricity.Value;
+            this.inclination            = inclination.Degrees;
+            this.longitudeAscendingNode = longitudeAscendingNode.Degrees;
+            this.argumentPeriapsis      = argumentPeriapsis.Degrees;
+            periodS                     = orbitalPeriod.Seconds;
+
+            trueAnomalyAtEpoch      = trueAnomaly.Degrees;
+            siderealRotationPeriodS = siderealPeriod.Seconds;
+            this.axialTilt          = axialTilt.Degrees;
         }
 
+
         /// <summary>
-        /// Creates an OrbitalData object.
+        ///     Creates an OrbitalData object.
         /// </summary>
         /// <param name="a">Semi-major axis (m)</param>
         /// <param name="e">Eccentricity</param>
         /// <param name="i">Inclination (deg)</param>
-        /// <param name="loAn">Longitude of the Ascending Node (deg)</param>
+        /// <param name="lan">Longitude of the Ascending Node (deg)</param>
         /// <param name="argP">Argument of Periapsis (deg)</param>
         /// <param name="nu">True Anomaly (deg)</param>
         /// <param name="period">Orbital period (s)</param>
-        /// <param name="siderealPeriod"></param>
+        /// <param name="siderealPeriod">Sidereal period (s)</param>
         /// <param name="axialTilt">Inclination to orbit (deg)</param>
-        ///  <returns></returns>
-        public static OrbitalData FromClassicElements(float a, float e, float i, float loAn, float argP, float nu, float period = 0,
-                                                      float siderealPeriod = 0, float axialTilt = 0)
+        /// <returns></returns>
+        public static OrbitalData FromClassicElements(
+            float a, float e, float i, float lan, float argP, float nu, float period = 0,
+            float siderealPeriod = 0, float axialTilt = 0)
         {
-            OrbitalData orbitalData = new()
-            {
-                semiMajorAxisM = a,
-                eccentricity = e,
-                inclination = i,
-                longitudeAscendingNode = loAn,
-                argumentPeriapsis = argP,
-                trueAnomalyAtEpoch = nu,
-                periodS = period,
-                siderealRotationPeriodS = siderealPeriod,
-                axialTilt = axialTilt
-            };
-            return orbitalData;
+            return new OrbitalData(a, e, i, lan, argP, period,
+                                   siderealPeriod, axialTilt, 0, nu);
         }
     }
 }

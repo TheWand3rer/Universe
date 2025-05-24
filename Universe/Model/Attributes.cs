@@ -1,20 +1,16 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.Model
 {
     public class Attributes : IEnumerable<KeyValuePair<string, string>>
     {
-        public Attributes()
-        {
-            data = new Dictionary<string, string>();
-        }
-
-        public Attributes(Dictionary<string, string> data)
-        {
-            this.data = data;
-        }
+        private readonly Dictionary<string, string> data;
 
         public CelestialBodyType Type => TryGet<CelestialBodyType>(nameof(Type));
 
@@ -24,7 +20,15 @@ namespace VindemiatrixCollective.Universe.Model
             set => data[key] = value;
         }
 
-        private readonly Dictionary<string, string> data;
+        public Attributes()
+        {
+            data = new Dictionary<string, string>();
+        }
+
+        public Attributes(Dictionary<string, string> data)
+        {
+            this.data = data;
+        }
 
         public bool ContainsKey(string key)
         {
@@ -44,6 +48,11 @@ namespace VindemiatrixCollective.Universe.Model
             }
         }
 
+        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+        {
+            return data.GetEnumerator();
+        }
+
         public string TryGet(string key)
         {
             data.TryGetValue(key, out string value);
@@ -61,11 +70,6 @@ namespace VindemiatrixCollective.Universe.Model
             }
 
             return Enum.Parse<TEnum>(value);
-        }
-
-        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
-        {
-            return data.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

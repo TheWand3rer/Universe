@@ -1,71 +1,62 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Text.RegularExpressions;
+using Unity.Properties;
 using UnityEngine;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.Model
 {
     public enum StarClass
     {
-        Unknown,
+        Undefined,
         WhiteDwarf,
         SubDwarf,
         Dwarf,
         SubGiant,
         Giant,
         BrightGiant,
-        SuperGiant,
+        SuperGiant
     }
 
     public enum StarType
     {
-        Unknown = -1,
-        W = 0,
-        O = 1,
-        B = 2,
-        A = 3,
-        F = 4,
-        G = 5,
-        K = 6,
-        M = 7,
-        L = 8,
-        T = 9
+        Undefined = 0,
+        W = 1,
+        O = 2,
+        B = 3,
+        A = 4,
+        F = 5,
+        G = 6,
+        K = 7,
+        M = 8,
+        L = 9,
+        T = 10
     }
 
     [Serializable]
     public struct SpectralClass
     {
-        public StarType Type;
-
-        public int SubType;
-
-        public LuminosityClass LuminosityClass;
-        public string Extra;
-        public readonly string Signature => $"{Type}{SubType}{LuminosityClass}";
-
-        public readonly string Description => $"{ColorFromStarType(Type)} {FindStarClass(LuminosityClass.ToString().SplitCamelCase())}";
-
-        public SpectralClass(StarType type = StarType.Unknown,
-                             int subType = 0,
-                             LuminosityClass luminosityClass = LuminosityClass.Undefined,
-                             string extra = null)
+        public SpectralClass(
+            StarType type = StarType.Undefined,
+            int subType = 0,
+            LuminosityClass luminosityClass = LuminosityClass.Undefined,
+            string extra = null)
         {
-            Type = type;
+            Type1   = type;
             SubType = subType;
-            LuminosityClass = luminosityClass;
-            Extra = extra ?? string.Empty;
+            Class   = luminosityClass;
+            Extra   = extra ?? string.Empty;
         }
-
-        public static SpectralClass Sol => new(StarType.G, 2, LuminosityClass.V);
-        public static SpectralClass Undefined => new(StarType.Unknown);
-
-        public readonly override string ToString() => Signature;
 
         public SpectralClass(string spectralClass)
         {
-            Type = StarType.Unknown;
-            LuminosityClass = LuminosityClass.Undefined;
+            Type1   = StarType.Undefined;
+            Class   = LuminosityClass.Undefined;
             SubType = 0;
-            Extra = null;
+            Extra   = null;
 
             Regex           regex   = new(@"(([OBAFGKM]+)([0-9]*)([IVX]*)(\w)*)[\/\-\+]*");
             MatchCollection matches = regex.Matches(spectralClass);
@@ -98,13 +89,31 @@ namespace VindemiatrixCollective.Universe.Model
             }
 
             char t = m.Groups[2].Value.Trim()[0];
-            Type = FindStarType(t);
+            Type1 = FindStarType(t);
             string sN     = m.Groups[3].Value;
             bool   result = float.TryParse(sN, out float fN);
             SubType = result ? (int)fN : 0;
             string sClass = m.Groups[4].Value;
-            LuminosityClass = FindLuminosityClass(sClass);
+            Class = FindLuminosityClass(sClass);
             Extra = m.Groups[5].Value;
+        }
+
+        public StarType Type1 { get; }
+
+        public int SubType { get; }
+
+        public LuminosityClass Class { get; }
+        public string Extra { get; }
+        [CreateProperty] public readonly string Signature => $"{Type1}{SubType}{Class}";
+
+        [CreateProperty] public readonly string Description => $"{ColorFromStarType(Type1)} {FindStarClass(Class.ToString().SplitCamelCase())}";
+
+        public static SpectralClass Sol => new(StarType.G, 2, LuminosityClass.V);
+        public static SpectralClass Undefined => new(StarType.Undefined);
+
+        public readonly override string ToString()
+        {
+            return Signature;
         }
 
         public static StarType FindStarType(char t)
@@ -118,7 +127,7 @@ namespace VindemiatrixCollective.Universe.Model
                 'G' => StarType.G,
                 'K' => StarType.K,
                 'M' => StarType.M,
-                _ => StarType.Unknown
+                _   => StarType.Undefined
             };
 
             return starType;
@@ -138,7 +147,7 @@ namespace VindemiatrixCollective.Universe.Model
                 StarType.M => "Red",
                 StarType.L => "Brown",
                 StarType.T => "Cool Brown",
-                _ => "Error"
+                _          => "Error"
             };
         }
 
@@ -146,12 +155,12 @@ namespace VindemiatrixCollective.Universe.Model
         {
             StarClass starClass = luminosityClass switch
             {
-                "V" => StarClass.Dwarf,
-                "IV" => StarClass.SubGiant,
+                "V"                       => StarClass.Dwarf,
+                "IV"                      => StarClass.SubGiant,
                 "III" or "IIIa" or "IIIb" => StarClass.Giant,
-                "II" => StarClass.BrightGiant,
-                "Ia" or "Ib" or "Iab" => StarClass.SuperGiant,
-                _ => StarClass.Unknown
+                "II"                      => StarClass.BrightGiant,
+                "Ia" or "Ib" or "Iab"     => StarClass.SuperGiant,
+                _                         => StarClass.Undefined
             };
 
             return starClass;
@@ -162,13 +171,13 @@ namespace VindemiatrixCollective.Universe.Model
         {
             LuminosityClass luminosity = luminosityClass switch
             {
-                "V" => LuminosityClass.V,
-                "IV" => LuminosityClass.IV,
+                "V"                       => LuminosityClass.V,
+                "IV"                      => LuminosityClass.IV,
                 "III" or "IIIa" or "IIIb" => LuminosityClass.III,
-                "II" => LuminosityClass.II,
-                "Ia" => LuminosityClass.Ia,
-                "Ib" or "Iab" => LuminosityClass.Ib,
-                _ => LuminosityClass.V
+                "II"                      => LuminosityClass.II,
+                "Ia"                      => LuminosityClass.Ia,
+                "Ib" or "Iab"             => LuminosityClass.Ib,
+                _                         => LuminosityClass.V
             };
 
             return luminosity;

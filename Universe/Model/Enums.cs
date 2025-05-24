@@ -4,8 +4,7 @@
     {
         Unknown,
         Planet,
-        Satellite,
         Star,
+        StarSystem
     }
-
- }
+}

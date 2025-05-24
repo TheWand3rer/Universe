@@ -1,23 +1,25 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿#region
+
+using System;
 using UnitsNet;
 using Unity.Mathematics;
 using VindemiatrixCollective.Universe.Model;
 
+#endregion
+
 namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
 {
     /// <summary>
-    /// References:
-    /// [1] Braeunig http://www.braeunig.us/space/interpl.htm
-    /// [2] Vallado Fundamentals of Astrodynamics
-    /// [3] 
+    ///     References:
+    ///     [1] Braeunig http://www.braeunig.us/space/interpl.htm
+    ///     [2] Vallado Fundamentals of Astrodynamics
     /// </summary>
     public static class OrbitalMechanics
     {
         public delegate double NewtonFunction(double p0, double M, double e);
 
         /// <summary>
-        /// Converts classical orbital elements to position and velocity vectors.
+        ///     Converts classical orbital elements to position and velocity vectors.
         /// </summary>
         /// <param name="mu">Gravitational parameter (m3/s2)</param>
         /// <param name="p">Semi latus rectum (m)</param>
@@ -26,14 +28,14 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         /// <returns>Position (r) and velocity (v) vectors</returns>
         public static (Vector3d r, Vector3d v) RVinPerifocalFrame(double mu, double p, double e, double nu)
         {
-            Vector3d r = (new Vector3d(Math.Cos(nu), Math.Sin(nu), 0) * p) / (1 + (e * Math.Cos(nu)));
+            Vector3d r = new Vector3d(Math.Cos(nu), Math.Sin(nu), 0) * p / (1 + e * Math.Cos(nu));
             Vector3d v = new Vector3d(-Math.Sin(nu), e + Math.Cos(nu), 0) * Math.Sqrt(mu / p);
 
             return (r, v);
         }
 
         /// <summary>
-        /// From Vallado [3] p.48
+        ///     From Vallado [3] p.48
         /// </summary>
         /// <param name="eccentricAnomaly">The eccentric anomaly E</param>
         /// <param name="eccentricity">The eccentricity of the orbit e</param>
@@ -53,18 +55,18 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         }
 
         /// <summary>
-        /// Converts Eccentric to Mean anomaly using the classic Kepler equation.
+        ///     Converts Eccentric to Mean anomaly using the classic Kepler equation.
         /// </summary>
         /// <param name="E">Eccentric anomaly (rad)</param>
         /// <param name="eccentricity">Eccentricity</param>
         /// <returns>Mean anomaly (rad)</returns>
         public static double EccentricToMeanAnomaly(double E, double eccentricity)
         {
-            return E - (eccentricity * Math.Sin(E));
+            return E - eccentricity * Math.Sin(E);
         }
 
         /// <summary>
-        /// Converts the eccentric to mean anomaly.
+        ///     Converts the eccentric to mean anomaly.
         /// </summary>
         /// <param name="eccentricAnomaly">The eccentric anomaly.</param>
         /// <param name="eccentricity">The eccentricity.</param>
@@ -110,7 +112,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         {
             const double pi = UniversalConstants.Tri.Pi;
             double       E0;
-            if (M is >= -pi and < 0 || (M > pi))
+            if (M is >= -pi and < 0 || M > pi)
             {
                 E0 = M - e;
             }
@@ -129,14 +131,14 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         }
 
         /// <summary>
-        /// Calculates the semi latus rectum.
+        ///     Calculates the semi latus rectum.
         /// </summary>
         /// <param name="a">Semi-major axis (m)</param>
         /// <param name="e">Eccentricity</param>
         /// <returns></returns>
         public static double SemiLatusRectum(double a, double e)
         {
-            return a * (1 - (e * e));
+            return a * (1 - e * e);
         }
 
         public static double TrueToEccentricAnomaly(double nu, double eccentricity)
@@ -150,10 +152,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             return Angle.FromRadians(E);
         }
 
-        public static double VisViva(double centerGM, Vector3d position, Length a)
+        public static double VisViva(double centreGM, Vector3d position, Length a)
         {
-            double gmAU = M3S2ToAu3Y2(centerGM);
-            double vMag = Math.Sqrt(gmAU * ((2 / position.magnitude) - (1 / a.AstronomicalUnits)));
+            double gmAU = M3S2ToAu3Y2(centreGM);
+            double vMag = Math.Sqrt(gmAU * (2 / position.magnitude - 1 / a.AstronomicalUnits));
 
             return vMag;
         }
@@ -167,56 +169,47 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             double3x3 r  = double3x3.zero;
 
             r[axis][axis] = 1.0;
-            r[a1][a1] = c;
-            r[a2][a1] = -s;
-            r[a1][a2] = s;
-            r[a2][a2] = c;
+            r[a1][a1]     = c;
+            r[a2][a1]     = -s;
+            r[a1][a2]     = s;
+            r[a2][a2]     = c;
 
             return r;
         }
 
         public static Duration CalculatePeriod(Length semiMajorAxis, CelestialBody attractor)
         {
-            double period = Math.Pow(((4 * Math.Pow(Math.PI, 2)) / attractor.Mu.Au3Y2) * Math.Pow(semiMajorAxis.AstronomicalUnits, 3), 0.5d);
+            double period = Math.Pow(4 * Math.Pow(Math.PI, 2) / attractor.Mu.Au3Y2 * Math.Pow(semiMajorAxis.AstronomicalUnits, 3), 0.5d);
             return Duration.FromYears365(period);
+        }
+
+        public static Duration CalculateTwoBodyPeriod(Length semiMajorAxis, Mass primary, Mass companion)
+        {
+            double a  = semiMajorAxis.Meters;
+            double m1 = primary.Kilograms;
+            double m2 = companion.Kilograms;
+            double G  = UniversalConstants.Celestial.GravitationalConstant;
+
+            double T = UniversalConstants.Tri.Pi2 * Math.Sqrt(Math.Pow(a, 3) / (G * (m1 + m2)));
+            return Duration.FromSeconds(T);
+        }
+
+        public static Mass TwoBodyMass(Length semiMajorAxis, Duration period)
+        {
+            double a = semiMajorAxis.Meters;
+            double T = period.Seconds;
+            double G = UniversalConstants.Celestial.GravitationalConstant;
+
+            double M = 4 * Math.PI * Math.PI * Math.Pow(a, 3) / (G * T * T);
+            return Mass.FromKilograms(M);
         }
 
         public static Duration CalculateSynodicPeriod(Duration p1, Duration p2)
         {
-            double sp = 1 / Math.Abs((1 / p1.Years365) - (1 / p2.Years365));
+            double sp = 1 / Math.Abs(1 / p1.Years365 - 1 / p2.Years365);
             return Duration.FromYears365(sp);
         }
 
-        public static Duration CalculateTransferTime(Length p, Length r1Mag, Length r2Mag, Length k, Length l, Length m, Angle deltaV,
-                                                     GravitationalParameter gm)
-        {
-            (double f, double g, double fDot) = CalculateTransferParameters(r1Mag, r2Mag, p, deltaV, gm.M3S2);
-            double a = CalculateSemiMajorAxisFromSemiLatusRectum(p, k, l, m).AstronomicalUnits;
-
-            // deltaE is Eccentric Anomaly
-            double deltaE    = Math.Acos(1 - ((r1Mag.AstronomicalUnits / a) * (1 - f)));
-            double sinDeltaE = (-r1Mag.AstronomicalUnits * r2Mag.AstronomicalUnits * fDot) / Math.Sqrt(gm.Au3S2 * a);
-            if (Math.Asin(sinDeltaE) < 0)
-            {
-                deltaE = (2 * Math.PI) - deltaE;
-            }
-
-            double t = g + (Math.Sqrt(Math.Pow(a, 3) / gm.Au3S2) * (deltaE - Math.Sin(deltaE)));
-
-            // Hyperbolic case
-            if (a < 0)
-            {
-                double deltaF = Math.Acosh(1 - ((r1Mag.Meters / a) * (1 - f)));
-                if (deltaF < 0)
-                {
-                    deltaF = (2 * Math.PI) + deltaF;
-                }
-
-                t = g + (Math.Sqrt(Math.Pow(-a, 3) / gm.Au3S2) * (Math.Sinh(deltaF) - deltaF));
-            }
-
-            return double.IsNaN(t) ? Duration.Zero : Duration.FromSeconds(t);
-        }
 
         public static Length CalculateSOI(CelestialBody attracted, CelestialBody attractor)
         {
@@ -227,26 +220,15 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         public static Speed CalculateEscapeVelocity(CelestialBody body, Length orbitHeight)
         {
             Length rTotal         = body.PhysicalData.Radius + orbitHeight;
-            double escapeVelocity = Math.Pow((2 * body.Mu.M3S2) / rTotal.Meters, 0.5);
+            double escapeVelocity = Math.Pow(2 * body.Mu.M3S2 / rTotal.Meters, 0.5);
             return Speed.FromMetersPerSecond(escapeVelocity);
         }
 
-        public static Speed CalculateExcessVelocity(Speed velocity, Length orbitHeight, CelestialBody body, CelestialBody attractor)
-        {
-            //Length soi = CalculateSphereOfInfluence(data.SemiMajorAxis, body.Mass, data.AttractorData.AttractorMass);
-            Length soi     = CalculateSOI(body, attractor);
-            double exitSOI = 1 / ((2 / soi.Meters) + (Math.Pow(velocity.MetersPerSecond, 2) / body.Mu.M3S2));
-            Length rTotal  = body.PhysicalData.Radius + orbitHeight;
-
-            double deltaVexit        = Math.Pow(body.Mu.M3S2 * ((2 / rTotal.Meters) + (1 / exitSOI)), 0.5);
-            double hyperbolicExcessV = deltaVexit - Math.Pow((2 * body.Mu.M3S2) / rTotal.Meters, 0.5);
-            return Speed.FromMetersPerSecond(hyperbolicExcessV);
-        }
 
         public static Speed CalculateHyperbolicExcessVelocity(Speed velocity, CelestialBody body, Length orbitHeight)
         {
             Length rTotal  = body.PhysicalData.Radius + orbitHeight;
-            double vExcess = Math.Sqrt(Math.Pow(velocity.MetersPerSecond, 2) - ((2 * body.Mu.M3S2) / rTotal.Meters));
+            double vExcess = Math.Sqrt(Math.Pow(velocity.MetersPerSecond, 2) - 2 * body.Mu.M3S2 / rTotal.Meters);
             return Speed.FromMetersPerSecond(vExcess);
         }
 
@@ -277,48 +259,18 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             return position * UniversalConstants.Celestial.AuPerMetre * scale;
         }
 
-        public static (double f, double g, double fDot) CalculateTransferParameters(Length r1Mag, Length r2Mag, Length p, Angle deltaV, double gmM3S2)
-        {
-
-            // (5.5)  f = 1 - r2 / p × (1 - cos )
-            double f = 1 - ((r2Mag.Meters / p.Meters) * (1 - Math.Cos(deltaV.Radians)));
-
-            // (5.6)  g = r1 × r2 × sin  / SQRT[ GM × p ]
-            double g = (r1Mag.Meters * r2Mag.Meters * Math.Sin(deltaV.Radians)) / Math.Sqrt(gmM3S2 * p.Meters);
-
-            // (5.7)  fdot = SQRT[ GM / p ] × tan(/2) × [(1 - cos ) / p - 1/r1 - 1/r2 ]
-            double fDot = Math.Sqrt(gmM3S2 / p.Meters) * Math.Tan(deltaV.Radians / 2) *
-                          (((1 - Math.Cos(deltaV.Radians)) / p.Meters) - (1 / r1Mag.Meters) - (1 / r2Mag.Meters));
-
-            return (f, g, fDot);
-        }
-
-        public static Length CalculateSemiMajorAxisFromSemiLatusRectum(Length p, Length k, Length l, Length m)
-        {
-            double mAU = m.AstronomicalUnits;
-            double kAU = k.AstronomicalUnits;
-            double pAU = p.AstronomicalUnits;
-            double lAU = l.AstronomicalUnits;
-
-            // (5.12) a = m × k × p / [(2 × m - l2) × p2 + 2 × k × l × p - k2]
-            double aAU = mAU * kAU * pAU / ((2 * mAU - lAU * lAU) * pAU * pAU + 2 * kAU * lAU * pAU - kAU * kAU);
-            return Length.FromAstronomicalUnits(aAU);
-        }
-
 
         private static double KeplerEquation(double E, double M, double e)
         {
             return EccentricToMeanAnomaly(E, e) - M;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static double KeplerEquationPrime(double E, double M, double e)
         {
-            return 1 - (e * Math.Cos(E));
+            return 1 - e * Math.Cos(E);
         }
 
-        private static double NewtonMethod(NewtonFunction function, NewtonFunction prime, double x0, double M, double e, int maxIterations,
-                                           double tol)
+        private static double NewtonMethod(NewtonFunction function, NewtonFunction prime, double x0, double M, double e, int maxIterations, double tol)
         {
             double p0   = x0;
             double step = 0;
@@ -340,7 +292,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         }
 
         /// <summary>
-        /// Creates a range of spaced dates from start to end.
+        ///     Creates a range of spaced dates from start to end.
         /// </summary>
         /// <param name="start">Starting date.</param>
         /// <param name="end">End date.</param>
@@ -352,12 +304,12 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
 
             int step = (int)math.floor((end - start).TotalSeconds / numValues);
 
-            for (int i = 1; i < numValues-1; i++)
+            for (int i = 1; i < numValues - 1; i++)
             {
                 dates[i] = start.AddSeconds(step * i);
             }
 
-            dates[0] = start;
+            dates[0]  = start;
             dates[^1] = end;
 
             return dates;

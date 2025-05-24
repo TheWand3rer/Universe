@@ -1,7 +1,12 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = System.Random;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.RandomNumberGeneration
 {
@@ -9,9 +14,8 @@ namespace VindemiatrixCollective.Universe.RandomNumberGeneration
     {
         private const int MaxIterations = 16;
         private static Gaussian gaussian;
-        private static System.Random random;
 
-        public static System.Random Random => random;
+        public static Random Random { get; private set; }
 
         public static double DoubleCloseTo(double value, double variation)
         {
@@ -20,7 +24,7 @@ namespace VindemiatrixCollective.Universe.RandomNumberGeneration
 
         public static double DoubleInRange(double min, double max)
         {
-            return (random.NextDouble() * (max - min)) + min;
+            return (Random.NextDouble() * (max - min)) + min;
         }
 
         public static double GaussianInRange(double mean, double std, double min, double max)
@@ -30,7 +34,7 @@ namespace VindemiatrixCollective.Universe.RandomNumberGeneration
             for (int i = 0; i < MaxIterations; i++)
             {
                 result = (gaussian.RandomGauss() * std) + mean;
-                test = (result < min) || (result > max);
+                test   = (result < min) || (result > max);
                 if (test)
                 {
                     break;
@@ -70,7 +74,7 @@ namespace VindemiatrixCollective.Universe.RandomNumberGeneration
                                                     .Select(entry => (entry.Item, RangeTo: offset += entry.Weight))
                                                     .ToArray();
 
-            float randomNumber = (float)random.NextDouble();
+            float randomNumber = (float)Random.NextDouble();
             return rangedItems.First(item => randomNumber <= item.RangeTo).Item;
         }
 
@@ -95,8 +99,8 @@ namespace VindemiatrixCollective.Universe.RandomNumberGeneration
 
         public static void InitRandomGenerator(int seed)
         {
-            random = new System.Random(seed);
-            gaussian = new Gaussian(random);
+            Random   = new Random(seed);
+            gaussian = new Gaussian(Random);
             UnityEngine.Random.InitState(seed);
         }
     }

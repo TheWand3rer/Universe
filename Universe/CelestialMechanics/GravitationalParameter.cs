@@ -1,5 +1,9 @@
-﻿using System;
+﻿#region
+
+using System;
 using UnitsNet;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.CelestialMechanics
 {
@@ -7,18 +11,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
     {
         public const double GravitationalConstant = UniversalConstants.Celestial.GravitationalConstant;
 
-        private readonly double value;
-
-        public GravitationalParameter(double value)
-        {
-            this.value = value;
-        }
-
-        public double M3S2 => value;
-
-        public double Km3S2 => value / Math.Pow(1000, 3);
-
-        public double Au3S2 => value / Math.Pow(UniversalConstants.Celestial.MetresPerAu, 3);
+        public double Au3S2 => M3S2 / Math.Pow(UniversalConstants.Celestial.MetresPerAu, 3);
 
         public double Au3Y2
         {
@@ -27,13 +20,23 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
                 double timeScale     = Math.Pow(UniversalConstants.Time.SecondsPerJulianYear, 2);
                 double distanceScale = Math.Pow(UniversalConstants.Celestial.MetresPerAu, 3);
 
-                return value * (timeScale / distanceScale);
+                return M3S2 * (timeScale / distanceScale);
             }
         }
 
-        public static GravitationalParameter Sun => new(1.32712440041279419e20);
+        public double Km3S2 => M3S2 / Math.Pow(1000, 3);
+
+        public double M3S2 { get; }
+
+        public GravitationalParameter(double value)
+        {
+            this.M3S2 = value;
+        }
+
         public static GravitationalParameter Earth => new(3.9860044188e14);
         public static GravitationalParameter Mars => new(4.2828372e13);
+
+        public static GravitationalParameter Sun => new(1.32712440041279419e20);
 
         public static GravitationalParameter FromMass(Mass mass)
         {

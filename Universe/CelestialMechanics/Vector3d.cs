@@ -1,5 +1,9 @@
-﻿using System;
+﻿#region
+
+using System;
 using UnityEngine;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.CelestialMechanics
 {
@@ -45,34 +49,11 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             }
         }
 
-        public Vector3d normalized => Normalize(this);
-
         public double magnitude => Math.Sqrt((x * x) + (y * y) + (z * z));
 
         public double sqrMagnitude => (x * x) + (y * y) + (z * z);
 
-        public static Vector3d zero => new(0d, 0d, 0d);
-
-        public static Vector3d one => new(1d, 1d, 1d);
-
-        public static Vector3d forward => new(0d, 0d, 1d);
-
-        public static Vector3d back => new(0d, 0d, -1d);
-
-        public static Vector3d up => new(0d, 1d, 0d);
-
-        public static Vector3d down => new(0d, -1d, 0d);
-
-        public static Vector3d left => new(-1d, 0d, 0d);
-
-        public static Vector3d right => new(1d, 0d, 0d);
-
-        public static Vector3d X => new(1d, 0d, 0d);
-        public static Vector3d Y => new(0d, 1d, 0d);
-        public static Vector3d Z => new(0d, 0d, 1d);
-
-        [Obsolete("Use Vector3d.forward instead.")]
-        public static Vector3d fwd => new(0d, 0d, 1d);
+        public Vector3d normalized => Normalize(this);
 
         public Vector3d(double x, double y, double z)
         {
@@ -99,8 +80,95 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         {
             this.x = x;
             this.y = y;
-            z = 0d;
+            z      = 0d;
         }
+
+        public override bool Equals(object other)
+        {
+            if (!(other is Vector3d))
+            {
+                return false;
+            }
+
+            Vector3d vector3d = (Vector3d)other;
+            if (x.Equals(vector3d.x) && y.Equals(vector3d.y))
+            {
+                return z.Equals(vector3d.z);
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return x.GetHashCode() ^ (y.GetHashCode() << 2) ^ (z.GetHashCode() >> 2);
+        }
+
+        public void Normalize()
+        {
+            double num = Magnitude(this);
+            if (num > 9.99999974737875E-06)
+            {
+                this = this / num;
+            }
+            else
+            {
+                this = zero;
+            }
+        }
+
+        public void Scale(Vector3d scale)
+        {
+            x *= scale.x;
+            y *= scale.y;
+            z *= scale.z;
+        }
+
+        public void Set(double new_x, double new_y, double new_z)
+        {
+            x = new_x;
+            y = new_y;
+            z = new_z;
+        }
+
+        public double[] ToArray()
+        {
+            return new[] { x, y, z };
+        }
+
+        public override string ToString()
+        {
+            return "(" + x + ", " + y + ", " + z + ")";
+        }
+
+        public Vector3 ToXZY()
+        {
+            Vector3 v = (Vector3)this;
+            return new Vector3(v.x, v.z, v.y);
+        }
+
+        public static Vector3d back => new(0d, 0d, -1d);
+
+        public static Vector3d down => new(0d, -1d, 0d);
+
+        public static Vector3d forward => new(0d, 0d, 1d);
+
+        [Obsolete("Use Vector3d.forward instead.")]
+        public static Vector3d fwd => new(0d, 0d, 1d);
+
+        public static Vector3d left => new(-1d, 0d, 0d);
+
+        public static Vector3d one => new(1d, 1d, 1d);
+
+        public static Vector3d right => new(1d, 0d, 0d);
+
+        public static Vector3d up => new(0d, 1d, 0d);
+
+        public static Vector3d X => new(1d, 0d, 0d);
+        public static Vector3d Y => new(0d, 1d, 0d);
+        public static Vector3d Z => new(0d, 0d, 1d);
+
+        public static Vector3d zero => new(0d, 0d, 0d);
 
         public static Vector3d operator +(Vector3d a, Vector3d b)
         {
@@ -169,10 +237,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         {
             Vector3 v3normal  = new Vector3();
             Vector3 v3tangent = new Vector3();
-            v3normal = (Vector3)normal;
+            v3normal  = (Vector3)normal;
             v3tangent = (Vector3)tangent;
             Vector3.OrthoNormalize(ref v3normal, ref v3tangent);
-            normal = new Vector3d(v3normal);
+            normal  = new Vector3d(v3normal);
             tangent = new Vector3d(v3tangent);
         }
 
@@ -181,12 +249,12 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             Vector3 v3normal   = new Vector3();
             Vector3 v3tangent  = new Vector3();
             Vector3 v3binormal = new Vector3();
-            v3normal = (Vector3)normal;
-            v3tangent = (Vector3)tangent;
+            v3normal   = (Vector3)normal;
+            v3tangent  = (Vector3)tangent;
             v3binormal = (Vector3)binormal;
             Vector3.OrthoNormalize(ref v3normal, ref v3tangent, ref v3binormal);
-            normal = new Vector3d(v3normal);
-            tangent = new Vector3d(v3tangent);
+            normal   = new Vector3d(v3normal);
+            tangent  = new Vector3d(v3tangent);
             binormal = new Vector3d(v3binormal);
         }
 
@@ -202,31 +270,35 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             return current + ((vector3 / magnitude) * maxDistanceDelta);
         }
 
-        public static Vector3d RotateTowards(Vector3d current, Vector3d target, double maxRadiansDelta,
-                                             double maxMagnitudeDelta)
+        public static Vector3d RotateTowards(
+            Vector3d current, Vector3d target, double maxRadiansDelta,
+            double maxMagnitudeDelta)
         {
             Vector3 v3 = Vector3.RotateTowards((Vector3)current, (Vector3)target, (float)maxRadiansDelta,
                                                (float)maxMagnitudeDelta);
             return new Vector3d(v3);
         }
 
-        public static Vector3d SmoothDamp(Vector3d current, Vector3d target, ref Vector3d currentVelocity,
-                                          double smoothTime, double maxSpeed)
+        public static Vector3d SmoothDamp(
+            Vector3d current, Vector3d target, ref Vector3d currentVelocity,
+            double smoothTime, double maxSpeed)
         {
             double deltaTime = Time.deltaTime;
             return SmoothDamp(current, target, ref currentVelocity, smoothTime, maxSpeed, deltaTime);
         }
 
-        public static Vector3d SmoothDamp(Vector3d current, Vector3d target, ref Vector3d currentVelocity,
-                                          double smoothTime)
+        public static Vector3d SmoothDamp(
+            Vector3d current, Vector3d target, ref Vector3d currentVelocity,
+            double smoothTime)
         {
             double deltaTime = Time.deltaTime;
             double maxSpeed  = double.PositiveInfinity;
             return SmoothDamp(current, target, ref currentVelocity, smoothTime, maxSpeed, deltaTime);
         }
 
-        public static Vector3d SmoothDamp(Vector3d current, Vector3d target, ref Vector3d currentVelocity,
-                                          double smoothTime, double maxSpeed, double deltaTime)
+        public static Vector3d SmoothDamp(
+            Vector3d current, Vector3d target, ref Vector3d currentVelocity,
+            double smoothTime, double maxSpeed, double deltaTime)
         {
             smoothTime = Math.Max(0.0001d, smoothTime);
             double num1 = 2d / smoothTime;
@@ -243,18 +315,11 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             Vector3d vector3_4 = target + ((vector3_2 + vector3_3) * num3);
             if (Dot(vector3_1 - current, vector3_4 - vector3_1) > 0.0)
             {
-                vector3_4 = vector3_1;
+                vector3_4       = vector3_1;
                 currentVelocity = (vector3_4 - vector3_1) / deltaTime;
             }
 
             return vector3_4;
-        }
-
-        public void Set(double new_x, double new_y, double new_z)
-        {
-            x = new_x;
-            y = new_y;
-            z = new_z;
         }
 
         public static Vector3d Scale(Vector3d a, Vector3d b)
@@ -262,38 +327,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             return new Vector3d(a.x * b.x, a.y * b.y, a.z * b.z);
         }
 
-        public void Scale(Vector3d scale)
-        {
-            x *= scale.x;
-            y *= scale.y;
-            z *= scale.z;
-        }
-
         public static Vector3d Cross(Vector3d lhs, Vector3d rhs)
         {
             return new Vector3d((lhs.y * rhs.z) - (lhs.z * rhs.y), (lhs.z * rhs.x) - (lhs.x * rhs.z),
                                 (lhs.x * rhs.y) - (lhs.y * rhs.x));
-        }
-
-        public override int GetHashCode()
-        {
-            return x.GetHashCode() ^ (y.GetHashCode() << 2) ^ (z.GetHashCode() >> 2);
-        }
-
-        public override bool Equals(object other)
-        {
-            if (!(other is Vector3d))
-            {
-                return false;
-            }
-
-            Vector3d vector3d = (Vector3d)other;
-            if (x.Equals(vector3d.x) && y.Equals(vector3d.y))
-            {
-                return z.Equals(vector3d.z);
-            }
-
-            return false;
         }
 
         public static Vector3d Reflect(Vector3d inDirection, Vector3d inNormal)
@@ -310,24 +347,6 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             }
 
             return zero;
-        }
-
-        public void Normalize()
-        {
-            double num = Magnitude(this);
-            if (num > 9.99999974737875E-06)
-            {
-                this = this / num;
-            }
-            else
-            {
-                this = zero;
-            }
-        }
-
-        public override string ToString()
-        {
-            return "(" + x + ", " + y + ", " + z + ")";
         }
 
         public static double Dot(Vector3d lhs, Vector3d rhs)
@@ -352,7 +371,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         }
 
         /// <summary>
-        /// Returns the angle between from and to in degrees.
+        ///     Returns the angle between from and to in degrees.
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
@@ -396,17 +415,6 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         public static Vector3d Max(Vector3d lhs, Vector3d rhs)
         {
             return new Vector3d(Math.Max(lhs.x, rhs.x), Math.Max(lhs.y, rhs.y), Math.Max(lhs.z, rhs.z));
-        }
-
-        public Vector3 ToXZY()
-        {
-            Vector3 v = (Vector3)this;
-            return new Vector3(v.x, v.z, v.y);
-        }
-
-        public double[] ToArray()
-        {
-            return new[] { x, y, z };
         }
     }
 }

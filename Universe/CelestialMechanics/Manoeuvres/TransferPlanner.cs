@@ -1,7 +1,11 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using UnitsNet;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
 {
@@ -11,15 +15,15 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
 
         private List<TransferData> transfers;
 
+        public ICelestialBody DepartureBody { get; }
+        public ICelestialBody TargetBody { get; }
+
         public TransferPlanner(ICelestialBody departureBody, ICelestialBody targetBody)
         {
             DepartureBody = departureBody;
-            TargetBody = targetBody;
-            solver = new IzzoLambertSolver();
+            TargetBody    = targetBody;
+            solver        = new IzzoLambertSolver();
         }
-
-        public ICelestialBody DepartureBody { get; }
-        public ICelestialBody TargetBody { get; }
 
         public void CalculateTransferWindows(DateTime start, int windowDays = 180, int number = 20)
         {
@@ -57,7 +61,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
             if (TargetBody == null)
                 throw new InvalidOperationException($"{nameof(TargetBody)} cannot be null");
             if (launch > arrival)
-                throw new ArgumentException($"Launch date cannot be after arrival date");
+                throw new ArgumentException("Launch date cannot be after arrival date");
 
 
             OrbitState orbitDeparture = DepartureBody.OrbitState.PropagateAsNew(launch);
@@ -73,9 +77,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
 
                 transfers.Add(tData);
             }
-            catch (Exception ex)
-            {
-            }
+            catch (Exception ex) { }
         }
     }
 }

@@ -1,16 +1,19 @@
-﻿using System;
+﻿#region
+
+using System;
 using Random = System.Random;
 
-namespace VindemiatrixCollective.Universe.RandomNumberGeneration {
+#endregion
+
+namespace VindemiatrixCollective.Universe.RandomNumberGeneration
+{
     public class Gaussian
     {
         private readonly Random rng;
         private bool available;
         private double nextGauss;
 
-        public Gaussian() : this(new Random())
-        {
-        }
+        public Gaussian() : this(new Random()) { }
 
         public Gaussian(Random random)
         {

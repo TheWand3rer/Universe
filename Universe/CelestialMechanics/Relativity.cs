@@ -1,32 +1,60 @@
-﻿using System.Text;
+﻿#region
+
+using System.Text;
 using UnitsNet;
+using UnityEngine.Assertions;
 using Math = System.Math;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.CelestialMechanics
 {
     public readonly struct RelativisticTravelData
     {
-        public Length Distance { get; }
-        public Speed MaxSpeed { get; }
         public Acceleration Acceleration { get; }
-        public Duration ShipTimeAcceleration { get; }
 
-        public Duration ObserverTimeAcceleration { get; }
-
-        public Duration ShipTimeCruise { get; }
-
-        public Duration ObserverTimeCruise { get; }
-
-        public Duration TotalShipTime { get; }
-
-        public Duration TotalObserverTime { get; }
-
-        public Length DistanceCruise { get; }
-        public Length DistanceAcceleration { get; }
+        public bool Orbit { get; }
 
         public double Rapidity { get; }
 
-        public bool Orbit { get; }
+        public Duration ObserverTimeAcceleration { get; }
+
+        public Duration ObserverTimeCruise { get; }
+        public Duration ShipTimeAcceleration { get; }
+
+        public Duration ShipTimeCruise { get; }
+
+        public Duration TotalObserverTime { get; }
+
+        public Duration TotalShipTime { get; }
+        public Length Distance { get; }
+        public Length DistanceAcceleration { get; }
+
+        public Length DistanceCruise { get; }
+        public Speed MaxSpeed { get; }
+
+        public RelativisticTravelData(
+            Length distance, Speed maxSpeed, Acceleration acceleration,
+            Duration shipTimeAcceleration, Duration observerTimeAcceleration,
+            Duration shipTimeCruise, Duration observerTimeCruise,
+            Duration totalShipTime, Duration totalObserverTime,
+            Length distanceAcceleration, Length distanceCruise,
+            double rapidity, bool orbit = true)
+        {
+            Distance                 = distance;
+            MaxSpeed                 = maxSpeed;
+            Acceleration             = acceleration;
+            ShipTimeAcceleration     = shipTimeAcceleration;
+            ObserverTimeAcceleration = observerTimeAcceleration;
+            ShipTimeCruise           = shipTimeCruise;
+            ObserverTimeCruise       = observerTimeCruise;
+            TotalShipTime            = totalShipTime;
+            TotalObserverTime        = totalObserverTime;
+            DistanceAcceleration     = distanceAcceleration;
+            DistanceCruise           = distanceCruise;
+            Rapidity                 = rapidity;
+            Orbit                    = orbit;
+        }
 
         public override string ToString()
         {
@@ -46,44 +74,28 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
 
             return sb.ToString();
         }
-
-        public RelativisticTravelData(Length distance, Speed maxSpeed, Acceleration acceleration,
-            Duration shipTimeAcceleration, Duration observerTimeAcceleration, 
-            Duration shipTimeCruise, Duration observerTimeCruise, 
-            Duration totalShipTime, Duration totalObserverTime, 
-            Length distanceAcceleration, Length distanceCruise,
-            double rapidity, bool orbit = true)
-        {
-            Distance = distance;
-            MaxSpeed = maxSpeed;
-            Acceleration = acceleration;
-            ShipTimeAcceleration = shipTimeAcceleration;
-            ObserverTimeAcceleration = observerTimeAcceleration;
-            ShipTimeCruise = shipTimeCruise;
-            ObserverTimeCruise = observerTimeCruise;
-            TotalShipTime = totalShipTime;
-            TotalObserverTime = totalObserverTime;
-            DistanceAcceleration = distanceAcceleration;
-            DistanceCruise = distanceCruise;
-            Rapidity = rapidity;
-            Orbit = orbit;
-        }
     }
+
     public static class Relativity
     {
         /// <summary>
-        /// Calculates the time a ship would take to travel a distance <strong>d</strong>, reaching a max speed of <strong>v</strong>,
-        /// under an acceleration <strong>a</strong>. The ship accelerates until it reaches max speed, then cruises,
-        /// and then decelerates (if decelerate is true).
-        /// Formulas sourced from: https://math.ucr.edu/home/baez/physics/Relativity/SR/Rocket/rocket.html
+        ///     Calculates the time a ship would take to travel a distance <strong>d</strong>, reaching a max speed of
+        ///     <strong>v</strong>,
+        ///     under an acceleration <strong>a</strong>. The ship accelerates until it reaches max speed, then cruises,
+        ///     and then decelerates (if decelerate is true).
+        ///     Formulas sourced from: https://math.ucr.edu/home/baez/physics/Relativity/SR/Rocket/rocket.html
         /// </summary>
         /// <param name="distance">The distance to the destination star system.</param>
         /// <param name="shipMaxSpeed">The maximum speed the ship will reach.</param>
         /// <param name="acceleration">The constant acceleration provided by the engines.</param>
         /// <param name="decelerate">If the ship should decelerate.</param>
-        /// <returns>A <see cref="RelativisticTravelData"/> struct.</returns>
+        /// <returns>A <see cref="RelativisticTravelData" /> struct.</returns>
         public static RelativisticTravelData CalculateTravel(Length distance, Speed shipMaxSpeed, Acceleration acceleration, bool decelerate = true)
         {
+            Assert.IsTrue(!double.IsNaN(distance.Value) && distance.Value > 0, nameof(distance));
+            Assert.IsTrue(!double.IsNaN(shipMaxSpeed.Value) && shipMaxSpeed.Value > 0, nameof(shipMaxSpeed));
+            Assert.IsTrue(!double.IsNaN(acceleration.Value) && acceleration.Value > 0, nameof(acceleration));
+
             double   gamma                = CalculateTimeDilation(shipMaxSpeed);
             Duration shipTimeAcceleration = CalculateShipTimeAcceleration(acceleration, shipMaxSpeed);
             double   rapidity             = CalculateRapidity(acceleration, shipTimeAcceleration);
@@ -92,32 +104,34 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
 
             Duration observerTimeAcceleration = CalculateObserverTimeAcceleration(acceleration, rapidity);
             Duration observerTimeCruise       = distanceCruise / shipMaxSpeed;
-            
-            Duration shipTimeCruise           = observerTimeCruise / gamma;
-            Duration totalObserverTime        = (observerTimeAcceleration * (decelerate ? 2 : 1)) + observerTimeCruise;
-            Duration totalShipTime            = (shipTimeAcceleration * (decelerate ? 2 : 1)) + shipTimeCruise;
+
+            Duration shipTimeCruise    = observerTimeCruise / gamma;
+            Duration totalObserverTime = (observerTimeAcceleration * (decelerate ? 2 : 1)) + observerTimeCruise;
+            Duration totalShipTime     = (shipTimeAcceleration * (decelerate ? 2 : 1)) + shipTimeCruise;
 
             return new RelativisticTravelData(distance, shipMaxSpeed, acceleration,
-                shipTimeAcceleration, observerTimeAcceleration, 
-                shipTimeCruise, observerTimeCruise,
-                totalShipTime, totalObserverTime,
-                distanceAcceleration, distanceCruise, rapidity, decelerate);
+                                              shipTimeAcceleration, observerTimeAcceleration,
+                                              shipTimeCruise, observerTimeCruise,
+                                              totalShipTime, totalObserverTime,
+                                              distanceAcceleration, distanceCruise, rapidity, decelerate);
         }
 
         /// <summary>
-        /// Calculates the time a ship would take to travel a distance <strong>d</strong>, reaching a max speed of <strong>v</strong>,
-        /// under an acceleration <strong>a</strong>. The ship accelerates until it reaches max speed, then cruises, and then decelerates.
-        /// Formulas sourced from: https://math.ucr.edu/home/baez/physics/Relativity/SR/Rocket/rocket.html
+        ///     Calculates the time a ship would take to travel a distance <strong>d</strong>, reaching a max speed of
+        ///     <strong>v</strong>,
+        ///     under an acceleration <strong>a</strong>. The ship accelerates until it reaches max speed, then cruises, and then
+        ///     decelerates.
+        ///     Formulas sourced from: https://math.ucr.edu/home/baez/physics/Relativity/SR/Rocket/rocket.html
         /// </summary>
         /// <param name="distanceLY">The distance to the destination star system, in light years.</param>
         /// <param name="deltaV">The total deltaV budget in km/s.</param>
         /// <param name="accelerationG">The constant acceleration provided by the engines, in standard g.</param>
         /// <param name="decelerate">If the ship should decelerate.</param>
-        /// <returns>A <see cref="RelativisticTravelData"/> struct.</returns>
+        /// <returns>A <see cref="RelativisticTravelData" /> struct.</returns>
         public static RelativisticTravelData CalculateTravel(float distanceLY, float deltaV, float accelerationG, bool decelerate = true)
         {
-            return CalculateTravel(Length.FromLightYears(distanceLY), Speed.FromKilometersPerSecond(deltaV/2),
-                Acceleration.FromStandardGravity(accelerationG), decelerate);
+            return CalculateTravel(Length.FromLightYears(distanceLY), Speed.FromKilometersPerSecond(deltaV / 2),
+                                   Acceleration.FromStandardGravity(accelerationG), decelerate);
         }
 
         public static double CalculateRapidity(Acceleration acceleration, Duration shipTime)
@@ -146,9 +160,9 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
 
         public static Duration CalculateShipTimeAcceleration(Acceleration acceleration, Speed shipMaxSpeed)
         {
-            double a = acceleration.MetersPerSecondSquared;
-            double v = shipMaxSpeed.MetersPerSecond;
-            double c = UniversalConstants.Celestial.LightSpeedMetresPerSecond;
+            double a        = acceleration.MetersPerSecondSquared;
+            double v        = shipMaxSpeed.MetersPerSecond;
+            double c        = UniversalConstants.Celestial.LightSpeedMetresPerSecond;
             double shipTime = ((c / a) * Math.Atanh(v / c));
 
             return Duration.FromSeconds(shipTime);

@@ -1,3 +1,5 @@
+#region
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +8,8 @@ using System.Text;
 using UnitsNet;
 using UnitsNet.Units;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
 {
@@ -16,7 +20,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
 
         public Impulse(Duration deltaTime, Vector3d deltaVelocity)
         {
-            DeltaTime = deltaTime;
+            DeltaTime     = deltaTime;
             DeltaVelocity = deltaVelocity;
         }
 
@@ -30,39 +34,11 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
     {
         private readonly List<Impulse> impulses;
 
+        public Impulse[] Impulses => impulses.ToArray();
+
         public Manoeuvre(IEnumerable<Impulse> impulses)
         {
             this.impulses = new List<Impulse>(impulses);
-        }
-
-        public Impulse[] Impulses => impulses.ToArray();
-
-        public static Manoeuvre Lambert(OrbitState initialState, OrbitState finalState, ILambertSolver solver)
-        {
-            // Get initial algorithm conditions
-            GravitationalParameter mu = initialState.GravitationalParameter;
-            Vector3d r0 = initialState.Position.FromMetresToKm();
-            Vector3d r1 = finalState.Position.FromMetresToKm();
-
-            Duration tof = Duration.FromSeconds((finalState.Epoch - initialState.Epoch).TotalSeconds);
-            
-            if (tof.Seconds < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(initialState), "Epoch of initial orbit greater than epoch of final orbit, causing a negative time of flight");
-            }
-
-            (Vector3d deltaV_a, Vector3d deltaV_b) = solver.Lambert(mu, r0, r1, tof);
-            
-            return new Manoeuvre(new[]
-            {
-                new Impulse(Duration.Zero, deltaV_a.FromKmToMetres() - initialState.Velocity),
-                new Impulse(tof, finalState.Velocity - deltaV_b.FromKmToMetres()),
-            });
-        }
-
-        public Duration ComputeTotalDuration()
-        {
-            return impulses.Sum(i => i.DeltaTime, DurationUnit.Second);
         }
 
         public Speed ComputeTotalCost()
@@ -71,14 +47,14 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
             return Speed.FromMetersPerSecond(dV);
         }
 
+        public Duration ComputeTotalDuration()
+        {
+            return impulses.Sum(i => i.DeltaTime, DurationUnit.Second);
+        }
+
         public IEnumerator<Impulse> GetEnumerator()
         {
             return impulses.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
 
         public override string ToString()
@@ -90,6 +66,35 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
             }
 
             return sb.ToString();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public static Manoeuvre Lambert(OrbitState initialState, OrbitState finalState, ILambertSolver solver)
+        {
+            // Get initial algorithm conditions
+            GravitationalParameter mu = initialState.GravitationalParameter;
+            Vector3d               r0 = initialState.Position.FromMetresToKm();
+            Vector3d               r1 = finalState.Position.FromMetresToKm();
+
+            Duration tof = Duration.FromSeconds((finalState.Epoch - initialState.Epoch).TotalSeconds);
+
+            if (tof.Seconds < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(initialState),
+                                                      "Epoch of initial orbit greater than epoch of final orbit, causing a negative time of flight");
+            }
+
+            (Vector3d deltaV_a, Vector3d deltaV_b) = solver.Lambert(mu, r0, r1, tof);
+
+            return new Manoeuvre(new[]
+            {
+                new Impulse(Duration.Zero, deltaV_a.FromKmToMetres() - initialState.Velocity),
+                new Impulse(tof, finalState.Velocity - deltaV_b.FromKmToMetres()),
+            });
         }
     }
 }

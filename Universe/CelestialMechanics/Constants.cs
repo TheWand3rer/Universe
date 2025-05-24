@@ -1,6 +1,4 @@
 ﻿namespace VindemiatrixCollective.Universe.CelestialMechanics
 {
-    public class Constants
-    {
-    }
+    public class Constants { }
 }

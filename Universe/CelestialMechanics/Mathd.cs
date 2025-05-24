@@ -1,5 +1,9 @@
-﻿using System;
+﻿#region
+
+using System;
 using UnityEngine;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.CelestialMechanics
 {
@@ -370,8 +374,9 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             return SmoothDamp(current, target, ref currentVelocity, smoothTime, maxSpeed, deltaTime);
         }
 
-        public static double SmoothDamp(double current, double target, ref double currentVelocity, double smoothTime, double maxSpeed,
-                                        double deltaTime)
+        public static double SmoothDamp(
+            double current, double target, ref double currentVelocity, double smoothTime, double maxSpeed,
+            double deltaTime)
         {
             smoothTime = Max(0.0001d, smoothTime);
             double num1 = 2d / smoothTime;
@@ -387,7 +392,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             double num8 = target + ((num6 + num7) * num3);
             if (num5 - current > 0.0 == num8 > num5)
             {
-                num8 = num5;
+                num8            = num5;
                 currentVelocity = (num8 - num5) / deltaTime;
             }
 
@@ -407,8 +412,9 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             return SmoothDampAngle(current, target, ref currentVelocity, smoothTime, maxSpeed, deltaTime);
         }
 
-        public static double SmoothDampAngle(double current, double target, ref double currentVelocity, double smoothTime, double maxSpeed,
-                                             double deltaTime)
+        public static double SmoothDampAngle(
+            double current, double target, ref double currentVelocity, double smoothTime, double maxSpeed,
+            double deltaTime)
         {
             target = current + DeltaAngle(current, target);
             return SmoothDamp(current, target, ref currentVelocity, smoothTime, maxSpeed, deltaTime);
@@ -472,6 +478,5 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
 
             return num;
         }
-
     }
 }

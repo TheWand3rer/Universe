@@ -1,10 +1,14 @@
+#region
+
 using VindemiatrixCollective.Universe.CelestialMechanics;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
+
+#endregion
 
 public static class VectorExtensions
 {
     /// <summary>
-    /// Converts this vector to Km. Assumes the original vector is in m.
+    ///     Converts this vector to Km. Assumes the original vector is in m.
     /// </summary>
     /// <param name="vMetres"></param>
     /// <returns></returns>
@@ -14,7 +18,7 @@ public static class VectorExtensions
     }
 
     /// <summary>
-    /// Converts this vector to m. Assumes the original vector is in Km.
+    ///     Converts this vector to m. Assumes the original vector is in Km.
     /// </summary>
     /// <param name="vKm"></param>
     /// <returns></returns>
@@ -24,7 +28,7 @@ public static class VectorExtensions
     }
 
     /// <summary>
-    /// Converts this vector to AU. Assumes the original vector is in m.
+    ///     Converts this vector to AU. Assumes the original vector is in m.
     /// </summary>
     /// <param name="vMetres"></param>
     /// <param name="unitsPerAU">Use to scale this vector, in terms of Unity units per AU.</param>

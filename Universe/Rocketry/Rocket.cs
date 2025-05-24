@@ -1,5 +1,9 @@
-﻿using System;
+﻿#region
+
+using System;
 using UnitsNet;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.Rocketry
 {

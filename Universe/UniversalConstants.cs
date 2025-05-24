@@ -1,4 +1,8 @@
-﻿using System;
+﻿#region
+
+using System;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe
 {
@@ -9,7 +13,7 @@ namespace VindemiatrixCollective.Universe
             public const double EarthDensityGCm3 = 5.515;
 
             /// <summary>
-            /// Earth equatorial radius from https://arxiv.org/abs/1510.07674
+            ///     Earth equatorial radius from https://arxiv.org/abs/1510.07674
             /// </summary>
             public const double EarthRadiusKm = 6378.1;
         }
@@ -24,10 +28,10 @@ namespace VindemiatrixCollective.Universe
 
         public struct Time
         {
-            public static DateTime J2000 = new(2000, 1, 1, 11, 58, 55, 816, DateTimeKind.Utc);
             public const int SecondsPerDay = SecondsPerHour * 24;
             public const int SecondsPerHour = 60 * 60;
             public const int SecondsPerJulianYear = 31557600;
+            public static DateTime J2000 = new(2000, 1, 1, 11, 58, 55, 816, DateTimeKind.Utc);
         }
 
         public struct Celestial
@@ -44,6 +48,5 @@ namespace VindemiatrixCollective.Universe
         {
             public const double SolarConstantWm2 = 1361;
         }
-
     }
 }

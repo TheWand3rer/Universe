@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using UnitsNet;
+using UnityEngine;
 using VindemiatrixCollective.Universe.CelestialMechanics;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
 using VindemiatrixCollective.Universe.Model;
@@ -32,7 +34,7 @@ namespace VindemiatrixCollective.Universe.Tests
             double                 h  = 60000e6;
             double                 e  = 0.3;
             double                 nu = UniversalConstants.Tri.DegreeToRad * 120;
-            double                 p  = (h * h) / gm.M3S2;
+            double                 p  = h * h / gm.M3S2;
             (Vector3d r, Vector3d v) = OrbitalMechanics.RVinPerifocalFrame(gm.M3S2, p, e, nu);
 
             Common.VectorsAreEqual(new Vector3d(-5312706.25105345, 9201877.15251336, 0), r, 1e-2, nameof(OrbitState.Position));
@@ -103,14 +105,82 @@ namespace VindemiatrixCollective.Universe.Tests
         [Test]
         public void LunarPeriod()
         {
-            Planet earth = Planet.Earth;
-            Planet moon  = Planet.Moon;
+            Mass   eMass   = Mass.FromEarthMasses(1);
+            Length eRadius = Length.FromKilometers(6371.0);
 
-            earth.AddPlanets(new[] { moon });
+            double volume = 4 / 3d * Math.PI * Math.Pow(eRadius.Meters, 3);
+
+            Planet earth = new()
+            {
+                Name = "Earth",
+                PhysicalData = new PhysicalData(Density.FromKilogramsPerCubicMeter(eMass.Kilograms / volume),
+                                                eRadius,
+                                                GravitationalParameter.FromMass(eMass)),
+                OrbitalData = Planet.Earth.OrbitalData
+            };
+
+            Planet moon = new()
+            {
+                Name = "Luna",
+                PhysicalData = new PhysicalData(Mass.FromKilograms(7.346e22),
+                                                Length.FromKilometers(1737.4),
+                                                Acceleration.FromMetersPerSecondSquared(1.622),
+                                                Density.FromGramsPerCubicCentimeter(3.34)),
+                OrbitalData = Planet.Moon.OrbitalData
+            };
+
+            earth.AddOrbiters(new[] { moon });
             moon.OrbitState.Propagate(Duration.FromDays(1));
 
             // Half a day of tolerance
             Assert.AreEqual(27, moon.OrbitState.Period.Days, 5e-1, nameof(OrbitState.Period));
+            Debug.Log(moon.OrbitState.Period.Days);
+        }
+
+
+        [Test]
+        public void PropagatedFromToVectors()
+        {
+            Planet earth    = Planet.Earth;
+            int    altitude = 7000000;
+
+            // this method uses Mu.M3S2 / (body.Radius + orbitHeight)
+            Speed orbitSpeed1 = OrbitalMechanics.CalculateOrbitalVelocity(Planet.Earth, Length.FromMeters(7000000 - earth.PhysicalData.Radius.Meters));
+
+            Speed orbitSpeed =
+                Speed.FromMetersPerSecond(Math.Sqrt(UniversalConstants.Celestial.GravitationalConstant * earth.PhysicalData.Mass.Kilograms / altitude));
+
+            Assert.AreEqual(orbitSpeed1.MetersPerSecond, orbitSpeed.MetersPerSecond, 1e-2, "Orbital Speed");
+
+
+            DateTime date = DateTime.Now;
+
+            OrbitState orbit = OrbitState.FromVectors(new Vector3d(altitude, 0, 0), new Vector3d(0, orbitSpeed.MetersPerSecond, 0),
+                                                      earth,
+                                                      date);
+
+            Assert.AreEqual(altitude, orbit.PeriapsisDistance.Meters, 5, "PeriapsisDistance Before");
+            Assert.AreEqual(altitude, orbit.ApoapsisDistance.Meters, 5, "ApoapsisDistance Before");
+            Assert.AreEqual(altitude, orbit.SemiMajorAxis.Meters, 5, "Semi Major Axis Before");
+            Assert.AreEqual(0, orbit.TrueAnomaly.Degrees, 0, "TrueAnomaly Before");
+
+
+            for (int i = 0; i < 1000; i++)
+            {
+                date += Duration.FromDays(0.016);
+                orbit.Propagate(date);
+            }
+
+            Vector3d r, v;
+
+            (r, v) = orbit.ToVectors();
+
+            OrbitState newOrbit = OrbitState.FromVectors(r, v, earth, date);
+
+            Assert.AreEqual(altitude, newOrbit.PeriapsisDistance.Meters, 5, "PeriapsisDistance After");
+            Assert.AreEqual(altitude, newOrbit.ApoapsisDistance.Meters, 5, "ApoapsisDistance After");
+            Assert.AreEqual(altitude, newOrbit.SemiMajorAxis.Meters, 5, "Semi Major Axis After");
+            //Assert.AreEqual(0, newOrbit.TrueAnomaly.Degrees, 0, "TrueAnomaly After");
         }
 
         [Test]
@@ -149,32 +219,5 @@ namespace VindemiatrixCollective.Universe.Tests
             Common.VectorsAreEqual(rExp, r1, 1e2, nameof(OrbitState.Position));  // 100 m precision
             Common.VectorsAreEqual(vExp, v1, 1e-1, nameof(OrbitState.Velocity)); // 10 cm / s
         }
-		
-		[Test]
-		public void PropogatedFromToVectors()
-		{
-			Planet moon  = Planet.Moon;
-			
-			Vector3d startR = new Vector3d(-11757256.850603558, -5546792.888592083, 0);
-			Vector3d startV = new Vector3d(288.26859429353965, -611.0283165837576, 0);
-			DateTime time = DateTime.Parse("3/3/2315 3:40:26 AM");
-
-			var orbit = OrbitState.FromVectors(startR, startV, moon, time);
-
-			(Vector3d r, Vector3d v) = orbit.ToVectors();
-
-			var newOrbit = OrbitState.FromVectors(r, v, moon, time);
-
-			Assert.AreEqual(orbit.Position.x, newOrbit.Position.x, 10, "Orbits to eachother");
-			Assert.AreEqual(startR.x, orbit.Position.x, 100, "Orbit to Source");
-			Assert.AreEqual(startR.x, newOrbit.Position.x, 100, "New Orbit to Source");
-
-			orbit.Propagate(Duration.FromDays(0.0));
-			newOrbit.Propagate(Duration.FromDays(0.0));
-
-			Assert.AreEqual(orbit.Position.x, newOrbit.Position.x, 10, "Orbits to eachother post");
-			Assert.AreEqual(startR.x, orbit.Position.x, 1000, "Orbit to Source post");
-			Assert.AreEqual(startR.x, newOrbit.Position.x, 1000, "New Orbit to Source post");
-		}
     }
 }

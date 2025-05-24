@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using NUnit.Framework;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
 using VindemiatrixCollective.Universe.Model;
 
@@ -8,26 +9,60 @@ namespace VindemiatrixCollective.Universe.Tests
     {
         private readonly DeserializationHelper dataHelper = new();
 
+        [Test]
+        public void BuildSolarSystem()
+        {
+            Galaxy     galaxy = new("Milky Way");
+            StarSystem sol    = new("Sol");
+            Star       sun    = Star.Sun;
+            Planet     earth  = Planet.Earth;
+
+            sun.AddOrbiter(earth);
+            sol.AddOrbiter(sun);
+            galaxy.AddSystem(sol);
+
+            Assert.IsTrue(earth.ParentBody == sun, nameof(CelestialBody.ParentBody));
+            Assert.IsTrue(earth.ParentStar == sun, nameof(CelestialBody.ParentStar));
+            Assert.IsTrue(earth.StarSystem == sol, nameof(CelestialBody.StarSystem));
+        }
 
         [Test]
         public void PlanetAttributes()
         {
-            Galaxy galaxy = dataHelper.LoadSol();
+            Galaxy     galaxy = dataHelper.LoadSol();
+            StarSystem solar  = galaxy["Sol"];
+            Star       sol    = solar[0];
+            Planet     venus  = sol["Venus"];
 
-            Planet venus  = galaxy["Sol"][0]["Venus"];
-
-            Assert.AreEqual(CelestialBodyType.Planet.ToString(), venus.Type.ToString(), nameof(CelestialBodyType));
+            Assert.IsNotNull(venus);
+            Assert.AreEqual(nameof(CelestialBodyType.Planet), venus.Type.ToString(), nameof(CelestialBodyType));
         }
 
         [Test]
         public void PlanetData()
         {
             Galaxy galaxy = dataHelper.LoadSol();
-            
+
             Planet mars    = galaxy["Sol"][0]["Mars"];
             Planet marsExp = Common.Mars;
 
+            Assert.IsFalse(mars.IsSatellite, nameof(Planet.IsSatellite));
             ComparePlanet(marsExp, mars);
+        }
+
+        [Test]
+        public void PreOrderVisit()
+        {
+            Galaxy     galaxy = dataHelper.LoadSol();
+            StarSystem solar  = galaxy["Sol"];
+
+            string preOrderVisit = "";
+            solar.VisitHierarchy<CelestialBody>(o => preOrderVisit += $"{o.Name}, ");
+            CelestialBody[] systemBodies = solar.Hierarchy.ToArray();
+
+            // Sol + 9 planets + Moon, Io, Europa = 13
+            Assert.AreEqual(13, systemBodies.Length);
+            Assert.AreEqual("Sol, Mercury, Venus, Earth, Moon, Mars, Jupiter, Io, Europa, Saturn, Uranus, Neptune, Pluto, ", preOrderVisit, nameof(preOrderVisit));
         }
 
         [Test]
@@ -35,41 +70,41 @@ namespace VindemiatrixCollective.Universe.Tests
         {
             Galaxy galaxy = dataHelper.LoadSol();
 
-            Planet io     = galaxy["Sol"][0]["Jupiter"]["Io"];
-            Planet ioExp  = Common.Io;
+            Planet io    = galaxy["Sol"][0]["Jupiter"]["Io"];
+            Planet ioExp = Common.Io;
 
+            Assert.IsTrue(io.IsSatellite, nameof(Planet.IsSatellite));
             ComparePlanet(ioExp, io);
         }
 
         [Test]
         public void SystemTree()
         {
-            Galaxy galaxy = dataHelper.LoadSol();
+            Galaxy     galaxy = dataHelper.LoadSol();
+            StarSystem solar  = galaxy["Sol"];
+            Star       sol    = solar[0];
+            Planet     earth  = sol["Earth"];
+            Planet     moon   = earth[0];
 
-            Planet earth  = galaxy["Sol"][0]["Earth"];
-
-            Assert.AreEqual("Sol A", earth.ParentStar.FullName, nameof(CelestialBody.ParentStar));
+            Assert.AreEqual(galaxy, solar.Galaxy, nameof(Galaxy));
+            Assert.AreEqual(sol, earth.ParentBody, nameof(CelestialBody.ParentBody));
+            Assert.AreEqual(sol, earth.ParentStar, nameof(CelestialBody.ParentStar));
             Assert.AreEqual(earth.ParentBody, earth.ParentStar, nameof(CelestialBody.ParentBody));
-            Planet moon = earth[0];
-            Assert.AreEqual("Moon", moon.Name);
+            Assert.AreEqual(earth, moon.ParentBody, nameof(CelestialBody.ParentBody));
+            Assert.AreEqual(sol, moon.ParentStar, nameof(CelestialBody.ParentStar));
+            Assert.AreEqual(solar, moon.StarSystem, nameof(CelestialBody.ParentStar));
+
+            Assert.AreEqual("Milky Way", galaxy.Name, nameof(Galaxy.Name));
+            Assert.AreEqual("Moon", moon.Name, nameof(CelestialBody.Name));
+            Assert.AreEqual("Sol", earth.ParentStar.FullName, nameof(CelestialBody.ParentStar));
             Assert.AreEqual("Sol", moon.StarSystem.Name, nameof(StarSystem));
             Assert.AreEqual("Sol", earth.StarSystem.Name, nameof(StarSystem));
             Assert.AreEqual("Sol", earth.ParentBody.StarSystem.Name, nameof(StarSystem));
-        }
 
-        public void X()
-        {
-            Galaxy     galaxy = new Galaxy("Milky Way");
-            StarSystem sol    = new StarSystem("Sol");
+            Assert.AreEqual(sol, earth.OrbitState.Attractor, nameof(OrbitState.Attractor));
+            Assert.AreEqual(earth, moon.OrbitState.Attractor, nameof(OrbitState.Attractor));
 
-            // Star.Sol and Planet.Earth are included as examples with hardcoded values at J2000.
-            // You should create stars and planets with the appropriate constructors or factory methods
-            Star   sun   = Star.Sun;
-            Planet earth = Planet.Earth;
-
-            galaxy.AddSystem(sol);
-            sun.AddPlanet(earth);
-            sol.AddStar(sun);
+            Assert.IsTrue(moon.IsSatellite, nameof(Planet.IsSatellite));
         }
 
         private void ComparePlanet(Planet expected, Planet actual)

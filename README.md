@@ -1,6 +1,5 @@
 # Universe
-
-<img src="Documentation/Images/Sine Fine Transfer.png"/>
+![](Documentation/Media/SineFine_Transfer.png)
 
 `Universe` is a library used in the development of [Sine Fine](https://www.vindemiatrixcollective.com), a space exploration game. It provides methods and code to perform calculations useful in this genre of games. With code ported to C# from popular libraries like [poliastro](https://github.com/poliastro/poliastro), it can calculate the position of the planets given a certain date, or an interplanetary manoeuvre to travel to another planet!
 
@@ -21,6 +20,7 @@ These are the features currently available in `Universe`:
 * Uses `double` for internal calculations and can output in `float` for Unity.
 * The model supports Galaxies / (n-ary) Star Systems / Stars / Planets (and moons). Each orbiter is a `CelestialBody`.
 * A Kepler simulation model that calculates the position of any object in the solar system given their orbital data and time from the [J2000 epoch](https://en.wikipedia.org/wiki/Epoch_(astronomy)#Julian_years_and_J2000).
+* Kinematic propagator for orbits of binary stars.
 * An interplanetary mission planner that calculates possible transfers given a set of launch windows.
 * A set of functions to calculate mission profiles for *relativistic rockets*, to obtain the acceleration and cruise time for both the observer and the ship, and the total duration of the mission given speeds that approach fractions of c.
 * (optional) custom deserialisation converters in the assembly `com.vindemiatrixcollective.universe.data`.
@@ -84,8 +84,10 @@ sol.AddStar(sun);
 
 ## Propagating orbits
 Define a solar system, then in your `Start` or other initialisation method:
+### Keplerian Orbits
 ```cs
-// iterate on every body in the Solar system
+// iterate on every body in the Solar system or use the provided Hiearrchy enumerator,
+// or use CelestialBody.PreOrderVisit | LevelOrderVisit
 planet.OrbitState.Propagate(DateTime.Today);
 ```
 Then, in your `Update` method:
@@ -101,7 +103,48 @@ Remarks:
 * Set unitsPerAU to define how many Unity units correspond to one Astronomical Unit (AU).
 * `.toXZY()` is necessary because the calculations are computed using Y as up, to adapt to the original libraries.
 
+### Binary Orbits
+https://github.com/user-attachments/assets/de2b0dad-f1b2-437a-9703-2bb9262cb911
+
+The Keplerian propagator works best for two-body problems where one is massive (like a star) and the other is much smaller (a planet). For star systems that have two or more stars, the Keplerian propagator cannot be used for the orbits of the stars. There is a `Kinematic` propagator that you can assign to the `OrbitState` of both stars, which will make them orbit without being affected by each other. An n-body simulator will be added in the future.
+
+```cs
+Star primary = stars[0];
+Star companion = stars[1];
+
+OrbitalData o = companion.OrbitalData;
+Barycentre barycentre = new(primary.StarSystem);
+(Length a1, Length a2) = barycentre.CalculateSemiMajorAxes(primary, companion, o.SemiMajorAxis);
+
+primary.Attractor   = barycentre;
+companion.Attractor = barycentre;
+
+// Only a, e, i, Ω (longitude of ascending node), ω (argument of periastron, and P are necessary
+// i here is zero to make sure that your view is aligned to the orbital plane,
+// but in catalogues this value represents the inclination as seen from Earth
+OrbitalData o1 = new(a1, o.Eccentricity, Angle.Zero, o.LongitudeAscendingNode, o.ArgumentPeriapsis, o.Period,
+                     Duration.Zero, Angle.Zero,
+                     trueAnomaly: Angle.FromDegrees(0));
+// ω is shifted 180° to place the other state at the opposite side
+// however you could calculate the "current position" from the time of periastron T0 if you have it
+OrbitalData o2 = new(a2, o.Eccentricity, Angle.Zero,
+                     o.LongitudeAscendingNode, //Angle.FromDegrees((o.LongitudeAscendingNode.Value + 180) % 360),
+                     Angle.FromDegrees((o.ArgumentPeriapsis.Value + 180) % 360), o.Period,
+                     Duration.Zero, Angle.Zero,
+                     trueAnomaly: Angle.FromDegrees(0));
+
+primary.OrbitalData   = o1;
+companion.OrbitalData = o2;
+
+IPropagator propagator = new Kinematic();
+primary.OrbitState.SetPropagator(propagator);
+companion.OrbitState.SetPropagator(propagator);
+```
+
+
 ## Interplanetary Transfers
+[SineFine_transfer.webm](https://github.com/user-attachments/assets/df0ded8a-72e8-4578-8fe2-4075dfc0b5b2)
+
 ### Simple transfer
 You can calculate a transfer between two known planets at any moment in time (based on J2000). 
 The full implementation is in [LambertTests](Universe/Tests/LambertTests.cs).
@@ -174,3 +217,7 @@ Rapidity: 0.05
 
 ## Support
 If you have questions, please create an [issue](https://github.com/TheWand3rer/SineFine/issues) here or join the [Discord](https://discord.gg/qCX6XKvJ4f).
+
+## See also:
+* [Sine Fine](https://vindemiatrixcollective.com): a space exploration game played at sublight speeds.
+* [astrolabium](https://github.com/TheWand3rer/astrolabium): a python project to combine data from stellar catalogues into the data structures used in the Universe library to represent the galaxy and its star systems.

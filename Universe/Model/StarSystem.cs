@@ -21,6 +21,10 @@ namespace VindemiatrixCollective.Universe.Model
         public string DistanceFromSolLy;
 #endif
 
+        private Barycentre barycentre;
+
+        public Barycentre Barycentre => barycentre ??= new Barycentre(this);
+
         public CelestialBody this[string name] => _Orbiters[name];
 
         public Galaxy Galaxy { get; internal set; }
@@ -47,6 +51,8 @@ namespace VindemiatrixCollective.Universe.Model
 
         [CreateProperty] public Length DistanceFromSol => Length.FromParsecs(Coordinates.magnitude);
 
+        public Mass Mass => Mass.FromSolarMasses(Stars.Sum(star => star.CalculatePlanetaryMass().SolarMasses));
+
         public Star this[int index] => Stars.ElementAt(index);
 
         public Star Primary => Stars.FirstOrDefault();
@@ -59,13 +65,15 @@ namespace VindemiatrixCollective.Universe.Model
 
         protected Dictionary<string, CelestialBody> _Orbiters { get; }
 
-        public StarSystem() : this(nameof(StarSystem)) { }
-
-        public StarSystem(string name)
+        public StarSystem()
         {
-            Name      = name;
             _Orbiters = new Dictionary<string, CelestialBody>();
-            Id        = MakeId(name);
+        }
+
+        public StarSystem(string name) : this()
+        {
+            Name = name;
+            Id   = MakeId(name);
         }
 
         public StarSystem(string name, Star primary) : this(name, new[] { primary }) { }
@@ -103,22 +111,39 @@ namespace VindemiatrixCollective.Universe.Model
 #endif
         }
 
+        public string SystemTree()
+        {
+            string tree = "*\n";
+            foreach (CelestialBody body in Orbiters)
+            {
+                tree += CelestialBody.RenderTree(body);
+            }
+
+            return tree;
+        }
+
         public CelestialBody[] ToArray()
         {
             return _Orbiters.Values.OrderByDescending(star => star.PhysicalData.Mass.SolarMasses).ToArray();
         }
 
-        public void VisitHierarchy<TBody>(Action<TBody> callback)
+        public void VisitHierarchy<TBody>(Action<TBody> callback, Func<CelestialBody, IEnumerable<CelestialBody>> visitAlgorithm = null)
             where TBody : CelestialBody
         {
-            foreach (CelestialBody body in Hierarchy)
+            visitAlgorithm ??= CelestialBody.PreOrderVisit;
+
+            foreach (CelestialBody body in _Orbiters.Values)
             {
-                if (body is TBody tBody)
+                foreach (CelestialBody orbiter in visitAlgorithm(body))
                 {
-                    callback.Invoke(tBody);
+                    if (orbiter is TBody tBody)
+                    {
+                        callback.Invoke(tBody);
+                    }
                 }
             }
         }
+
 
         IEnumerator IEnumerable.GetEnumerator()
         {

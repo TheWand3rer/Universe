@@ -8,13 +8,13 @@ namespace VindemiatrixCollective.Universe.Tests
     {
         public static (double f, double g, double fDot) CalculateTransferParameters(Length r1Mag, Length r2Mag, Length p, Angle deltaV, double gmM3S2)
         {
-            // (5.5)  f = 1 - r2 / p ï¿½ (1 - cos )
+            // (5.5)  f = 1 - r2 / p × (1 - cos )
             double f = 1 - r2Mag.Meters / p.Meters * (1 - Math.Cos(deltaV.Radians));
 
-            // (5.6)  g = r1 ï¿½ r2 ï¿½ sin  / SQRT[ GM ï¿½ p ]
+            // (5.6)  g = r1 × r2 × sin  / SQRT[ GM × p ]
             double g = r1Mag.Meters * r2Mag.Meters * Math.Sin(deltaV.Radians) / Math.Sqrt(gmM3S2 * p.Meters);
 
-            // (5.7)  fdot = SQRT[ GM / p ] ï¿½ tan(/2) ï¿½ [(1 - cos ) / p - 1/r1 - 1/r2 ]
+            // (5.7)  fdot = SQRT[ GM / p ] × tan(/2) × [(1 - cos ) / p - 1/r1 - 1/r2 ]
             double fDot = Math.Sqrt(gmM3S2 / p.Meters) * Math.Tan(deltaV.Radians / 2) *
                           ((1 - Math.Cos(deltaV.Radians)) / p.Meters - 1 / r1Mag.Meters - 1 / r2Mag.Meters);
 
@@ -28,7 +28,7 @@ namespace VindemiatrixCollective.Universe.Tests
             double pAU = p.AstronomicalUnits;
             double lAU = l.AstronomicalUnits;
 
-            // (5.12) a = m ï¿½ k ï¿½ p / [(2 ï¿½ m - l2) ï¿½ p2 + 2 ï¿½ k ï¿½ l ï¿½ p - k2]
+            // (5.12) a = m × k × p / [(2 × m - l2) × p2 + 2 × k × l × p - k2]
             double aAU = mAU * kAU * pAU / ((2 * mAU - lAU * lAU) * pAU * pAU + 2 * kAU * lAU * pAU - kAU * kAU);
             return Length.FromAstronomicalUnits(aAU);
         }

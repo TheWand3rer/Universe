@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using UnitsNet;
 using Unity.Properties;
 using UnityEngine.Assertions;
@@ -28,7 +30,38 @@ namespace VindemiatrixCollective.Universe.Model
         public IEnumerable<CelestialBody> Hierarchy => PreOrderVisit(this);
 
         public IEnumerable<CelestialBody> Orbiters => _Orbiters.Values;
+
+        public IEnumerable<CelestialBody> Siblings
+        {
+            get
+            {
+                List<CelestialBody> siblings = ParentBody != null ? ParentBody.Orbiters.ToList() : StarSystem.Orbiters.ToList();
+                siblings.Remove(this);
+                return siblings;
+            }
+        }
+
+        public int Depth
+        {
+            get
+            {
+                int           depth = 0;
+                CelestialBody body  = ParentBody;
+                while (body != null)
+                {
+                    body = body.ParentBody;
+                    depth++;
+                }
+
+                return depth;
+            }
+        }
+
         public int Index { get; protected set; }
+
+        public int OrbiterCount => _Orbiters.Count;
+
+        public int SiblingsCount => Siblings.Count();
 
         [CreateProperty]
         public OrbitalData OrbitalData
@@ -93,15 +126,13 @@ namespace VindemiatrixCollective.Universe.Model
 
         public virtual void AddOrbiter(CelestialBody orbiter)
         {
-            orbiter.Index      = _Orbiters.Count;
-            orbiter.StarSystem = StarSystem;
+            orbiter.Index = _Orbiters.Count;
             orbiter.SetParentBody(this);
 
             _Orbiters.Add(orbiter.Name, orbiter);
 
-            foreach (CelestialBody body in orbiter.Orbiters)
+            foreach (CelestialBody body in orbiter.Hierarchy)
             {
-                body.SetParentBody(orbiter);
                 body.StarSystem = StarSystem;
             }
         }
@@ -198,14 +229,72 @@ namespace VindemiatrixCollective.Universe.Model
             }
         }
 
-        public static void VisitHierarchy<TBody>(TBody root, Action<TBody> callback)
+
+        public static IEnumerable<CelestialBody> LevelOrderVisit(CelestialBody root)
+        {
+            Queue<CelestialBody> queue = new();
+            queue.Enqueue(root);
+
+            while (queue.Count > 0)
+            {
+                CelestialBody body = queue.Dequeue();
+                yield return body;
+
+                foreach (CelestialBody orbiter in body.Orbiters)
+                {
+                    queue.Enqueue(orbiter);
+                }
+            }
+        }
+
+        public static void VisitHierarchy<TBody>(TBody root, Action<TBody> callback, Func<CelestialBody, IEnumerable<CelestialBody>> visitAlgorithm = null)
             where TBody : CelestialBody
         {
-            foreach (CelestialBody body in PreOrderVisit(root))
+            visitAlgorithm ??= PreOrderVisit;
+
+            foreach (CelestialBody body in visitAlgorithm(root))
             {
                 if (body is TBody tBody)
                 {
                     callback?.Invoke(tBody);
+                }
+            }
+        }
+
+        public static string RenderTree(CelestialBody root, int indentLength = 2)
+        {
+            string indent = string.Empty;
+            for (int i = 0; i < indentLength; i++)
+            {
+                indent += " ";
+            }
+
+            StringBuilder sb = new();
+
+            PrintNode(sb, root, string.Empty, true);
+
+            return sb.ToString();
+
+            void PrintNode(StringBuilder sb, CelestialBody node, string currentIndent, bool isLast)
+            {
+                sb.Append(currentIndent);
+                if (isLast)
+                {
+                    sb.Append("└── ");
+                }
+                else
+                {
+                    sb.Append("├── ");
+                }
+
+                sb.AppendLine(node.Name);
+
+                CelestialBody[] orbiters = node.Orbiters.ToArray();
+                for (int i = 0; i < orbiters.Length; i++)
+                {
+                    CelestialBody orbiter   = orbiters[i];
+                    bool          lastChild = i == orbiters.Length - 1;
+                    PrintNode(sb, orbiter, currentIndent + (isLast ? $"{indent}  " : $"│{indent} "), lastChild);
                 }
             }
         }

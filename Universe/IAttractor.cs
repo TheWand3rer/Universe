@@ -2,7 +2,7 @@
 
 using UnitsNet;
 using VindemiatrixCollective.Universe.CelestialMechanics;
-using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
+using VindemiatrixCollective.Universe.Model;
 
 #endregion
 
@@ -13,7 +13,10 @@ namespace VindemiatrixCollective.Universe
         GravitationalParameter Mu { get; }
         Mass Mass { get; }
 
-        OrbitalData OrbitalData { get; }
+
+        StarSystem StarSystem { get; }
+
+
         string Name { get; }
     }
 }

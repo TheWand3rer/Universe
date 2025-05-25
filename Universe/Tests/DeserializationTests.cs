@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using NUnit.Framework;
+using UnityEngine;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
 using VindemiatrixCollective.Universe.Model;
 
@@ -24,6 +25,21 @@ namespace VindemiatrixCollective.Universe.Tests
             Assert.IsTrue(earth.ParentBody == sun, nameof(CelestialBody.ParentBody));
             Assert.IsTrue(earth.ParentStar == sun, nameof(CelestialBody.ParentStar));
             Assert.IsTrue(earth.StarSystem == sol, nameof(CelestialBody.StarSystem));
+        }
+
+        [Test]
+        public void LevelOrderVisit()
+        {
+            Galaxy     galaxy = dataHelper.LoadSol();
+            StarSystem solar  = galaxy["Sol"];
+
+            string levelOrderVisit = "";
+            solar.VisitHierarchy<CelestialBody>(o => levelOrderVisit += $"{o.Name}, ", CelestialBody.LevelOrderVisit);
+            CelestialBody[] systemBodies = solar.Hierarchy.ToArray();
+
+            // Sol + 9 planets + Moon, Io, Europa = 13
+            Assert.AreEqual(13, systemBodies.Length);
+            Assert.AreEqual("Sol, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Io, Europa, ", levelOrderVisit, nameof(levelOrderVisit));
         }
 
         [Test]
@@ -65,6 +81,7 @@ namespace VindemiatrixCollective.Universe.Tests
             Assert.AreEqual("Sol, Mercury, Venus, Earth, Moon, Mars, Jupiter, Io, Europa, Saturn, Uranus, Neptune, Pluto, ", preOrderVisit, nameof(preOrderVisit));
         }
 
+
         [Test]
         public void SatelliteData()
         {
@@ -81,18 +98,20 @@ namespace VindemiatrixCollective.Universe.Tests
         public void SystemTree()
         {
             Galaxy     galaxy = dataHelper.LoadSol();
-            StarSystem solar  = galaxy["Sol"];
-            Star       sol    = solar[0];
-            Planet     earth  = sol["Earth"];
+            StarSystem sol    = galaxy["Sol"];
+            Star       sun    = sol[0];
+            Planet     earth  = sun["Earth"];
             Planet     moon   = earth[0];
 
-            Assert.AreEqual(galaxy, solar.Galaxy, nameof(Galaxy));
-            Assert.AreEqual(sol, earth.ParentBody, nameof(CelestialBody.ParentBody));
-            Assert.AreEqual(sol, earth.ParentStar, nameof(CelestialBody.ParentStar));
+            Debug.Log(sol.SystemTree());
+
+            Assert.AreEqual(galaxy, sol.Galaxy, nameof(Galaxy));
+            Assert.AreEqual(sun, earth.ParentBody, nameof(CelestialBody.ParentBody));
+            Assert.AreEqual(sun, earth.ParentStar, nameof(CelestialBody.ParentStar));
             Assert.AreEqual(earth.ParentBody, earth.ParentStar, nameof(CelestialBody.ParentBody));
             Assert.AreEqual(earth, moon.ParentBody, nameof(CelestialBody.ParentBody));
-            Assert.AreEqual(sol, moon.ParentStar, nameof(CelestialBody.ParentStar));
-            Assert.AreEqual(solar, moon.StarSystem, nameof(CelestialBody.ParentStar));
+            Assert.AreEqual(sun, moon.ParentStar, nameof(CelestialBody.ParentStar));
+            Assert.AreEqual(sol, moon.StarSystem, nameof(CelestialBody.ParentStar));
 
             Assert.AreEqual("Milky Way", galaxy.Name, nameof(Galaxy.Name));
             Assert.AreEqual("Moon", moon.Name, nameof(CelestialBody.Name));
@@ -101,7 +120,7 @@ namespace VindemiatrixCollective.Universe.Tests
             Assert.AreEqual("Sol", earth.StarSystem.Name, nameof(StarSystem));
             Assert.AreEqual("Sol", earth.ParentBody.StarSystem.Name, nameof(StarSystem));
 
-            Assert.AreEqual(sol, earth.OrbitState.Attractor, nameof(OrbitState.Attractor));
+            Assert.AreEqual(sun, earth.OrbitState.Attractor, nameof(OrbitState.Attractor));
             Assert.AreEqual(earth, moon.OrbitState.Attractor, nameof(OrbitState.Attractor));
 
             Assert.IsTrue(moon.IsSatellite, nameof(Planet.IsSatellite));

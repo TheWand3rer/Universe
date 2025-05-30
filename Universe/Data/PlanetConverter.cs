@@ -49,7 +49,7 @@ namespace VindemiatrixCollective.Universe.Data
             JToken                     attributesToken = jo[nameof(Attributes)];
             Dictionary<string, string> attributes      = serializer.Deserialize<Dictionary<string, string>>(attributesToken.CreateReader());
 
-            planet.Name = reader.ParentNameFromContainer(nameof(CelestialBody.Orbiters));
+            planet.Name = reader.ObjectNameFromPath();
             Assert.IsFalse(string.IsNullOrEmpty(planet.Name));
 
             PhysicalData physical;

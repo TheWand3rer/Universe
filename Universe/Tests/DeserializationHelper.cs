@@ -7,10 +7,11 @@ namespace VindemiatrixCollective.Universe.Tests
 {
     public class DeserializationHelper
     {
-        private readonly JsonConverter[] converters =
+        public static readonly JsonConverter[] Converters =
         {
             new CoreObjectConverter<Galaxy>(new GalaxyConverter()), new CoreObjectConverter<StarSystem>(new StarSystemConverter()),
-            new CoreObjectConverter<Planet>(new PlanetConverter()), new CoreObjectConverter<CelestialBody>(new CelestialBodyConverter())
+            new CoreObjectConverter<Star>(new StarConverter()), new CoreObjectConverter<Planet>(new PlanetConverter()),
+            new CoreObjectConverter<CelestialBody>(new CelestialBodyConverter())
         };
 
         public T DeserializeFile<T>(string filename, params JsonConverter[] converters)
@@ -20,11 +21,15 @@ namespace VindemiatrixCollective.Universe.Tests
             return data;
         }
 
+        public T DeserializeObject<T>(string json, params JsonConverter[] converters)
+        {
+            T data = JsonConvert.DeserializeObject<T>(json, converters);
+            return data;
+        }
+
         public Galaxy LoadGalaxy(string path = "Data/galaxy")
         {
-            Galaxy galaxy = DeserializeFile<Galaxy>(path, converters);
-
-            //EventLog.Info($"Loaded {galaxy.Systems.Count} systems");
+            Galaxy galaxy = DeserializeFile<Galaxy>(path, Converters);
             return galaxy;
         }
 
@@ -38,7 +43,7 @@ namespace VindemiatrixCollective.Universe.Tests
         public void LoadSol(ref Galaxy galaxy, string path = "Data/SolarSystem")
         {
             JsonSerializerSettings settings       = new();
-            Galaxy                 additionalData = DeserializeFile<Galaxy>(path, converters);
+            Galaxy                 additionalData = DeserializeFile<Galaxy>(path, Converters);
             foreach (StarSystem system in additionalData.Systems)
             {
                 galaxy.AddSystem(system);

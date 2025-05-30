@@ -25,8 +25,6 @@ namespace VindemiatrixCollective.Universe.Model
         [CreateProperty] public CelestialBodyType Type => Attributes.Type;
         public GravitationalParameter Mu => GravitationalParameter.FromMass(PhysicalData.Mass);
 
-        public IAttractor Attractor { get; set; }
-
         public IEnumerable<CelestialBody> Hierarchy => PreOrderVisit(this);
 
         public IEnumerable<CelestialBody> Orbiters => _Orbiters.Values;
@@ -70,9 +68,9 @@ namespace VindemiatrixCollective.Universe.Model
             set
             {
                 orbitalData = value;
-                if (Attractor is CelestialBody c)
+                if (ParentBody != null)
                 {
-                    OrbitState = OrbitState.FromOrbitalElements(orbitalData, Attractor);
+                    OrbitState = OrbitState.FromOrbitalElements(orbitalData, ParentBody);
                 }
                 else
                 {
@@ -83,7 +81,7 @@ namespace VindemiatrixCollective.Universe.Model
 
         [CreateProperty] public OrbitState OrbitState { get; private set; }
 
-        [CreateProperty] public PhysicalData PhysicalData { get; set; }
+        [CreateProperty] public virtual PhysicalData PhysicalData { get; set; }
 
         public Star ParentStar
         {

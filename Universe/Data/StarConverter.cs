@@ -35,7 +35,16 @@ namespace VindemiatrixCollective.Universe.Data
             t   ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.t");
             age ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.age");
 
-            star.SpectralClass = new SpectralClass(jo.Value<string>(nameof(SpectralClass)) ?? jo.Value<string>("SC"));
+            string sc = jo.Value<string>(nameof(SpectralClass)) ?? jo.Value<string>("SC");
+            if (string.IsNullOrEmpty(sc))
+            {
+                star.SpectralClass = SpectralClass.Undefined;
+                Debug.LogWarning($"{reader.Path} SC is empty.");
+            }
+            else
+            {
+                star.SpectralClass = new SpectralClass(sc);
+            }
 
             string name = jo.Value<string>(nameof(Star.Name)) ?? reader.ParentNameFromContainer(nameof(StarSystem.Orbiters));
             if (!string.IsNullOrEmpty(name))
@@ -47,7 +56,7 @@ namespace VindemiatrixCollective.Universe.Data
 
             if (string.IsNullOrEmpty(star.Name))
             {
-                Debug.LogWarning($"{nameof(Star)} name is empty.");
+                Debug.LogWarning($"{reader.Path} name is empty.");
                 star.Name = "Unknown";
             }
 
@@ -59,13 +68,13 @@ namespace VindemiatrixCollective.Universe.Data
                     ? Density.FromGramsPerCubicCentimeter(3 * mass.Grams / (4 * UniversalConstants.Tri.Pi * Math.Pow(radius.Centimeters, 3)))
                     : Density.Zero;
 
-                star.PhysicalData = new StellarData(Luminosity.FromSolarLuminosities(l ?? 0),
-                                                    mass,
-                                                    Acceleration.FromCentimetersPerSecondSquared(g ?? 0),
-                                                    radius,
-                                                    Temperature.FromKelvins(t ?? 0),
-                                                    Duration.FromYears365(age * 1E9 ?? 0),
-                                                    density);
+                star.StellarData = new StellarData(Luminosity.FromSolarLuminosities(l ?? 0),
+                                                   mass,
+                                                   Acceleration.FromCentimetersPerSecondSquared(g ?? 0),
+                                                   radius,
+                                                   Temperature.FromKelvins(t ?? 0),
+                                                   Duration.FromYears365(age * 1E9 ?? 0),
+                                                   density);
             }
             catch (ArgumentException ex)
             {
@@ -81,14 +90,14 @@ namespace VindemiatrixCollective.Universe.Data
                 double? lan  = (double?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.LongitudeAscendingNode)}");
                 double? argp = (double?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.ArgumentPeriapsis)}");
 
-                a    ??= (double)jo.SelectToken($"{nameof(OrbitalData)}.a");
-                e    ??= (double)jo.SelectToken($"{nameof(OrbitalData)}.e");
-                P    ??= (double)jo.SelectToken($"{nameof(OrbitalData)}.P");
-                i    ??= (double)jo.SelectToken($"{nameof(OrbitalData)}.i");
-                lan  ??= (double)jo.SelectToken($"{nameof(OrbitalData)}.lan");
-                argp ??= (double)jo.SelectToken($"{nameof(OrbitalData)}.argp");
+                a    ??= (double?)jo.SelectToken($"{nameof(OrbitalData)}.a");
+                e    ??= (double?)jo.SelectToken($"{nameof(OrbitalData)}.e");
+                P    ??= (double?)jo.SelectToken($"{nameof(OrbitalData)}.P");
+                i    ??= (double?)jo.SelectToken($"{nameof(OrbitalData)}.i");
+                lan  ??= (double?)jo.SelectToken($"{nameof(OrbitalData)}.lan");
+                argp ??= (double?)jo.SelectToken($"{nameof(OrbitalData)}.argp");
 
-                star.OrbitalData = new OrbitalData(Length.FromAstronomicalUnits(a.Value * UniversalConstants.Celestial.MetresPerAu),
+                star.OrbitalData = new OrbitalData(Length.FromAstronomicalUnits(a.Value),
                                                    Ratio.FromDecimalFractions(e.Value),
                                                    Angle.FromDegrees(i.Value),
                                                    Angle.FromDegrees(lan.Value),

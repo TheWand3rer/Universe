@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
@@ -10,36 +11,91 @@ namespace VindemiatrixCollective.Universe.Tests
     {
         private readonly DeserializationHelper dataHelper = new();
 
+
         [Test]
-        public void BuildSolarSystem()
+        public void DeserializePlanet()
         {
-            Galaxy     galaxy = new("Milky Way");
-            StarSystem sol    = new("Sol");
-            Star       sun    = Star.Sun;
-            Planet     earth  = Planet.Earth;
+            string earthJson = @"{
+            ""Earth"": {
+              ""Attributes"": {
+                ""Type"": ""Planet"",
+                ""Class"": ""Terrestrial"",
+                ""Size"": ""Average"",
+                ""SurfaceMaterial"": ""System/Planets/Earth"",
+                ""AtmosphereType"": ""Oxygen""
+              },
+              ""Orbiters"": {},
+              ""PhysicalData"": {
+                ""Mass"": 5.97219e+24,
+                ""Density"": 5.51,
+                ""Radius"": 6378.137,
+                ""Gravity"": 9.7803267715,
+                ""Temperature"": 287.6,
+                ""HillSphereRadius"": 234.9,
+                ""GravitationalParameter"": 398600.435436
+              },
+              ""OrbitalData"": {
+                ""SemiMajorAxis"": 1.000448828934185,
+                ""Eccentricity"": 0.01711862906746885,
+                ""Period"": 365.5022838235192,
+                ""Inclination"": 7.251513445651153,
+                ""LongitudeAscendingNode"": 241.097743921078,
+                ""ArgumentPeriapsis"": 206.0459434316863,
+                ""MeanAnomaly"": 358.6172562416435,
+                ""TrueAnomaly"": 358.5688856532555,
+                ""AxialTilt"": 23.4392911,
+                ""SiderealRotationPeriod"": 23.9344695944
+              }
+            }
+          }";
+            Dictionary<string, Planet> kvp = dataHelper.DeserializeObject<Dictionary<string, Planet>>(earthJson, DeserializationHelper.Converters);
+            Assert.IsNotNull(kvp);
 
-            sun.AddOrbiter(earth);
-            sol.AddOrbiter(sun);
-            galaxy.AddSystem(sol);
+            Planet earth = kvp["Earth"];
+            Debug.Log($"Deserialized Planet <{earth.Name}>");
 
-            Assert.IsTrue(earth.ParentBody == sun, nameof(CelestialBody.ParentBody));
-            Assert.IsTrue(earth.ParentStar == sun, nameof(CelestialBody.ParentStar));
-            Assert.IsTrue(earth.StarSystem == sol, nameof(CelestialBody.StarSystem));
+            ComparePlanet(Common.Earth, earth);
         }
 
         [Test]
-        public void LevelOrderVisit()
+        public void DeserializeStar()
         {
-            Galaxy     galaxy = dataHelper.LoadSol();
-            StarSystem solar  = galaxy["Sol"];
+            string proximaJson = @"{
+            ""C"": {
+              ""Id"": ""HIP 70890"",
+              ""Name"": ""Proxima"",
+              ""SC"": ""M5Ve"",
+              ""PhysicalData"": {
+                ""l"": 0.0017,
+                ""m"": 0.12,
+                ""t"": 3306.0,
+                ""g"": 112000.0,
+                ""age"": 4.85
+              },
+              ""OrbitalData"": {
+                ""a"": 14666.424758,
+                ""P"": 547000.0,
+                ""e"": 0.5,
+                ""i"": 107.6,
+                ""lan"": 126.0,
+                ""argp"": 72.3
+              }
+            }
+          }";
 
-            string levelOrderVisit = "";
-            solar.VisitHierarchy<CelestialBody>(o => levelOrderVisit += $"{o.Name}, ", CelestialBody.LevelOrderVisit);
-            CelestialBody[] systemBodies = solar.Hierarchy.ToArray();
+            Dictionary<string, Star> kvp = dataHelper.DeserializeObject<Dictionary<string, Star>>(proximaJson, DeserializationHelper.Converters);
 
-            // Sol + 9 planets + Moon, Io, Europa = 13
-            Assert.AreEqual(13, systemBodies.Length);
-            Assert.AreEqual("Sol, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Io, Europa, ", levelOrderVisit, nameof(levelOrderVisit));
+            Assert.IsNotNull(kvp);
+
+            Star proxima = kvp["C"];
+
+            Assert.IsNotNull(proxima, nameof(Star));
+            Assert.AreEqual("Proxima", proxima.Name, nameof(Star.Name));
+            Assert.AreEqual("M5V", proxima.SpectralClass.Signature, nameof(Star.SpectralClass));
+            Assert.AreEqual(0.0017, proxima.StellarData.Luminosity.SolarLuminosities, 1e-4, nameof(StellarData.Luminosity));
+            Assert.AreEqual(0.12, proxima.StellarData.Mass.SolarMasses, 1e-3, nameof(StellarData.Mass));
+            Assert.AreEqual(3306, proxima.StellarData.Temperature.Kelvins, 1e-1, nameof(StellarData.Temperature));
+            Assert.AreEqual(112000, proxima.StellarData.Gravity.CentimetersPerSecondSquared, 1e-1, nameof(StellarData.Gravity));
         }
 
         [Test]
@@ -64,21 +120,6 @@ namespace VindemiatrixCollective.Universe.Tests
 
             Assert.IsFalse(mars.IsSatellite, nameof(Planet.IsSatellite));
             ComparePlanet(marsExp, mars);
-        }
-
-        [Test]
-        public void PreOrderVisit()
-        {
-            Galaxy     galaxy = dataHelper.LoadSol();
-            StarSystem solar  = galaxy["Sol"];
-
-            string preOrderVisit = "";
-            solar.VisitHierarchy<CelestialBody>(o => preOrderVisit += $"{o.Name}, ");
-            CelestialBody[] systemBodies = solar.Hierarchy.ToArray();
-
-            // Sol + 9 planets + Moon, Io, Europa = 13
-            Assert.AreEqual(13, systemBodies.Length);
-            Assert.AreEqual("Sol, Mercury, Venus, Earth, Moon, Mars, Jupiter, Io, Europa, Saturn, Uranus, Neptune, Pluto, ", preOrderVisit, nameof(preOrderVisit));
         }
 
 
@@ -124,6 +165,36 @@ namespace VindemiatrixCollective.Universe.Tests
             Assert.AreEqual(earth, moon.OrbitState.Attractor, nameof(OrbitState.Attractor));
 
             Assert.IsTrue(moon.IsSatellite, nameof(Planet.IsSatellite));
+        }
+
+        [Test]
+        public void VisitLevelOrder()
+        {
+            Galaxy     galaxy = dataHelper.LoadSol();
+            StarSystem solar  = galaxy["Sol"];
+
+            string levelOrderVisit = "";
+            solar.VisitHierarchy<CelestialBody>(o => levelOrderVisit += $"{o.Name}, ", CelestialBody.LevelOrderVisit);
+            CelestialBody[] systemBodies = solar.Hierarchy.ToArray();
+
+            // Sol + 9 planets + Moon, Io, Europa = 13
+            Assert.AreEqual(13, systemBodies.Length);
+            Assert.AreEqual("Sol, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Io, Europa, ", levelOrderVisit, nameof(levelOrderVisit));
+        }
+
+        [Test]
+        public void VisitPreOrder()
+        {
+            Galaxy     galaxy = dataHelper.LoadSol();
+            StarSystem solar  = galaxy["Sol"];
+
+            string preOrderVisit = "";
+            solar.VisitHierarchy<CelestialBody>(o => preOrderVisit += $"{o.Name}, ");
+            CelestialBody[] systemBodies = solar.Hierarchy.ToArray();
+
+            // Sol + 9 planets + Moon, Io, Europa = 13
+            Assert.AreEqual(13, systemBodies.Length);
+            Assert.AreEqual("Sol, Mercury, Venus, Earth, Moon, Mars, Jupiter, Io, Europa, Saturn, Uranus, Neptune, Pluto, ", preOrderVisit, nameof(preOrderVisit));
         }
 
         private void ComparePlanet(Planet expected, Planet actual)

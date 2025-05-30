@@ -14,7 +14,7 @@ namespace VindemiatrixCollective.Universe.Data
 
         public CelestialBody Create(JObject jo)
         {
-            if (jo.TryGetValue(nameof(SpectralClass), out JToken value) || jo.TryGetValue("SC", out value))
+            if (jo.SelectToken($"{nameof(Attributes)}.otypes") != null)
             {
                 type = CelestialBodyType.Star;
                 return new Star();
@@ -26,7 +26,7 @@ namespace VindemiatrixCollective.Universe.Data
                 return new Planet();
             }
 
-            throw new InvalidOperationException($"Invalid Orbiter type: {jo.Path}");
+            throw new InvalidOperationException($"Invalid Orbiter type: {jo}");
         }
 
         public void Read(JObject jo, JsonReader reader, JsonSerializer serializer, ref CelestialBody target)

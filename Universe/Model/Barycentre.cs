@@ -10,14 +10,17 @@ namespace VindemiatrixCollective.Universe.Model
     public class Barycentre : IAttractor
     {
         public GravitationalParameter Mu => GravitationalParameter.FromMass(Mass);
-        public Mass Mass => StarSystem.Mass;
+        public Mass Mass { get; }
         public StarSystem StarSystem { get; }
         public string Name => $"{nameof(Barycentre)} {StarSystem.Name}";
 
-        public Barycentre(StarSystem system)
+        public Barycentre(StarSystem system, Mass mass)
         {
             StarSystem = system;
+            Mass       = mass;
         }
+
+        public Barycentre(StarSystem system) : this(system, system.Mass) { }
 
         public (Length a1, Length a2) CalculateSemiMajorAxes(Star primary, Star companion, Length a)
         {

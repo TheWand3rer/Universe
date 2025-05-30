@@ -20,10 +20,9 @@ namespace VindemiatrixCollective.Universe.Model
         /// </summary>
         public string DistanceFromSolLy;
 #endif
-
         private Barycentre barycentre;
-
         public Barycentre Barycentre => barycentre ??= new Barycentre(this);
+
 
         public CelestialBody this[string name] => _Orbiters[name];
 
@@ -109,6 +108,12 @@ namespace VindemiatrixCollective.Universe.Model
 #if UNITY_EDITOR
             DistanceFromSolLy = DistanceFromSol.LightYears.ToString("0.00 LY");
 #endif
+        }
+
+
+        public void SetBarycentre(Barycentre barycentre)
+        {
+            this.barycentre = barycentre;
         }
 
         public string SystemTree()

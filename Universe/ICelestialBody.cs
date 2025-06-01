@@ -16,4 +16,10 @@ namespace VindemiatrixCollective.Universe
         OrbitState OrbitState { get; }
         PhysicalData PhysicalData { get; }
     }
+
+    public interface IOrbiter
+    {
+        IEnumerable<IOrbiter> Orbiters { get; }
+        string Name { get; }
+    }
 }

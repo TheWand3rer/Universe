@@ -15,15 +15,15 @@ namespace VindemiatrixCollective.Universe.Model
 {
     [Serializable]
     [DebuggerDisplay("{Name}")]
-    public class Star : CelestialBody, IEnumerable<Planet>
+    public class Star : CelestialBody, IEnumerable<CelestialBody>
     {
         public Star() : base(nameof(Star), CelestialBodyType.Star) { }
 
         public Star(string name) : base(name, CelestialBodyType.Star) { }
 
-        public Star(string name, PhysicalData data) : this(name)
+        public Star(string name, StellarData data) : this(name)
         {
-            PhysicalData = data;
+            StellarData = data;
 #if UNITY_EDITOR
             CopyValues();
 #endif
@@ -36,12 +36,17 @@ namespace VindemiatrixCollective.Universe.Model
         public Planet this[string key] => Planets.FirstOrDefault(p => p.Name == key);
         public Planet this[int index] => Planets.ElementAt(index);
 
-        public override string FullName => Name.Length > 1 ? Name : $"{StarSystem.Name} {Name}";
+        public override string FullName => Name.Length > 2 ? Name : $"{StarSystem.Name} {Name}";
 
-        [CreateProperty] public Duration Age { get; set; }
-        [CreateProperty] public Luminosity Luminosity { get; set; }
         [CreateProperty] public SpectralClass SpectralClass { get; set; }
-        [CreateProperty] public Temperature Temperature { get; set; }
+
+        [CreateProperty] public StellarData StellarData { get; set; }
+
+        public override PhysicalData PhysicalData
+        {
+            get => StellarData;
+            set => StellarData = (StellarData)value;
+        }
 
 
         /// <summary>
@@ -56,27 +61,29 @@ namespace VindemiatrixCollective.Universe.Model
         {
             get
             {
-                Mass    mass    = Mass.FromSolarMasses(1);
-                Length  radius  = Length.FromSolarRadiuses(1);
-                Density density = Density.FromGramsPerCubicCentimeter(3 * mass.Grams / (4 * UniversalConstants.Tri.Pi * Math.Pow(radius.Centimeters, 3)));
-                Acceleration gravity = Acceleration.FromMetersPerSecondSquared(UniversalConstants.Celestial.GravitationalConstant * mass.Kilograms /
-                                                                               Math.Pow(radius.Meters, 2));
+                Luminosity  luminosity  = Luminosity.FromSolarLuminosities(1);
+                Mass        mass        = Mass.FromSolarMasses(1);
+                Length      radius      = Length.FromSolarRadiuses(1);
+                Density     density     = Density.FromGramsPerCubicCentimeter(3 * mass.Grams / (4 * UniversalConstants.Tri.Pi * Math.Pow(radius.Centimeters, 3)));
+                Temperature temperature = Temperature.FromKelvins(5770);
+                Acceleration gravity = Acceleration.FromMetersPerSecondSquared(UniversalConstants.Celestial.GravitationalConstant *
+                                                                               mass.Kilograms / Math.Pow(radius.Meters, 2));
+                Duration age = Duration.FromYears365(4.6 * 1E9);
 
-                return new Star("Sol", new PhysicalData(mass, radius, gravity, density));
+                return new Star("Sol", new StellarData(luminosity, mass, gravity, radius, temperature, age, density));
             }
         }
 
-
-        public IEnumerator<Planet> GetEnumerator()
+        public IEnumerator<CelestialBody> GetEnumerator()
         {
-            return Planets?.GetEnumerator() ?? Enumerable.Empty<Planet>().GetEnumerator();
+            return Orbiters.GetEnumerator();
         }
-
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
+
 
         public Mass CalculatePlanetaryMass()
         {
@@ -100,9 +107,9 @@ namespace VindemiatrixCollective.Universe.Model
             }
 
             MassSM       = PhysicalData.Mass.SolarMasses.ToString("0.00");
-            LuminositySL = Luminosity.SolarLuminosities.ToString("0.00");
-            TemperatureK = Temperature.Kelvins.ToString("0");
-            AgeGY        = (Age.Years365 / 1E9).ToString("0.00");
+            LuminositySL = StellarData.Luminosity.SolarLuminosities.ToString("0.00");
+            TemperatureK = StellarData.Temperature.Kelvins.ToString("0");
+            AgeGY        = (StellarData.Age.Years365 / 1E9).ToString("0.00");
             RadiusSR     = PhysicalData.Radius.SolarRadiuses.ToString("0.00");
             //Class = SpectralClass.Signature;
             //DistanceFromSol = Length.FromParsecs(Coordinates.magnitude).LightYears.ToString("0.00 LY");

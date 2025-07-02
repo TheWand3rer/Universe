@@ -189,9 +189,9 @@ namespace VindemiatrixCollective.Universe.Tests
             solar.VisitHierarchy<CelestialBody>(o => levelOrderVisit += $"{o.Name}, ", Tree.LevelOrderVisit);
             CelestialBody[] systemBodies = solar.Hierarchy.ToArray();
 
-            // Sol + 9 planets + Moon, Io, Europa = 13
-            Assert.AreEqual(13, systemBodies.Length);
-            Assert.AreEqual("Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Io, Europa, ",
+            // Sol + 8 planets + Moon, Phobos, Deimos, Io, Europa, Pluto = 15
+            Assert.AreEqual(15, systemBodies.Length);
+            Assert.AreEqual("Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Phobos, Deimos, Io, Europa, ",
                             levelOrderVisit, nameof(levelOrderVisit));
         }
 
@@ -205,10 +205,10 @@ namespace VindemiatrixCollective.Universe.Tests
             solar.VisitHierarchy<CelestialBody>(o => preOrderVisit += $"{o.Name}, ");
             CelestialBody[] systemBodies = solar.Hierarchy.ToArray();
 
-            // Sol + 9 planets + Moon, Io, Europa = 13
-            Assert.AreEqual(13, systemBodies.Length);
-            Assert.AreEqual("Sun, Mercury, Venus, Earth, Moon, Mars, Jupiter, Io, Europa, Saturn, Uranus, Neptune, Pluto, ", preOrderVisit,
-                            nameof(preOrderVisit));
+            // Sol + 8 planets + Moon, Deimos, Phobos, Io, Europa, Pluto = 15
+            Assert.AreEqual(15, systemBodies.Length);
+            Assert.AreEqual("Sun, Mercury, Venus, Earth, Moon, Mars, Phobos, Deimos, Jupiter, Io, Europa, Saturn, Uranus, Neptune, Pluto, ",
+                            preOrderVisit, nameof(preOrderVisit));
         }
 
         private void ComparePlanet(Planet expected, Planet actual)

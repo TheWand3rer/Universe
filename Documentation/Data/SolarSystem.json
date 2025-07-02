@@ -2,15 +2,20 @@
   "Name": "Milky Way",
   "Systems": {
     "Sol": {
-      "Stars": {
-        "A": {
-          "Mass": 1.0,
-          "Luminosity": 1.0,
-          "Age": 4.6,
-          "Temperature": 5770.0,
-          "Radius": 1.0,
+      "Orbiters": {
+        "Sun": {
+          "Attributes": {
+            "otypes": "*"
+          },
+          "PhysicalData": {
+            "Mass": 1.0,
+            "Luminosity": 1.0,
+            "Age": 4.6,
+            "Temperature": 5770.0,
+            "Radius": 1.0
+          },
           "SpectralClass": "G2V",
-          "Planets": {
+          "Orbiters": {
             "Mercury": {
               "Attributes": {
                 "Type": "Planet",
@@ -80,10 +85,10 @@
                 "SurfaceMaterial": "System/Planets/Earth",
                 "AtmosphereType": "Oxygen"
               },
-              "Satellites": {
+              "Orbiters": {
                 "Moon": {
                   "Attributes": {
-                    "Type": "Satellite",
+                    "Type": "Planet",
                     "Class": "Barren",
                     "Size": "Tiny",
                     "SurfaceMaterial": "System/Planets/Luna",
@@ -98,7 +103,10 @@
                     "GravitationalParameter": 4902.800066
                   },
                   "OrbitalData": {
-                    "SemiMajorAxis": 384400.0,
+                    "SemiMajorAxis": {
+                      "v": 384400.0,
+                      "u": "km"
+                    },
                     "Eccentricity": 0.0549,
                     "Period": 27.321582,
                     "SiderealRotationPeriod": 708.7344,
@@ -162,6 +170,59 @@
                 "TrueAnomaly": 23.33319664407214,
                 "AxialTilt": 25.19,
                 "SiderealRotationPeriod": 24.622962
+              },
+              "Orbiters": {
+                "Phobos": {
+                  "Attributes": {
+                    "Type": "Planet",
+                    "Class": "Barren",
+                    "Size": "Tiny",
+                    "Model": "System/Planets/Phobos.fbx",
+                    "SurfaceMaterial": "System/Planets/Phobos"
+                  },
+                  "PhysicalData": {
+                    "Radius": 11.8,
+                    "Mass": 1.08e+20,
+                    "Density": 1.9,
+                    "Gravity": 0.0057
+                  },
+                  "OrbitalData": {
+                    "SemiMajorAxis": {"v": 9377.2, "u": "km" },
+                    "Eccentricity": 0.0151,
+                    "Period": 0.319,
+                    "SiderealRotationPeriod": 7.656000000000001,
+                    "Inclination": 1.082,
+                    "LongitudeAscendingNode": 231.3355952710982,
+                    "ArgumentPeriapsis": 47.60634947471625,
+                    "MeanAnomaly": 53.42140431805541,
+                    "TrueAnomaly": 65.78075929043136
+                  }
+                },
+                "Deimos": {
+                  "Attributes": {
+                    "Type": "Planet",
+                    "Class": "Barren",
+                    "Size": "Tiny",
+                    "SurfaceMaterial": "System/Planets/Deimos"
+                  },
+                  "PhysicalData": {
+                    "Mass": 1.8e+20,
+                    "Radius": 6.27,
+                    "Density": 1.76,
+                    "Gravity": 0.003
+                  },
+                  "OrbitalData": {
+                    "SemiMajorAxis": {"v": 23463.2, "u": "km" },
+                    "Eccentricity": 0.00033,
+                    "Period": 1.263,
+                    "SiderealRotationPeriod": 30.311999999999998,
+                    "Inclination": 1.791,
+                    "LongitudeAscendingNode": 239.2300939227744,
+                    "ArgumentPeriapsis": 75.97610975275042,
+                    "MeanAnomaly": 21.08494961264008,
+                    "TrueAnomaly": 29.55646400343032
+                  }
+                }
               }
             },
             "Jupiter": {
@@ -172,10 +233,10 @@
                 "SurfaceMaterial": "System/Planets/Jupiter",
                 "AtmosphereType": "Hydrogen"
               },
-              "Satellites": {
+              "Orbiters": {
                 "Io": {
                   "Attributes": {
-                    "Type": "Satellite",
+                    "Type": "Planet",
                     "Class": "Barren",
                     "Size": "Tiny",
                     "SurfaceMaterial": "System/Planets/Io",
@@ -188,7 +249,10 @@
                     "GravitationalParameter": 5959.9155
                   },
                   "OrbitalData": {
-                    "SemiMajorAxis": 422000.0,
+                    "SemiMajorAxis": {
+                      "v": 422000.0,
+                      "u": "km"
+                    },
                     "Eccentricity": 0.00472,
                     "Period": 1.77,
                     "SiderealRotationPeriod": 42.480000000000004,
@@ -201,7 +265,7 @@
                 },
                 "Europa": {
                   "Attributes": {
-                    "Type": "Satellite",
+                    "Type": "Planet",
                     "Class": "Barren",
                     "Size": "Tiny",
                     "SurfaceMaterial": "System/Planets/Europa",
@@ -214,7 +278,10 @@
                     "GravitationalParameter": 3202.7121
                   },
                   "OrbitalData": {
-                    "SemiMajorAxis": 671000.0,
+                    "SemiMajorAxis": {
+                      "v": 671000.0,
+                      "u": "km"
+                    },
                     "Eccentricity": 0.00981,
                     "Period": 3.55,
                     "SiderealRotationPeriod": 85.19999999999999,

@@ -1,7 +1,12 @@
+// Terminalizer © 2025 Vindemiatrix Collective
+// Website and Documentation - https://dev.vindemiatrixcollective.com
+
 #region
 
+using System.Collections.Generic;
 using UnitsNet;
 using VindemiatrixCollective.Universe.CelestialMechanics;
+using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
 
 #endregion
 
@@ -11,13 +16,18 @@ namespace VindemiatrixCollective.Universe.Model
     {
         public GravitationalParameter Mu => GravitationalParameter.FromMass(Mass);
         public Mass Mass { get; }
+
+        public OrbitalData OrbitalData { get; }
+        public OrbitState OrbitState { get; }
         public StarSystem StarSystem { get; }
         public string Name => $"{nameof(Barycentre)} {StarSystem.Name}";
 
         public Barycentre(StarSystem system, Mass mass)
         {
             StarSystem = system;
-            Mass       = mass;
+            Mass = mass;
+            OrbitalData = OrbitalData.Empty;
+            OrbitState = new OrbitState();
         }
 
         public Barycentre(StarSystem system) : this(system, system.Mass) { }
@@ -30,5 +40,15 @@ namespace VindemiatrixCollective.Universe.Model
             Length a2 = m1 / (m1 + m2) * a;
             return (a1, a2);
         }
+
+        #region IOrbiter
+
+        public IEnumerable<ITreeNode> Children => StarSystem.Orbiters;
+
+        ITreeNode ITreeNode.this[string name] => StarSystem[name];
+
+        public ITreeNode Parent => null;
+
+        #endregion
     }
 }

@@ -12,18 +12,15 @@ namespace VindemiatrixCollective.Universe.Data
 {
     public struct ValueUnit
     {
-        public string u;
         public double v;
+        public string u;
     }
 
     public class PlanetConverter : IConverterReader<Planet>
     {
         public const string Orbiters = nameof(Orbiters);
 
-        public Planet Create(JObject jo)
-        {
-            return new Planet();
-        }
+        public Planet Create(JObject jo) { return new Planet(); }
 
         public void Read(JObject jo, JsonReader reader, JsonSerializer serializer, ref Planet planet)
         {
@@ -31,7 +28,7 @@ namespace VindemiatrixCollective.Universe.Data
             double? density = (double?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(PhysicalData.Density)}");
             double? mass    = (double?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(PhysicalData.Mass)}");
             double? radius  = (double?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(PhysicalData.Radius)}");
-            double? gmKm3S2 = (double)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(GravitationalParameter)}");
+            double? gmKm3S2 = (double?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(GravitationalParameter)}");
 
             JToken semiMajorAxisToken = jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.SemiMajorAxis)}");
             semiMajorAxisToken ??= jo.SelectToken($"{nameof(OrbitalData)}.a");
@@ -102,7 +99,7 @@ namespace VindemiatrixCollective.Universe.Data
                 orbital.Retrograde = false;
             }
 
-            planet.OrbitalData  = orbital;
+            planet.OrbitalData = orbital;
             planet.PhysicalData = physical;
 
             JToken moons = jo[nameof(Orbiters)];
@@ -119,10 +116,19 @@ namespace VindemiatrixCollective.Universe.Data
 
             KeyValuePair<string, double?>[] fields =
             {
-                new(nameof(semiMajorAxis), semiMajorAxis), new(nameof(eccentricity), eccentricity), new(nameof(orbitalPeriod), orbitalPeriod),
-                new(nameof(meanAnomaly), meanAnomaly), new(nameof(gravity), gravity), new(nameof(density), density), new(nameof(mass), mass),
-                new(nameof(radius), radius), new(nameof(orbitalPeriod), orbitalPeriod), new(nameof(siderealRotation), siderealRotation),
-                new(nameof(orbitalInclination), orbitalInclination), new(nameof(axialTilt), axialTilt), new(nameof(ascendingNode), ascendingNode),
+                new(nameof(semiMajorAxis), semiMajorAxis),
+                new(nameof(eccentricity), eccentricity),
+                new(nameof(orbitalPeriod), orbitalPeriod),
+                new(nameof(meanAnomaly), meanAnomaly),
+                new(nameof(gravity), gravity),
+                new(nameof(density), density),
+                new(nameof(mass), mass),
+                new(nameof(radius), radius),
+                new(nameof(orbitalPeriod), orbitalPeriod),
+                new(nameof(siderealRotation), siderealRotation),
+                new(nameof(orbitalInclination), orbitalInclination),
+                new(nameof(axialTilt), axialTilt),
+                new(nameof(ascendingNode), ascendingNode),
                 new(nameof(argumentPeriapsis), argumentPeriapsis)
             };
 

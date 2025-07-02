@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.Assertions;
 using VindemiatrixCollective.Universe.Data;
 using VindemiatrixCollective.Universe.Model;
 
@@ -9,23 +10,12 @@ namespace VindemiatrixCollective.Universe.Tests
     {
         public static readonly JsonConverter[] Converters =
         {
-            new CoreObjectConverter<Galaxy>(new GalaxyConverter()), new CoreObjectConverter<StarSystem>(new StarSystemConverter()),
-            new CoreObjectConverter<Star>(new StarConverter()), new CoreObjectConverter<Planet>(new PlanetConverter()),
+            new CoreObjectConverter<Galaxy>(new GalaxyConverter()),
+            new CoreObjectConverter<StarSystem>(new StarSystemConverter()),
+            new CoreObjectConverter<Star>(new StarConverter()),
+            new CoreObjectConverter<Planet>(new PlanetConverter()),
             new CoreObjectConverter<CelestialBody>(new CelestialBodyConverter())
         };
-
-        public T DeserializeFile<T>(string filename, params JsonConverter[] converters)
-        {
-            TextAsset text = Resources.Load<TextAsset>(filename);
-            T         data = JsonConvert.DeserializeObject<T>(text.ToString(), converters);
-            return data;
-        }
-
-        public T DeserializeObject<T>(string json, params JsonConverter[] converters)
-        {
-            T data = JsonConvert.DeserializeObject<T>(json, converters);
-            return data;
-        }
 
         public Galaxy LoadGalaxy(string path = "Data/galaxy")
         {
@@ -38,6 +28,20 @@ namespace VindemiatrixCollective.Universe.Tests
             Galaxy galaxy = new("Milky Way");
             LoadSol(ref galaxy);
             return galaxy;
+        }
+
+        public T DeserializeFile<T>(string filename, params JsonConverter[] converters)
+        {
+            TextAsset text = Resources.Load<TextAsset>(filename);
+            Assert.IsNotNull(text, filename);
+            T data = JsonConvert.DeserializeObject<T>(text.ToString(), converters);
+            return data;
+        }
+
+        public T DeserializeObject<T>(string json, params JsonConverter[] converters)
+        {
+            T data = JsonConvert.DeserializeObject<T>(json, converters);
+            return data;
         }
 
         public void LoadSol(ref Galaxy galaxy, string path = "Data/SolarSystem")

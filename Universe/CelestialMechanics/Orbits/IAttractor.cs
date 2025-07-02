@@ -1,22 +1,17 @@
 #region
 
 using UnitsNet;
-using VindemiatrixCollective.Universe.CelestialMechanics;
 using VindemiatrixCollective.Universe.Model;
 
 #endregion
 
-namespace VindemiatrixCollective.Universe
+namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
 {
-    public interface IAttractor
+    public interface IAttractor : IOrbiter
     {
         GravitationalParameter Mu { get; }
         Mass Mass { get; }
 
-
         StarSystem StarSystem { get; }
-
-
-        string Name { get; }
     }
 }

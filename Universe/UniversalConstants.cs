@@ -20,10 +20,10 @@ namespace VindemiatrixCollective.Universe
 
         public struct Tri
         {
+            public const double DegreeToRad = 0.017453292519943295;
             public const double Pi = 3.141592653589793d;
             public const double Pi2 = 2 * Pi;
             public const double RadToDegree = 180 / Pi;
-            public const double DegreeToRad = 0.017453292519943295;
         }
 
         public struct Time
@@ -39,9 +39,9 @@ namespace VindemiatrixCollective.Universe
             public const double AuPerMetre = 6.6845871222684454959959533702106e-12;
             public const double GravitationalConstant = 6.67429E-11;
             public const double KmPerAu = 149597870.700;
-            public const double MetresPerAu = 149597870700;
             public const double LightSpeedKilometresPerSecond = 299792.458;
             public const double LightSpeedMetresPerSecond = 299792458;
+            public const double MetresPerAu = 149597870700;
         }
 
         public struct Energy

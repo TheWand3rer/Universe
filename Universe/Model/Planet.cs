@@ -25,11 +25,13 @@ namespace VindemiatrixCollective.Universe.Model
         public IEnumerable<Planet> Satellites => _Orbiters.Values.OfType<Planet>().OrderBy(o => o.OrbitalData.SemiMajorAxis);
 
         public int SatelliteCount => Satellites.Count();
-        public Planet ClosestMoon => Satellites.Aggregate((m1, m2) => m2.OrbitalData.SemiMajorAxis < m1.OrbitalData.SemiMajorAxis ? m2 : m1);
 
-        public Planet FarthestMoon => Satellites.Aggregate((m1, m2) => m2.OrbitalData.SemiMajorAxis > m1.OrbitalData.SemiMajorAxis ? m2 : m1);
-        public Planet this[string key] => Satellites.FirstOrDefault(p => p.Name == key);
-        public Planet this[int index] => Satellites.ElementAt(index);
+        public Planet ClosestMoon
+            => Satellites.Aggregate((m1, m2) => m2.OrbitalData.SemiMajorAxis < m1.OrbitalData.SemiMajorAxis ? m2 : m1);
+
+        public Planet FarthestMoon
+            => Satellites.Aggregate((m1, m2) => m2.OrbitalData.SemiMajorAxis > m1.OrbitalData.SemiMajorAxis ? m2 : m1);
+
         public override string FullName => $"{Name}";
 
 
@@ -37,24 +39,26 @@ namespace VindemiatrixCollective.Universe.Model
 
         public Planet(string name) : base(name, CelestialBodyType.Planet) { }
 
-        public Planet(string name, PhysicalData physical, OrbitalData orbital, CelestialBody attractor = null) : this(name)
+        public Planet(string name, PhysicalData physical, OrbitalData orbital) : this(name)
         {
             PhysicalData = physical;
-            OrbitalData  = orbital;
+            OrbitalData = orbital;
 #if UNITY_EDITOR
             CopyValues();
 #endif
         }
 
-        public new IEnumerator<Planet> GetEnumerator()
+        public new IEnumerator<Planet> GetEnumerator() { return Satellites?.GetEnumerator() ?? Enumerable.Empty<Planet>().GetEnumerator(); }
+
+        public Planet Clone()
         {
-            return Satellites?.GetEnumerator() ?? Enumerable.Empty<Planet>().GetEnumerator();
+            Planet newPlanet = new(Name, PhysicalData, OrbitalData);
+            return newPlanet;
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        public Planet GetSatellite(string key) { return Satellites.FirstOrDefault(p => p.Name == key); }
+
+        IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
 
         /// <summary>
         ///     Creates a new planet with the physical and orbital characteristics of the Earth at J2000.
@@ -133,7 +137,15 @@ namespace VindemiatrixCollective.Universe.Model
             }
         }
 
-        public static Planet Moon => Luna;
+        public static Planet Moon
+        {
+            get
+            {
+                Planet moon = Luna;
+                moon.Name = "Moon";
+                return moon;
+            }
+        }
 
         #region Unity_Editor
 
@@ -157,14 +169,14 @@ namespace VindemiatrixCollective.Universe.Model
         protected override void CopyValues()
         {
             base.CopyValues();
-            MassEM               = PhysicalData.Mass.EarthMasses.ToString("0.00");
-            RadiusER             = (PhysicalData.Radius.Kilometers / UniversalConstants.Physical.EarthRadiusKm).ToString("0.00");
-            SemiMajorAxisAU      = OrbitalData.SemiMajorAxis.AstronomicalUnits.ToString("0.00");
-            EccentricityValue    = OrbitalData.Eccentricity.Value.ToString("0.00");
-            OrbitalPeriodYears   = OrbitalData.Period.Years365.ToString("0.00");
+            MassEM = PhysicalData.Mass.EarthMasses.ToString("0.00");
+            RadiusER = (PhysicalData.Radius.Kilometers / UniversalConstants.Physical.EarthRadiusKm).ToString("0.00");
+            SemiMajorAxisAU = OrbitalData.SemiMajorAxis.AstronomicalUnits.ToString("0.00");
+            EccentricityValue = OrbitalData.Eccentricity.Value.ToString("0.00");
+            OrbitalPeriodYears = OrbitalData.Period.Years365.ToString("0.00");
             SiderealRotationDays = OrbitalData.SiderealRotationPeriod.Days.ToString("0.00");
-            InclinationDeg       = OrbitalData.Inclination.Degrees.ToString("0.00 °");
-            AxialTiltDeg         = OrbitalData.AxialTilt.Degrees.ToString("0.00 °");
+            InclinationDeg = OrbitalData.Inclination.Degrees.ToString("0.00 °");
+            AxialTiltDeg = OrbitalData.AxialTilt.Degrees.ToString("0.00 °");
         }
 #endif
 

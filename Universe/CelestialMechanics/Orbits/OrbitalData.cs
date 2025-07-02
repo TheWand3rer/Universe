@@ -42,7 +42,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
 
         private OrbitalData(
             double semiMajorAxisMetres, double eccentricity, double orbitalInclination, double lan, double argp,
-            double? orbitalPeriodSeconds, double? siderealRotationSeconds = null, double? axialTilt = null, double? meanAnomaly = null, double? trueAnomaly = null)
+            double? orbitalPeriodSeconds, double? siderealRotationSeconds = null, double? axialTilt = null, double? meanAnomaly = null,
+            double? trueAnomaly = null)
         {
             semiMajorAxisM          = semiMajorAxisMetres;
             this.eccentricity       = eccentricity;
@@ -64,15 +65,18 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
 
         public OrbitalData(
             Length semiMajorAxis, Ratio eccentricity, Angle inclination, Angle longitudeAscendingNode, Angle argumentPeriapsis,
-            Duration? orbitalPeriod, Duration? siderealPeriod, Angle? axialTilt, Angle? trueAnomaly, Angle? meanAnomaly = null) : this(semiMajorAxis.Meters,
-         eccentricity.Value,
-         inclination.Degrees,
-         longitudeAscendingNode.Degrees, argumentPeriapsis.Degrees,
-         orbitalPeriod?.Seconds,
-         siderealPeriod?.Seconds,
-         axialTilt?.Degrees,
-         trueAnomaly?.Degrees,
-         meanAnomaly?.Degrees) { }
+            Duration? orbitalPeriod, Duration? siderealPeriod, Angle? axialTilt, Angle? trueAnomaly,
+            Angle? meanAnomaly = null) : this(semiMajorAxis.Meters,
+                                              eccentricity.Value,
+                                              inclination.Degrees,
+                                              longitudeAscendingNode.Degrees, argumentPeriapsis.Degrees,
+                                              orbitalPeriod?.Seconds,
+                                              siderealPeriod?.Seconds,
+                                              axialTilt?.Degrees,
+                                              trueAnomaly?.Degrees,
+                                              meanAnomaly?.Degrees) { }
+
+        internal static OrbitalData Empty => new(0, 0, 0, 0, 0, 0);
 
 
         /// <summary>

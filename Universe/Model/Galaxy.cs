@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
+using UnityEngine.Assertions;
 
 #endregion
 
@@ -17,7 +17,7 @@ namespace VindemiatrixCollective.Universe.Model
 
         public Galaxy()
         {
-            name     = nameof(Galaxy);
+            name = nameof(Galaxy);
             _Systems = new Dictionary<string, StarSystem>();
         }
 
@@ -68,6 +68,11 @@ namespace VindemiatrixCollective.Universe.Model
             return GetEnumerator();
         }
 
+        public bool ContainsSystem(string name)
+        {
+            return _Systems.ContainsKey(name);
+        }
+
         public void AddSystem(StarSystem system)
         {
             _Systems.Add(system.Name, system);
@@ -93,45 +98,39 @@ namespace VindemiatrixCollective.Universe.Model
         ///     Traverses the Galaxy structure to retrieve the chosen body (Star or Planet/Satellite).
         /// </summary>
         /// <param name="path">
-        ///     Must be in the format "SystemName/StarName*/PlanetName*/SatelliteName*", e.g.: "Sol/A/Earth/Moon".
-        ///     Asterisks indicate optional parts. Only the SystemName is required.
+        ///     Must be in the format "SystemName/StarName*/PlanetName*/SatelliteName*", e.g.: "Sol/Sun/Earth/Moon".
+        ///     Asterisks indicate optional parts. Only the SystemName is required. If no StarName is specified,
+        ///     it will return the primary object.
         /// </param>
         /// <returns>The specified body</returns>
         /// <exception cref="InvalidOperationException"></exception>
         public CelestialBody GetBody(string path)
         {
-            Regex           regex   = new(@"(\w+)\/*");
-            MatchCollection matches = regex.Matches(path);
+            Assert.IsFalse(string.IsNullOrEmpty(path), $"Path cannot be null or empty: {nameof(path)}");
+            string[] parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            Assert.IsTrue(parts.Length > 1, $"Invalid path format: [{path}]");
 
-            if (_Systems.TryGetValue(matches[0].Groups[1].Value, out StarSystem system))
+            if (!_Systems.TryGetValue(parts[0], out StarSystem system))
             {
-                if (matches.Count > 1)
-                {
-                    Star star = (Star)system[matches[1].Groups[1].Value];
-                    if (matches.Count > 2)
-                    {
-                        Planet planet = star[matches[2].Groups[1].Value];
-                        if (matches.Count > 3)
-                        {
-                            for (int i = 3; i < matches.Count; i++)
-                            {
-                                Match  match    = matches[i];
-                                string pathPart = match.Groups[1].Value;
-
-                                planet = planet[pathPart];
-                            }
-                        }
-
-                        return planet;
-                    }
-
-                    return star;
-                }
-
-                return system[0];
+                throw new InvalidOperationException($"System {parts[0]} not found: [{path}]");
             }
 
-            throw new InvalidOperationException($"Invalid path: <{path}>");
+            if (parts.Length == 1)
+            {
+                return system.Primary;
+            }
+
+            CelestialBody current = system[parts[1]];
+            for (int i = 2; i < parts.Length; i++)
+            {
+                current = current[parts[i]];
+                if (current == null)
+                {
+                    throw new InvalidOperationException($"{parts[i]} not found: [{path}]");
+                }
+            }
+
+            return current;
         }
     }
 }

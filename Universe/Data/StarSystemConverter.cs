@@ -8,10 +8,7 @@ namespace VindemiatrixCollective.Universe.Data
 {
     public class StarSystemConverter : IConverterReader<StarSystem>
     {
-        public StarSystem Create(JObject jo)
-        {
-            return new StarSystem();
-        }
+        public StarSystem Create(JObject jo) { return new StarSystem(); }
 
         public void Read(JObject jo, JsonReader reader, JsonSerializer serializer, ref StarSystem starSystem)
         {
@@ -31,8 +28,6 @@ namespace VindemiatrixCollective.Universe.Data
                     starSystem.AddOrbiter(orbiter);
                 }
             }
-
-            starSystem.Init();
         }
     }
 }

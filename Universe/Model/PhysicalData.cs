@@ -22,16 +22,17 @@ namespace VindemiatrixCollective.Universe.Model
 
         public PhysicalData(Mass mass, Length radius, Acceleration gravity, Density density)
         {
-            Mass    = mass;
-            Radius  = radius;
+            Mass = mass;
+            Radius = radius;
             Gravity = gravity;
             Density = density;
         }
 
         public PhysicalData(Density density, Length radius, GravitationalParameter gm)
         {
-            Mass    = Mass.FromKilograms(4 / 3d * UniversalConstants.Tri.Pi * Math.Pow(radius.Meters, 3) * density.KilogramsPerCubicMeter);
+            Mass = Mass.FromKilograms(4 / 3d * UniversalConstants.Tri.Pi * Math.Pow(radius.Meters, 3) * density.KilogramsPerCubicMeter);
             Gravity = Acceleration.FromMetersPerSecondSquared(gm.M3S2 / Math.Pow(radius.Meters, 2));
+            Radius = radius;
         }
     }
 }

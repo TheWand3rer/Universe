@@ -48,7 +48,8 @@ namespace VindemiatrixCollective.Universe.Tests
               }
             }
           }";
-            Dictionary<string, Planet> kvp = dataHelper.DeserializeObject<Dictionary<string, Planet>>(earthJson, DeserializationHelper.Converters);
+            Dictionary<string, Planet> kvp =
+                dataHelper.DeserializeObject<Dictionary<string, Planet>>(earthJson, DeserializationHelper.Converters);
             Assert.IsNotNull(kvp);
 
             Planet earth = kvp["Earth"];
@@ -83,7 +84,8 @@ namespace VindemiatrixCollective.Universe.Tests
             }
           }";
 
-            Dictionary<string, Star> kvp = dataHelper.DeserializeObject<Dictionary<string, Star>>(proximaJson, DeserializationHelper.Converters);
+            Dictionary<string, Star> kvp =
+                dataHelper.DeserializeObject<Dictionary<string, Star>>(proximaJson, DeserializationHelper.Converters);
 
             Assert.IsNotNull(kvp);
 
@@ -99,12 +101,22 @@ namespace VindemiatrixCollective.Universe.Tests
         }
 
         [Test]
+        public void GalaxyFindBody()
+        {
+            Galaxy galaxy = dataHelper.LoadSol();
+            Planet earth  = galaxy.GetBody<Planet>("Sol/Sun/Earth");
+
+            Assert.IsNotNull(earth);
+            Assert.AreEqual(earth.Name, "Earth");
+        }
+
+        [Test]
         public void PlanetAttributes()
         {
             Galaxy     galaxy = dataHelper.LoadSol();
-            StarSystem solar  = galaxy["Sol"];
-            Star       sol    = solar[0];
-            Planet     venus  = sol["Venus"];
+            StarSystem sol    = galaxy["Sol"];
+            Star       sun    = sol[0];
+            Planet     venus  = sun.GetPlanet("Venus");
 
             Assert.IsNotNull(venus);
             Assert.AreEqual(nameof(CelestialBodyType.Planet), venus.Type.ToString(), nameof(CelestialBodyType));
@@ -115,7 +127,7 @@ namespace VindemiatrixCollective.Universe.Tests
         {
             Galaxy galaxy = dataHelper.LoadSol();
 
-            Planet mars    = galaxy["Sol"][0]["Mars"];
+            Planet mars    = (Planet)galaxy["Sol"][0]["Mars"];
             Planet marsExp = Common.Mars;
 
             Assert.IsFalse(mars.IsSatellite, nameof(Planet.IsSatellite));
@@ -128,7 +140,7 @@ namespace VindemiatrixCollective.Universe.Tests
         {
             Galaxy galaxy = dataHelper.LoadSol();
 
-            Planet io    = galaxy["Sol"][0]["Jupiter"]["Io"];
+            Planet io    = (Planet)galaxy["Sol"][0]["Jupiter"]["Io"];
             Planet ioExp = Common.Io;
 
             Assert.IsTrue(io.IsSatellite, nameof(Planet.IsSatellite));
@@ -141,8 +153,8 @@ namespace VindemiatrixCollective.Universe.Tests
             Galaxy     galaxy = dataHelper.LoadSol();
             StarSystem sol    = galaxy["Sol"];
             Star       sun    = sol[0];
-            Planet     earth  = sun["Earth"];
-            Planet     moon   = earth[0];
+            Planet     earth  = (Planet)sun["Earth"];
+            Planet     moon   = (Planet)earth[0];
 
             Debug.Log(sol.SystemTree());
 
@@ -156,7 +168,7 @@ namespace VindemiatrixCollective.Universe.Tests
 
             Assert.AreEqual("Milky Way", galaxy.Name, nameof(Galaxy.Name));
             Assert.AreEqual("Moon", moon.Name, nameof(CelestialBody.Name));
-            Assert.AreEqual("Sol", earth.ParentStar.FullName, nameof(CelestialBody.ParentStar));
+            Assert.AreEqual("Sun", earth.ParentStar.FullName, nameof(CelestialBody.ParentStar));
             Assert.AreEqual("Sol", moon.StarSystem.Name, nameof(StarSystem));
             Assert.AreEqual("Sol", earth.StarSystem.Name, nameof(StarSystem));
             Assert.AreEqual("Sol", earth.ParentBody.StarSystem.Name, nameof(StarSystem));
@@ -174,12 +186,13 @@ namespace VindemiatrixCollective.Universe.Tests
             StarSystem solar  = galaxy["Sol"];
 
             string levelOrderVisit = "";
-            solar.VisitHierarchy<CelestialBody>(o => levelOrderVisit += $"{o.Name}, ", CelestialBody.LevelOrderVisit);
+            solar.VisitHierarchy<CelestialBody>(o => levelOrderVisit += $"{o.Name}, ", Tree.LevelOrderVisit);
             CelestialBody[] systemBodies = solar.Hierarchy.ToArray();
 
             // Sol + 9 planets + Moon, Io, Europa = 13
             Assert.AreEqual(13, systemBodies.Length);
-            Assert.AreEqual("Sol, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Io, Europa, ", levelOrderVisit, nameof(levelOrderVisit));
+            Assert.AreEqual("Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Io, Europa, ",
+                            levelOrderVisit, nameof(levelOrderVisit));
         }
 
         [Test]
@@ -194,7 +207,8 @@ namespace VindemiatrixCollective.Universe.Tests
 
             // Sol + 9 planets + Moon, Io, Europa = 13
             Assert.AreEqual(13, systemBodies.Length);
-            Assert.AreEqual("Sol, Mercury, Venus, Earth, Moon, Mars, Jupiter, Io, Europa, Saturn, Uranus, Neptune, Pluto, ", preOrderVisit, nameof(preOrderVisit));
+            Assert.AreEqual("Sun, Mercury, Venus, Earth, Moon, Mars, Jupiter, Io, Europa, Saturn, Uranus, Neptune, Pluto, ", preOrderVisit,
+                            nameof(preOrderVisit));
         }
 
         private void ComparePlanet(Planet expected, Planet actual)
@@ -207,7 +221,8 @@ namespace VindemiatrixCollective.Universe.Tests
             Assert.AreEqual(expected.Name, actual.Name);
             Assert.AreEqual(physicalEx.Mass.EarthMasses, physicalActual.Mass.EarthMasses, 1e-2, nameof(PhysicalData.Mass));
             Assert.AreEqual(physicalEx.Radius.Kilometers / UniversalConstants.Physical.EarthRadiusKm,
-                            physicalActual.Radius.Kilometers / UniversalConstants.Physical.EarthRadiusKm, 1e-3, nameof(PhysicalData.Radius));
+                            physicalActual.Radius.Kilometers / UniversalConstants.Physical.EarthRadiusKm, 1e-3,
+                            nameof(PhysicalData.Radius));
             Assert.AreEqual(physicalEx.Gravity.StandardGravity, physicalActual.Gravity.StandardGravity, 1e-2,
                             nameof(PhysicalData.Gravity));
             Assert.AreEqual(physicalEx.Density.GramsPerCubicCentimeter / UniversalConstants.Physical.EarthDensityGCm3,

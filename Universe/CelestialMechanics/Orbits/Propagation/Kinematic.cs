@@ -10,12 +10,9 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits.Propagation
     {
         private readonly double period;
 
-        public Kinematic(OrbitalData data)
-        {
-            period = data.Period.Seconds;
-        }
+        public Kinematic(OrbitalData data) { period = data.Period.Seconds; }
 
-        public Angle PropagateOrbit(OrbitState state, Duration tof)
+        public (Angle nu, Angle E, Angle M) PropagateOrbit(OrbitState state, Duration tof)
         {
             double e  = state.Eccentricity.Value;
             double nu = state.TrueAnomaly.Radians;
@@ -23,8 +20,9 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits.Propagation
             double t0 = DeltaTFromNu(nu, e, P);
             double t  = t0 + tof.Seconds;
 
-            double E = TimeToEccentricAnomaly(t, P, e);
-            return Angle.FromRadians(OrbitalMechanics.EccentricToTrueAnomaly(E, e));
+            double E = TimeToEccentricAnomaly(t, P, e, out double M);
+            nu = OrbitalMechanics.EccentricToTrueAnomaly(E, e);
+            return (Angle.FromRadians(nu), Angle.FromRadians(E), Angle.FromRadians(M));
         }
 
         private static double DeltaTFromNu(double nu, double e, double P)
@@ -37,12 +35,12 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits.Propagation
             return t0;
         }
 
-        private static double TimeToEccentricAnomaly(double t, double P, double e)
+        private static double TimeToEccentricAnomaly(double t, double P, double e, out double M)
         {
             double Pi2 = UniversalConstants.Tri.Pi2;
 
             // Calculate Mean anomaly over one period
-            double M = Pi2 * t / P;
+            M = Pi2 * t / P;
             M %= Pi2;
 
             double E = OrbitalMechanics.MeanToEccentricAnomaly(M, e);

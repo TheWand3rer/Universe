@@ -37,7 +37,7 @@ namespace VindemiatrixCollective.Universe.Tests
             double                 p  = h * h / gm.M3S2;
             (Vector3d r, Vector3d v) = OrbitalMechanics.RVinPerifocalFrame(gm.M3S2, p, e, nu);
 
-            Common.VectorsAreEqual(new Vector3d(-5312706.25105345, 9201877.15251336, 0), r, 1e-2, nameof(OrbitState.Position));
+            Common.VectorsAreEqual(new Vector3d(-5312706.25105345, 9201877.15251336, 0), r, 1e-2, nameof(OrbitState.LocalPosition));
             Common.VectorsAreEqual(new Vector3d(-5753.30180931, -1328.66813933, 0), v, 1e-2, nameof(OrbitState.Velocity));
         }
 
@@ -61,7 +61,8 @@ namespace VindemiatrixCollective.Universe.Tests
             Assert.AreEqual(stateExpected.TrueAnomaly.Degrees, stateResult.TrueAnomaly.Degrees, 0.5, nameof(OrbitState.TrueAnomaly));
             Assert.AreEqual(stateExpected.LongitudeAscendingNode.Degrees, stateResult.LongitudeAscendingNode.Degrees, 1e-3,
                             nameof(OrbitState.LongitudeAscendingNode));
-            Assert.AreEqual(stateExpected.ArgumentPeriapsis.Degrees, stateResult.ArgumentPeriapsis.Degrees, 1, nameof(OrbitState.ArgumentPeriapsis));
+            Assert.AreEqual(stateExpected.ArgumentPeriapsis.Degrees, stateResult.ArgumentPeriapsis.Degrees, 1,
+                            nameof(OrbitState.ArgumentPeriapsis));
             Assert.AreEqual(stateExpected.Inclination.Degrees, stateResult.Inclination.Degrees, 1e-3, nameof(OrbitState.Inclination));
         }
 
@@ -145,10 +146,12 @@ namespace VindemiatrixCollective.Universe.Tests
             int    altitude = 7000000;
 
             // this method uses Mu.M3S2 / (body.Radius + orbitHeight)
-            Speed orbitSpeed1 = OrbitalMechanics.CalculateOrbitalVelocity(Planet.Earth, Length.FromMeters(7000000 - earth.PhysicalData.Radius.Meters));
+            Speed orbitSpeed1 =
+                OrbitalMechanics.CalculateOrbitalVelocity(Planet.Earth, Length.FromMeters(7000000 - earth.PhysicalData.Radius.Meters));
 
             Speed orbitSpeed =
-                Speed.FromMetersPerSecond(Math.Sqrt(UniversalConstants.Celestial.GravitationalConstant * earth.PhysicalData.Mass.Kilograms / altitude));
+                Speed.FromMetersPerSecond(Math.Sqrt(UniversalConstants.Celestial.GravitationalConstant * earth.PhysicalData.Mass.Kilograms
+                                                  / altitude));
 
             Assert.AreEqual(orbitSpeed1.MetersPerSecond, orbitSpeed.MetersPerSecond, 1e-2, "Orbital Speed");
 
@@ -202,7 +205,7 @@ namespace VindemiatrixCollective.Universe.Tests
         public void PropagationKnownValues()
         {
             Galaxy galaxy = dataHelper.LoadSol();
-            Planet earth  = galaxy["Sol"][0]["Earth"];
+            Planet earth  = (Planet)galaxy["Sol"][0]["Earth"];
 
             // Data from Vallado, example 2.4
             Vector3d r0   = new(1131340, -2282343, 6672423);        // m
@@ -216,8 +219,8 @@ namespace VindemiatrixCollective.Universe.Tests
 
             (Vector3d r1, Vector3d v1) = state0.ToVectors();
 
-            Common.VectorsAreEqual(rExp, r1, 1e2, nameof(OrbitState.Position));  // 100 m precision
-            Common.VectorsAreEqual(vExp, v1, 1e-1, nameof(OrbitState.Velocity)); // 10 cm / s
+            Common.VectorsAreEqual(rExp, r1, 1e2, nameof(OrbitState.LocalPosition)); // 100 m precision
+            Common.VectorsAreEqual(vExp, v1, 1e-1, nameof(OrbitState.Velocity));     // 10 cm / s
         }
     }
 }

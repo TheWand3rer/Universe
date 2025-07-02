@@ -23,7 +23,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits.Propagation
         /// </summary>
         /// <param name="state">Current orbit state</param>
         /// <param name="tof">Time of flight (s)</param>
-        public Angle PropagateOrbit(OrbitState state, Duration tof)
+        public (Angle nu, Angle E, Angle M) PropagateOrbit(OrbitState state, Duration tof)
         {
             Assert.IsNotNull(state.Attractor, $"{nameof(OrbitState)}.{nameof(OrbitState.Attractor)} cannot be null");
 
@@ -32,8 +32,9 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits.Propagation
             double deltaT0 = DeltaTFromNu(state.TrueAnomaly.Radians, state.Eccentricity.Value, state.Attractor.Mu.M3S2, q);
             double deltaT  = deltaT0 + tof.Seconds;
 
-            double nu = NuFromDeltaT(deltaT, state.Eccentricity.Value, state.GravitationalParameter.M3S2, q);
-            return Angle.FromRadians(nu);
+            (double nu, double E, double M) = NuFromDeltaT(deltaT, state.Eccentricity.Value, state.GravitationalParameter.M3S2, q);
+
+            return (Angle.FromRadians(nu), Angle.FromRadians(E), Angle.FromRadians(M));
         }
 
         /// <summary>
@@ -109,8 +110,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits.Propagation
         /// <param name="mu">Gravitational parameter (M3/S2)</param>
         /// <param name="q"></param>
         /// <param name="delta"></param>
-        /// <returns></returns>
-        public static double NuFromDeltaT(double dt, double e, double mu, double q, double delta = 1e-2)
+        /// <returns>A tuple with the three anomalies: true, eccentric, and mean anomaly </returns>
+        public static (double nu, double E, double M) NuFromDeltaT(double dt, double e, double mu, double q, double delta = 1e-2)
         {
             const double pi  = UniversalConstants.Tri.Pi;
             const double pi2 = UniversalConstants.Tri.Pi2;
@@ -121,9 +122,9 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits.Propagation
             double nu;
             if (e < 1 - delta)
             {
-                n  = Math.Sqrt(mu * Math.Pow(1 - e, 3) / Math.Pow(q, 3));
-                M  = n * dt;
-                E  = OrbitalMechanics.MeanToEccentricAnomaly((M + pi) % pi2 - pi, e);
+                n = Math.Sqrt(mu * Math.Pow(1 - e, 3) / Math.Pow(q, 3));
+                M = n * dt;
+                E = OrbitalMechanics.MeanToEccentricAnomaly((M + pi) % pi2 - pi, e);
                 nu = OrbitalMechanics.EccentricToTrueAnomaly(E, e);
             }
             else if (e > 1 - delta && e < 1)
@@ -134,7 +135,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits.Propagation
                 if (OrbitalMechanics.EccentricToMeanAnomaly(Edelta, e) <= Math.Abs(M))
                 {
                     // Strong elliptic
-                    E  = OrbitalMechanics.MeanToEccentricAnomaly((M + pi) % pi2 - pi, e);
+                    E = OrbitalMechanics.MeanToEccentricAnomaly((M + pi) % pi2 - pi, e);
                     nu = OrbitalMechanics.EccentricToMeanAnomaly(E, e);
                 }
                 else
@@ -155,7 +156,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits.Propagation
                 throw new NotImplementedException("Strong Hyperbolic case not implemented");
             }
 
-            return nu;
+            return (nu, E, M);
         }
 
 

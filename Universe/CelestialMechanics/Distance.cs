@@ -1,6 +1,7 @@
 ﻿#region
 
-using System;
+using UnitsNet;
+using Unity.Mathematics;
 
 #endregion
 
@@ -8,9 +9,15 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
 {
     public static class Distance
     {
-        public static double AngularSize(double distance, double radius)
+        public static Angle AngularSize(Length radius, Length distance)
         {
-            return 2 * Math.Asin(radius / distance);
+            double delta = 2 * math.atan(radius / distance);
+            return Angle.FromRadians(delta);
+        }
+
+        public static float InGameScaleFactor(Angle angularSize, float sceneDistance)
+        {
+            return sceneDistance * math.tan((float)angularSize.Radians / 2f);
         }
     }
 }

@@ -6,7 +6,7 @@
     ],
     "includePlatforms": [
         "Editor",
-        "WindowsStandalone32",
+        "LinuxStandalone64",
         "WindowsStandalone64"
     ],
     "excludePlatforms": [],

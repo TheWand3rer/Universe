@@ -14,10 +14,7 @@ namespace VindemiatrixCollective.Universe.Data
     {
         public const string Planets = nameof(Planets);
 
-        public Star Create(JObject jo)
-        {
-            return new Star();
-        }
+        public Star Create(JObject jo) { return new Star(); }
 
         public void Read(JObject jo, JsonReader reader, JsonSerializer serializer, ref Star star)
         {
@@ -28,35 +25,36 @@ namespace VindemiatrixCollective.Universe.Data
             double? t   = (double?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(StellarData.Temperature)}");
             double? age = (double?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(StellarData.Age)}");
 
-            m   ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.m");
-            l   ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.l");
-            g   ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.g");
-            r   ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.r");
-            t   ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.t");
-            age ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.age");
-
-            string sc = jo.Value<string>(nameof(SpectralClass)) ?? jo.Value<string>("SC");
-            if (string.IsNullOrEmpty(sc))
-            {
-                star.SpectralClass = SpectralClass.Undefined;
-                Debug.LogWarning($"{reader.Path} SC is empty.");
-            }
-            else
-            {
-                star.SpectralClass = new SpectralClass(sc);
-            }
-
             string name = jo.Value<string>(nameof(Star.Name)) ?? reader.ParentNameFromContainer(nameof(StarSystem.Orbiters));
             if (!string.IsNullOrEmpty(name))
             {
                 star.Name = name;
             }
 
+            m ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.m");
+            l ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.l");
+            g ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.g");
+            r ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.r");
+            t ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.t");
+            age ??= (double?)jo.SelectToken($"{nameof(PhysicalData)}.age");
+
+            string sc = jo.Value<string>(nameof(SpectralClass)) ?? jo.Value<string>("SC");
+            if (string.IsNullOrEmpty(sc))
+            {
+                star.SpectralClass = SpectralClass.Undefined;
+                Debug.LogWarning($"{name}: {reader.Path} SC is empty.");
+            }
+            else
+            {
+                star.SpectralClass = new SpectralClass(sc);
+            }
+
+
             Assert.IsFalse(string.IsNullOrEmpty(star.Name));
 
             if (string.IsNullOrEmpty(star.Name))
             {
-                Debug.LogWarning($"{reader.Path} name is empty.");
+                Debug.LogWarning($"{name}: {reader.Path} name is empty.");
                 star.Name = "Unknown";
             }
 
@@ -65,7 +63,8 @@ namespace VindemiatrixCollective.Universe.Data
                 Mass   mass   = Mass.FromSolarMasses(m ?? 0);
                 Length radius = Length.FromSolarRadiuses(r ?? 0);
                 Density density = r is > 0
-                    ? Density.FromGramsPerCubicCentimeter(3 * mass.Grams / (4 * UniversalConstants.Tri.Pi * Math.Pow(radius.Centimeters, 3)))
+                    ? Density.FromGramsPerCubicCentimeter(3 * mass.Grams
+                                                        / (4 * UniversalConstants.Tri.Pi * Math.Pow(radius.Centimeters, 3)))
                     : Density.Zero;
 
                 star.StellarData = new StellarData(Luminosity.FromSolarLuminosities(l ?? 0),
@@ -90,11 +89,11 @@ namespace VindemiatrixCollective.Universe.Data
                 double? lan  = (double?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.LongitudeAscendingNode)}");
                 double? argp = (double?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.ArgumentPeriapsis)}");
 
-                a    ??= (double?)jo.SelectToken($"{nameof(OrbitalData)}.a");
-                e    ??= (double?)jo.SelectToken($"{nameof(OrbitalData)}.e");
-                P    ??= (double?)jo.SelectToken($"{nameof(OrbitalData)}.P");
-                i    ??= (double?)jo.SelectToken($"{nameof(OrbitalData)}.i");
-                lan  ??= (double?)jo.SelectToken($"{nameof(OrbitalData)}.lan");
+                a ??= (double?)jo.SelectToken($"{nameof(OrbitalData)}.a");
+                e ??= (double?)jo.SelectToken($"{nameof(OrbitalData)}.e");
+                P ??= (double?)jo.SelectToken($"{nameof(OrbitalData)}.P");
+                i ??= (double?)jo.SelectToken($"{nameof(OrbitalData)}.i");
+                lan ??= (double?)jo.SelectToken($"{nameof(OrbitalData)}.lan");
                 argp ??= (double?)jo.SelectToken($"{nameof(OrbitalData)}.argp");
 
                 star.OrbitalData = new OrbitalData(Length.FromAstronomicalUnits(a.Value),
@@ -106,19 +105,37 @@ namespace VindemiatrixCollective.Universe.Data
                                                    Duration.Zero, Angle.Zero, Angle.Zero, Angle.Zero);
             }
 
+
+            //double a    = 0;
+            //double e    = 0;
+            //double i    = 0;
+            //double lan  = 0;
+            //double argp = 0;
+            //double P    = 0;
+            //star.OrbitalData = new OrbitalData(Length.FromAstronomicalUnits(a),
+            //                                   Ratio.FromDecimalFractions(e),
+            //                                   Angle.FromDegrees(i),
+            //                                   Angle.FromDegrees(lan),
+            //                                   Angle.FromDegrees(argp),
+            //                                   Duration.FromSeconds(P * UniversalConstants.Time.SecondsPerJulianYear),
+            //                                   Duration.Zero, Angle.Zero, Angle.Zero, Angle.Zero);
             star.Attributes[nameof(Type)] = nameof(CelestialBodyType.Star);
-            star.Attributes["Class"]      = nameof(CelestialBodyType.Star);
+            star.Attributes["Class"] = nameof(CelestialBodyType.Star);
 
             JToken orbiters = jo[nameof(CelestialBody.Orbiters)];
 
             if (orbiters is { HasValues: true })
             {
-                Dictionary<string, CelestialBody> planetDict = serializer.Deserialize<Dictionary<string, CelestialBody>>(orbiters.CreateReader());
+                Dictionary<string, CelestialBody> planetDict =
+                    serializer.Deserialize<Dictionary<string, CelestialBody>>(orbiters.CreateReader());
                 star.AddOrbiters(planetDict.Values);
             }
 
 #if UNITY_EDITOR
-            Tuple<string, double?>[] fields = { new(nameof(m), m), new(nameof(age), age), new(nameof(t), t), new(nameof(r), r), new(nameof(l), l) };
+            Tuple<string, double?>[] fields =
+            {
+                new(nameof(m), m), new(nameof(age), age), new(nameof(t), t), new(nameof(r), r), new(nameof(l), l)
+            };
 
             if (ConverterOptions.VerboseLog)
             {

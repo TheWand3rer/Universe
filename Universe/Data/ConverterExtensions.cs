@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -15,10 +16,7 @@ namespace VindemiatrixCollective.Universe.Data
             return name;
         }
 
-        public static string ObjectNameFromPath(this JsonReader reader)
-        {
-            return reader.Path.Split('.')[^1];
-        }
+        public static string ObjectNameFromPath(this JsonReader reader) { return reader.Path.Split('.')[^1]; }
 
         public static string KeyValueFromPath(this JsonReader reader)
         {
@@ -31,7 +29,8 @@ namespace VindemiatrixCollective.Universe.Data
         public static Vector3 StringToVector3(string input, char delimiter = ',')
         {
             string[] array = input.Split(delimiter);
-            return new Vector3(float.Parse(array[0]), float.Parse(array[1]), float.Parse(array[2]));
+            return new Vector3(float.Parse(array[0], CultureInfo.InvariantCulture), float.Parse(array[1], CultureInfo.InvariantCulture),
+                               float.Parse(array[2], CultureInfo.InvariantCulture));
         }
 
         internal static void CheckValue(string fieldName, double? field)

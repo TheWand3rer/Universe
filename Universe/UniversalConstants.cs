@@ -1,8 +1,11 @@
 ﻿#region
 
 using System;
+using System.Runtime.CompilerServices;
 
 #endregion
+
+[assembly: InternalsVisibleTo("com.vindemiatrixcollective.universe.data")]
 
 namespace VindemiatrixCollective.Universe
 {
@@ -37,7 +40,7 @@ namespace VindemiatrixCollective.Universe
         public struct Celestial
         {
             public const double AuPerMetre = 6.6845871222684454959959533702106e-12;
-            public const double GravitationalConstant = 6.67429E-11;
+            public const double GravitationalConstant = 6.67429E-11; // N⋅m²/kg²
             public const double KmPerAu = 149597870.700;
             public const double LightSpeedKilometresPerSecond = 299792.458;
             public const double LightSpeedMetresPerSecond = 299792458;

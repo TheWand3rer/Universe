@@ -1,33 +1,37 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 using VindemiatrixCollective.Universe.Model;
 
 namespace VindemiatrixCollective.Universe.Data
 {
-    public class StarSystemConverter : IConverterReader<StarSystem>
+    public class StarSystemConverter : CoreObjectConverter<StarSystem, StarSystemConverter.StarSystemState>
     {
-        public StarSystem Create(JObject jo) { return new StarSystem(); }
-
-        public void Read(JObject jo, JsonReader reader, JsonSerializer serializer, ref StarSystem starSystem)
+        public StarSystemConverter()
         {
-            starSystem.Name = reader.ParentNameFromContainer(nameof(Galaxy.Systems));
-            string coordinates = jo.Value<string>(nameof(StarSystem.Coordinates)) ?? jo.Value<string>("c");
+            Converter = new ObjectBuilder<StarSystem, StarSystemState>.Builder()
+               .SetProperty(nameof(CelestialBody.Name), Parse.String, (state, value) => state.Name = value)
+               .SetProperty(nameof(StarSystem.Orbiters), Parse.List<CelestialBody, CelestialBodyConverter>,
+                            (state, value) => state.Orbiters = value)
+               .SetProperty(nameof(StarSystem.Coordinates), Parse.Vector3, (state, value) => state.Coordinates = value,
+                            alternativeName: "c")
+               .SetCreate(Creator)
+               .Build();
+        }
 
-            starSystem.Coordinates = !string.IsNullOrEmpty(coordinates)
-                ? ConverterExtensions.StringToVector3(coordinates)
-                : Vector3.zero;
-
-            JToken orbiters = jo[nameof(StarSystem.Orbiters)];
-
-            if (orbiters is { HasValues: true })
+        private StarSystem Creator(StarSystemState state)
+        {
+            StarSystem system = new(state.Name, state.Orbiters)
             {
-                foreach (CelestialBody orbiter in serializer.Deserialize<Dictionary<string, CelestialBody>>(orbiters.CreateReader()).Values)
-                {
-                    starSystem.AddOrbiter(orbiter);
-                }
-            }
+                Coordinates = state.Coordinates
+            };
+            return system;
+        }
+
+        public class StarSystemState
+        {
+            public List<CelestialBody> Orbiters;
+            public string Name;
+            public Vector3 Coordinates;
         }
     }
 }

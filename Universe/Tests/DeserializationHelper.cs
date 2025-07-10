@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
 using UnityEngine;
 using UnityEngine.Assertions;
 using VindemiatrixCollective.Universe.Data;
 using VindemiatrixCollective.Universe.Model;
+using JsonConverter = System.Text.Json.Serialization.JsonConverter;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace VindemiatrixCollective.Universe.Tests
 {
@@ -10,16 +12,14 @@ namespace VindemiatrixCollective.Universe.Tests
     {
         public static readonly JsonConverter[] Converters =
         {
-            new CoreObjectConverter<Galaxy>(new GalaxyConverter()),
-            new CoreObjectConverter<StarSystem>(new StarSystemConverter()),
-            new CoreObjectConverter<Star>(new StarConverter()),
-            new CoreObjectConverter<Planet>(new PlanetConverter()),
-            new CoreObjectConverter<CelestialBody>(new CelestialBodyConverter())
+            new GalaxyConverter(), new StarSystemConverter(),
+            new StarConverter(), new PlanetConverter(), new CelestialBodyConverter(),
+            new PhysicalDataConverter(), new StellarDataConverter(), new OrbitalDataConverter()
         };
 
         public Galaxy LoadGalaxy(string path = "Data/galaxy")
         {
-            Galaxy galaxy = DeserializeFile<Galaxy>(path, Converters);
+            Galaxy galaxy = DeserializeFileNew<Galaxy>(path, Converters);
             return galaxy;
         }
 
@@ -30,24 +30,35 @@ namespace VindemiatrixCollective.Universe.Tests
             return galaxy;
         }
 
-        public T DeserializeFile<T>(string filename, params JsonConverter[] converters)
+        public T DeserializeFileNew<T>(string filename, params JsonConverter[] converters)
         {
             TextAsset text = Resources.Load<TextAsset>(filename);
             Assert.IsNotNull(text, filename);
-            T data = JsonConvert.DeserializeObject<T>(text.ToString(), converters);
-            return data;
+            JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
+
+            foreach (JsonConverter converter in converters)
+            {
+                options.Converters.Add(converter);
+            }
+
+            return JsonSerializer.Deserialize<T>(text.text, options);
         }
 
-        public T DeserializeObject<T>(string json, params JsonConverter[] converters)
+        public T DeserializeObjectNew<T>(string data, params JsonConverter[] converters)
         {
-            T data = JsonConvert.DeserializeObject<T>(json, converters);
-            return data;
+            JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
+
+            foreach (JsonConverter converter in converters)
+            {
+                options.Converters.Add(converter);
+            }
+
+            return JsonSerializer.Deserialize<T>(data, options);
         }
 
         public void LoadSol(ref Galaxy galaxy, string path = "Data/SolarSystem")
         {
-            JsonSerializerSettings settings       = new();
-            Galaxy                 additionalData = DeserializeFile<Galaxy>(path, Converters);
+            Galaxy additionalData = DeserializeFileNew<Galaxy>(path, Converters);
             foreach (StarSystem system in additionalData.Systems)
             {
                 galaxy.AddSystem(system);

@@ -1,64 +1,74 @@
 ﻿using System;
-using System.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace VindemiatrixCollective.Universe.Data
 {
-    public class CoreObjectConverter<T> : JsonConverter
-        where T : class
+    public interface IConverterImplementation<out T, in TState>
     {
-        private readonly IConverterReader<T> readerImplementation;
-        private readonly Type[] types;
-        public override bool CanWrite => true;
-
-        public CoreObjectConverter(params Type[] types)
-        {
-            this.types = types;
-        }
-
-        public CoreObjectConverter() : this(typeof(T))
-        {
-            readerImplementation = new DefaultReaderImplementation<T>();
-        }
-
-        public CoreObjectConverter(IConverterReader<T> readerImplementation) : this(typeof(T))
-        {
-            this.readerImplementation = readerImplementation;
-        }
-
-        public override bool CanConvert(Type objectType)
-        {
-            return types.Any(t => t == objectType);
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            JObject jo     = JObject.Load(reader);
-            T       target = readerImplementation.Create(jo);
-            readerImplementation.Read(jo, reader, serializer, ref target);
-            return target;
-        }
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            JObject jo = new();
-            serializer.Serialize(writer, value);
-            jo.WriteTo(writer);
-        }
+        Type Type { get; }
+        bool ReadProperty(string propertyName, ref Utf8JsonReader reader, JsonSerializerOptions options, TState state);
+        T Create(TState state);
     }
 
-    internal class DefaultReaderImplementation<T> : IConverterReader<T>
-        where T : class
+    public delegate TProperty PropertyReader<out TProperty>(ref Utf8JsonReader reader, JsonSerializerOptions options);
+
+    public delegate void PropertySetter(ref Utf8JsonReader reader, JsonSerializerOptions options);
+
+    public delegate void PropertySetter<TState>(ref Utf8JsonReader reader, JsonSerializerOptions options, TState state)
+        where TState : class, new();
+
+    public class CoreObjectConverter<T, TState> : JsonConverter<T> where T : class where TState : class, new()
     {
-        public T Create(JObject jo)
+        protected IConverterImplementation<T, TState> Converter { get; set; }
+
+        public CoreObjectConverter(IConverterImplementation<T, TState> readerImplementation)
         {
-            return Activator.CreateInstance<T>();
+            Converter = readerImplementation;
         }
 
-        public void Read(JObject jo, JsonReader reader, JsonSerializer serializer, ref T target)
+        protected CoreObjectConverter() { }
+
+        public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            serializer.Populate(jo.CreateReader(), target);
+            if (reader.TokenType != JsonTokenType.StartObject)
+            {
+                throw new JsonException($"{Type.Name}: Expected start of object but found {reader.TokenType}");
+            }
+
+            TState state = new();
+
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonTokenType.EndObject)
+                {
+                    break;
+                }
+
+                if (reader.TokenType == JsonTokenType.PropertyName)
+                {
+                    string propertyName = reader.GetString();
+
+                    reader.Read();
+
+                    bool result = Converter.ReadProperty(propertyName, ref reader, options, state);
+                    if (!result)
+                    {
+                        throw new JsonException($"{Type.Name}: Property not recognised: <{propertyName}> | {reader.TokenType}");
+                    }
+                }
+                else
+                {
+                    throw new JsonException($"{Type.Name}: Unexpected token: <{reader.TokenType}> Value: {reader.GetString()}");
+                }
+            }
+
+            return Converter.Create(state);
+        }
+
+        public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
+        {
+            throw new NotImplementedException();
         }
     }
 }

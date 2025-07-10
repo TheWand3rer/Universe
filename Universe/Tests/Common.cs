@@ -11,9 +11,9 @@ namespace VindemiatrixCollective.Universe.Tests
 {
     public static class Common
     {
-        public static Stopwatch timer = new();
         public static Galaxy Galaxy;
         public static readonly DateTime J2000 = new(2000, 1, 1, 11, 58, 55, 816, DateTimeKind.Utc);
+        public static Stopwatch timer = new();
 
         internal static Planet Earth
         {
@@ -29,17 +29,12 @@ namespace VindemiatrixCollective.Universe.Tests
         {
             get
             {
-                OrbitalData orbital = new(Length.FromKilometers(421700),
-                                          Ratio.FromDecimalFractions(0.0041),
-                                          Angle.FromDegrees(0.0375),
-                                          Angle.FromDegrees(241.1210503807339),
-                                          Angle.FromDegrees(127.39925384521484),
-                                          Duration.FromSeconds(152853.5047),
-                                          Duration.FromDays(1.77f), Angle.Zero,
-                                          Angle.FromDegrees(13.08436484643558f),
-                                          Angle.FromDegrees(33.54986953430662));
+                OrbitalData orbital = new(Length.FromKilometers(421700), Ratio.FromDecimalFractions(0.0041), Angle.FromDegrees(0.0375),
+                                          Angle.FromDegrees(241.1210503807339), Angle.FromDegrees(127.39925384521484),
+                                          Angle.FromDegrees(13.08436484643558f), Duration.FromSeconds(152853.5047),
+                                          Duration.FromDays(1.77f), Angle.Zero, Angle.FromDegrees(33.54986953430662));
 
-                PhysicalData physical = new(Density.FromGramsPerCubicCentimeter(3.528), Length.FromKilometers(1821.6),
+                PhysicalData physical = new(Density.FromGramsPerCubicCentimeter(3.528), Length.FromKilometers(1821.49),
                                             GravitationalParameter.FromMass(Mass.FromKilograms(8.931938e22)));
                 return new Planet("Io", physical, orbital);
             }
@@ -57,6 +52,31 @@ namespace VindemiatrixCollective.Universe.Tests
 
         internal static OrbitalData MarsElements => Planet.Mars.OrbitalData;
 
+        internal static Star Proxima
+        {
+            get
+            {
+                Luminosity   luminosity  = Luminosity.FromSolarLuminosities(0.0017);
+                Mass         mass        = Mass.FromSolarMasses(0.12);
+                Length       radius      = Length.FromSolarRadiuses(0.1542);
+                Temperature  temperature = Temperature.FromKelvins(3306);
+                Acceleration gravity     = Acceleration.FromMetersPerSecondSquared(112000);
+                Duration     age         = Duration.FromYears365(4.85 * 1E9);
+
+                Length   sma          = Length.FromAstronomicalUnits(14666.424758);
+                Duration period       = Duration.FromYears365(547000.0);
+                Ratio    eccentricity = Ratio.FromDecimalFractions(0.5);
+                Angle    inclination  = Angle.FromDegrees(107.6);
+                Angle    lan          = Angle.FromDegrees(126.0);
+                Angle    argp         = Angle.FromDegrees(72.3);
+
+                OrbitalData orbitalData = new(sma, eccentricity, inclination, lan, argp, Angle.Zero, period);
+                Star        proxima     = new("Proxima", new StellarData(luminosity, mass, radius, gravity, temperature, age: age));
+                proxima.OrbitalData = orbitalData;
+                return proxima;
+            }
+        }
+
         internal static Star Sun => Star.Sun;
 
         public static void ArrayAreEqual(double[] expected, double[] actual, double tolerance, string name)
@@ -65,6 +85,11 @@ namespace VindemiatrixCollective.Universe.Tests
             {
                 Assert.AreEqual(expected[i], actual[i], tolerance, name);
             }
+        }
+
+        public static void CompareVector3d(Vector3d expected, Vector3d actual, double tolerance, string name)
+        {
+            ArrayAreEqual(expected.ToArray(), actual.ToArray(), tolerance, name);
         }
 
         public static void LoadData()

@@ -16,7 +16,7 @@
     "precompiledReferences": [
         "nunit.framework.dll",
         "UnitsNet.dll",
-        "Newtonsoft.Json.dll"
+        "System.Text.Json.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [

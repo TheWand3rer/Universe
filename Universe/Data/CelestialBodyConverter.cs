@@ -1,50 +1,41 @@
-﻿using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using VindemiatrixCollective.Universe.Model;
 
 namespace VindemiatrixCollective.Universe.Data
 {
-    public class CelestialBodyConverter : IConverterReader<CelestialBody>
+    public class CelestialBodyConverter : JsonConverter<CelestialBody>
     {
-        private readonly PlanetConverter planetConverter = new();
-        private readonly StarConverter starConverter = new();
-
-        private CelestialBodyType type;
-
-        public CelestialBody Create(JObject jo)
+        public override CelestialBody Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (jo.SelectToken($"{nameof(Attributes)}.otypes") != null)
+            using JsonDocument jsonDoc    = JsonDocument.ParseValue(ref reader);
+            JsonElement        jsonObject = jsonDoc.RootElement;
+
+            if (jsonObject.TryGetProperty(nameof(Star.StellarData), out _))
             {
-                type = CelestialBodyType.Star;
-                return new Star();
+                return jsonObject.Deserialize<Star>(options);
             }
 
-            if (jo.SelectToken($"{nameof(Attributes)}.{nameof(CelestialBody.Type)}") != null)
+            if (jsonObject.TryGetProperty(nameof(Star.Attributes), out JsonElement value))
             {
-                type = CelestialBodyType.Planet;
-                return new Planet();
+                if (value.TryGetProperty("otypes", out _))
+                {
+                    return jsonObject.Deserialize<Star>(options);
+                }
             }
 
-            throw new InvalidOperationException($"Invalid Orbiter type: {jo}");
+            if (jsonObject.TryGetProperty(nameof(Planet.PhysicalData), out _))
+            {
+                return jsonObject.Deserialize<Planet>(options);
+            }
+
+            throw new InvalidOperationException($"Unknown {nameof(CelestialBody)} type in: {jsonObject.ToString()}");
         }
 
-        public void Read(JObject jo, JsonReader reader, JsonSerializer serializer, ref CelestialBody target)
+        public override void Write(Utf8JsonWriter writer, CelestialBody value, JsonSerializerOptions options)
         {
-            switch (type)
-            {
-                case CelestialBodyType.Star:
-                    Star star = (Star)target;
-                    starConverter.Read(jo, reader, serializer, ref star);
-                    break;
-
-                case CelestialBodyType.Planet:
-                    Planet planet = (Planet)target;
-                    planetConverter.Read(jo, reader, serializer, ref planet);
-                    break;
-                default:
-                    throw new InvalidOperationException("Invalid orbiter type");
-            }
+            throw new NotImplementedException();
         }
     }
 }

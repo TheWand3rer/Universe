@@ -14,7 +14,8 @@
     "overrideReferences": true,
     "precompiledReferences": [
         "Newtonsoft.Json.dll",
-        "UnitsNet.dll"
+        "UnitsNet.dll",
+        "System.Text.Json.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [],

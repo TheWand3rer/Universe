@@ -73,6 +73,11 @@ namespace VindemiatrixCollective.Universe.Model
             get => orbitalData;
             set
             {
+                if (value == null)
+                {
+                    return;
+                }
+
                 orbitalData = value;
                 if (ParentBody != null)
                 {
@@ -133,7 +138,7 @@ namespace VindemiatrixCollective.Universe.Model
             return result;
         }
 
-        public IEnumerator<CelestialBody> GetEnumerator() { return Orbiters.GetEnumerator(); }
+        public IEnumerator<CelestialBody> GetEnumerator() => Orbiters.GetEnumerator();
 
         public Length DistanceTo(CelestialBody body)
         {
@@ -189,6 +194,8 @@ namespace VindemiatrixCollective.Universe.Model
 
         public void AddOrbiters(IEnumerable<CelestialBody> newOrbiters)
         {
+            Assert.IsNotNull(newOrbiters, nameof(Orbiters));
+
             foreach (CelestialBody orbiter in newOrbiters)
             {
                 AddOrbiter(orbiter);
@@ -214,7 +221,7 @@ namespace VindemiatrixCollective.Universe.Model
         protected virtual void CopyValues() { }
 #endif
 
-        IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         #region ITreeNode
 

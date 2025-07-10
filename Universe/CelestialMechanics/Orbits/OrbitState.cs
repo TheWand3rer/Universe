@@ -23,8 +23,9 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         public Angle ArgumentPeriapsis => Angle.FromRadians(argP);
         public Angle EccentricAnomaly => Angle.FromRadians(E);
         public Angle Inclination => Angle.FromRadians(i);
-
         public Angle LongitudeAscendingNode => Angle.FromRadians(loAN);
+        public Angle MeanAnomaly => Angle.FromRadians(M);
+        public Angle SiderealRotation => Angle.FromRadians(sra);
 
         public Angle TrueAnomaly => Angle.FromRadians(nu);
 
@@ -67,9 +68,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
 
         public Vector3d AngularMomentum => Vector3d.Cross(LocalPosition, Velocity);
 
-        public Vector3d EccentricityVector => 1 / mu.M3S2 *
-                                              ((Velocity.sqrMagnitude - mu.M3S2 / LocalPosition.magnitude) * LocalPosition -
-                                               Vector3d.Dot(LocalPosition, Velocity) * Velocity);
+        public Vector3d EccentricityVector => 1 / mu.M3S2 * ((Velocity.sqrMagnitude - mu.M3S2 / LocalPosition.magnitude) * LocalPosition
+                                                           - Vector3d.Dot(LocalPosition, Velocity) * Velocity);
 
         /// <summary>
         ///     Local orbital position (m), relative to its attractor if any.
@@ -87,8 +87,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             {
                 Vector3d attractorPosition = ((ICelestialBody)Attractor).OrbitState?.LocalPosition ?? Vector3d.zero;
                 return Tree.Ancestors<CelestialBody>(Attractor)
-                           .Aggregate(LocalPosition + attractorPosition,
-                                      (sum, ancestor) => sum + (ancestor.OrbitState?.LocalPosition ?? Vector3d.zero));
+                   .Aggregate(LocalPosition + attractorPosition,
+                              (sum, ancestor) => sum + (ancestor.OrbitState?.LocalPosition ?? Vector3d.zero));
             }
         }
 
@@ -97,12 +97,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         /// </summary>
         public Vector3d Velocity { get; private set; }
 
-        public (Length p, Ratio e, Angle i, Angle loAN, Angle argP, Angle nu) ToElements()
-        {
-            return (SemiLatusRectum, Eccentricity, Inclination, LongitudeAscendingNode, ArgumentPeriapsis, TrueAnomaly);
-        }
+        public (Length p, Ratio e, Angle i, Angle loAN, Angle argP, Angle nu) ToElements() => (
+            SemiLatusRectum, Eccentricity, Inclination, LongitudeAscendingNode, ArgumentPeriapsis, TrueAnomaly);
 
-        public (Vector3d r, Vector3d v) ToVectors() { return ClassicalElementsToVectors(a, e, mu.M3S2, i, loAN, argP, nu); }
+        public (Vector3d r, Vector3d v) ToVectors() => ClassicalElementsToVectors(a, e, mu.M3S2, i, loAN, argP, nu);
 
         public double[] ToArrayElements()
         {
@@ -225,9 +223,22 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             Velocity = v;
         }
 
-        public void Propagate(float tofSeconds) { Propagate((double)tofSeconds); }
+        public void Propagate(float tofSeconds)
+        {
+            Propagate((double)tofSeconds);
+        }
 
-        public void Propagate(double tofSeconds) { Propagate(Duration.FromSeconds(tofSeconds)); }
+        public void Propagate(double tofSeconds)
+        {
+            Propagate(Duration.FromSeconds(tofSeconds));
+        }
+
+        public void Rotate(double tofSeconds)
+        {
+            double rotationRateRadPerDay = 2 * Math.PI / srp;
+            double angle                 = sra - rotationRateRadPerDay * tofSeconds;
+            sra = Math.Atan2(Math.Sin(angle), Math.Cos(angle));
+        }
 
         public void SetAttractor(IAttractor attractor)
         {
@@ -239,11 +250,26 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             Attractor = attractor;
             mu = GravitationalParameter.FromMass(attractor.Mass);
             CalculateStateFromElements();
+
+            if (srp > 0)
+            {
+                // Tidal lock, use orbital period to avoid accumulation of error
+                if (math.abs(Period.Seconds - srp) < 12 * UniversalConstants.Time.SecondsPerHour)
+                {
+                    srp = Period.Seconds;
+                }
+            }
         }
 
-        public void SetDate(DateTime date) { epoch = date; }
+        public void SetDate(DateTime date)
+        {
+            epoch = date;
+        }
 
-        public void SetPropagator(IPropagator propagator) { Propagator = propagator; }
+        public void SetPropagator(IPropagator propagator)
+        {
+            Propagator = propagator;
+        }
 
         private void CalculateStateFromElements()
         {
@@ -374,10 +400,12 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
                 i = orbitalData.Inclination.Radians,
                 loAN = orbitalData.LongitudeAscendingNode.Radians,
                 argP = orbitalData.ArgumentPeriapsis.Radians,
-                M = orbitalData.MeanAnomalyAtEpoch.Radians,
-                nu = orbitalData.TrueAnomalyAtEpoch.Radians,
+                M = orbitalData.MeanAnomaly.Radians,
+                nu = orbitalData.TrueAnomaly.Radians,
+                srp = orbitalData.SiderealRotationPeriod.Seconds,
                 Propagator = new Farnocchia()
             };
+
             return state;
         }
 
@@ -402,10 +430,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             return state;
         }
 
-        public static OrbitState FromEphemerides(CelestialBody attractor, CelestialBody body, DateTime epoch)
-        {
+        public static OrbitState FromEphemerides(CelestialBody attractor, CelestialBody body, DateTime epoch) =>
             throw new NotImplementedException();
-        }
 
         public static OrbitState Propagate(OrbitState state, Duration tof)
         {
@@ -456,6 +482,16 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         ///     Mean Anomaly (rad)
         /// </summary>
         private double M;
+
+        /// <summary>
+        ///     Sidereal Rotation Angle (rad)
+        /// </summary>
+        public double sra;
+
+        /// <summary>
+        ///     Sidereal Rotation Period (s)
+        /// </summary>
+        private double srp;
 
         /// <summary>
         ///     True Anomaly (rad) ν

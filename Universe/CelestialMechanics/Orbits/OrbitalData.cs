@@ -25,8 +25,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         public Angle AxialTilt => Angle.FromDegrees(axialTilt);
         public Angle Inclination => Angle.FromDegrees(inclination);
         public Angle LongitudeAscendingNode => Angle.FromDegrees(longitudeAscendingNode);
-        public Angle MeanAnomalyAtEpoch => Angle.FromDegrees(meanAnomalyAtEpoch);
-        public Angle TrueAnomalyAtEpoch => Angle.FromDegrees(trueAnomalyAtEpoch);
+        public Angle MeanAnomaly => Angle.FromDegrees(meanAnomalyAtEpoch);
+        public Angle TrueAnomaly => Angle.FromDegrees(trueAnomalyAtEpoch);
 
         [CreateProperty] public Duration Period => Duration.FromSeconds(periodS);
 
@@ -41,21 +41,21 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         public Ratio Eccentricity => Ratio.FromDecimalFractions(eccentricity);
 
         private OrbitalData(
-            double semiMajorAxisMetres, double eccentricity, double orbitalInclination, double lan, double argp,
-            double? orbitalPeriodSeconds, double? siderealRotationSeconds = null, double? axialTilt = null, double? meanAnomaly = null,
-            double? trueAnomaly = null)
+            double semiMajorAxisMetres, double eccentricity, double orbitalInclination, double lan, double argp, double trueAnomaly,
+            double? orbitalPeriodSeconds = null, double? siderealRotationSeconds = null, double? axialTilt = null,
+            double? meanAnomaly = null)
         {
-            semiMajorAxisM          = semiMajorAxisMetres;
-            this.eccentricity       = eccentricity;
+            semiMajorAxisM = semiMajorAxisMetres;
+            this.eccentricity = eccentricity;
             siderealRotationPeriodS = siderealRotationSeconds ?? 0;
-            inclination             = orbitalInclination;
-            longitudeAscendingNode  = lan;
-            argumentPeriapsis       = argp;
-            periodS                 = orbitalPeriodSeconds ?? 0;
+            inclination = orbitalInclination;
+            longitudeAscendingNode = lan;
+            argumentPeriapsis = argp;
+            periodS = orbitalPeriodSeconds ?? 0;
 
-            this.axialTilt     = axialTilt ?? 0;
+            this.axialTilt = axialTilt ?? 0;
             meanAnomalyAtEpoch = meanAnomaly ?? 0;
-            trueAnomalyAtEpoch = trueAnomaly ?? 0;
+            trueAnomalyAtEpoch = trueAnomaly;
 
             if (inclination > 180)
             {
@@ -65,16 +65,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
 
         public OrbitalData(
             Length semiMajorAxis, Ratio eccentricity, Angle inclination, Angle longitudeAscendingNode, Angle argumentPeriapsis,
-            Duration? orbitalPeriod, Duration? siderealPeriod, Angle? axialTilt, Angle? trueAnomaly,
-            Angle? meanAnomaly = null) : this(semiMajorAxis.Meters,
-                                              eccentricity.Value,
-                                              inclination.Degrees,
-                                              longitudeAscendingNode.Degrees, argumentPeriapsis.Degrees,
-                                              orbitalPeriod?.Seconds,
-                                              siderealPeriod?.Seconds,
-                                              axialTilt?.Degrees,
-                                              trueAnomaly?.Degrees,
-                                              meanAnomaly?.Degrees) { }
+            Angle trueAnomaly, Duration? orbitalPeriod = null, Duration? siderealPeriod = null, Angle? axialTilt = null,
+            Angle? meanAnomaly = null) : this(semiMajorAxis.Meters, eccentricity.Value, inclination.Degrees, longitudeAscendingNode.Degrees,
+                                              argumentPeriapsis.Degrees, trueAnomaly.Degrees, orbitalPeriod?.Seconds,
+                                              siderealPeriod?.Seconds, axialTilt?.Degrees, meanAnomaly?.Degrees) { }
 
         internal static OrbitalData Empty => new(0, 0, 0, 0, 0, 0);
 
@@ -89,10 +83,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         /// <param name="argP">Argument of Periapsis (deg)</param>
         /// <param name="nu">True Anomaly (deg)</param>
         /// <returns></returns>
-        public static OrbitalData FromClassicElements(float a, float e, float i, float lan, float argP, float nu)
-        {
-            return new OrbitalData(a, e, i, lan, argP,
-                                   0, 0, 0, 0, nu);
-        }
+        public static OrbitalData FromClassicElements(float a, float e, float i, float lan, float argP, float nu) =>
+            new(a, e, i, lan, argP, nu, 0, 0,
+                0, 0);
     }
 }

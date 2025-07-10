@@ -2,6 +2,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using Unity.Mathematics;
 using UnityEngine;
 
 #endregion
@@ -100,11 +101,14 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             return false;
         }
 
-        public double[] ToArray() { return new[] { x, y, z }; }
+        public double[] ToArray()
+        {
+            return new[] { x, y, z };
+        }
 
-        public override int GetHashCode() { return x.GetHashCode() ^ (y.GetHashCode() << 2) ^ (z.GetHashCode() >> 2); }
+        public override int GetHashCode() => x.GetHashCode() ^ (y.GetHashCode() << 2) ^ (z.GetHashCode() >> 2);
 
-        public override string ToString() { return "(" + x + ", " + y + ", " + z + ")"; }
+        public override string ToString() => "(" + x + ", " + y + ", " + z + ")";
 
         public Vector3 ToXZY()
         {
@@ -112,7 +116,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             return new Vector3(v.x, v.z, v.y);
         }
 
-        public Vector3d ToXZYd() { return new Vector3d(x, z, y); }
+        public Vector3d ToXZYd() => new(x, z, y);
 
         public void Normalize()
         {
@@ -164,28 +168,25 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
 
         public static Vector3d zero => new(0d, 0d, 0d);
 
-        public static Vector3d operator +(Vector3d a, Vector3d b) { return new Vector3d(a.x + b.x, a.y + b.y, a.z + b.z); }
+        public static Vector3d operator +(Vector3d a, Vector3d b) => new(a.x + b.x, a.y + b.y, a.z + b.z);
 
-        public static Vector3d operator -(Vector3d a, Vector3d b) { return new Vector3d(a.x - b.x, a.y - b.y, a.z - b.z); }
+        public static Vector3d operator -(Vector3d a, Vector3d b) => new(a.x - b.x, a.y - b.y, a.z - b.z);
 
-        public static Vector3d operator -(Vector3d a) { return new Vector3d(-a.x, -a.y, -a.z); }
+        public static Vector3d operator -(Vector3d a) => new(-a.x, -a.y, -a.z);
 
-        public static Vector3d operator *(Vector3d a, double d) { return new Vector3d(a.x * d, a.y * d, a.z * d); }
+        public static Vector3d operator *(Vector3d a, double d) => new(a.x * d, a.y * d, a.z * d);
 
-        public static Vector3d operator *(double d, Vector3d a) { return new Vector3d(a.x * d, a.y * d, a.z * d); }
+        public static Vector3d operator *(double d, Vector3d a) => new(a.x * d, a.y * d, a.z * d);
 
-        public static Vector3d operator /(Vector3d a, double d) { return new Vector3d(a.x / d, a.y / d, a.z / d); }
+        public static Vector3d operator /(Vector3d a, double d) => new(a.x / d, a.y / d, a.z / d);
 
-        public static bool operator ==(Vector3d lhs, Vector3d rhs) { return SqrMagnitude(lhs - rhs) < 0.0 / 1.0; }
+        public static bool operator ==(Vector3d lhs, Vector3d rhs) => SqrMagnitude(lhs - rhs) < 0.0 / 1.0;
 
-        public static bool operator !=(Vector3d lhs, Vector3d rhs) { return SqrMagnitude(lhs - rhs) >= 0.0 / 1.0; }
+        public static bool operator !=(Vector3d lhs, Vector3d rhs) => SqrMagnitude(lhs - rhs) >= 0.0 / 1.0;
 
-        public static explicit operator Vector3(Vector3d vector3d)
-        {
-            return new Vector3((float)vector3d.x, (float)vector3d.y, (float)vector3d.z);
-        }
+        public static explicit operator Vector3(Vector3d vector3d) => new((float)vector3d.x, (float)vector3d.y, (float)vector3d.z);
 
-        public static explicit operator Vector3d(Vector3 vector3) { return new Vector3d(vector3.x, vector3.y, vector3.z); }
+        public static explicit operator Vector3d(Vector3 vector3) => new(vector3.x, vector3.y, vector3.z);
 
         public static Vector3d Lerp(Vector3d from, Vector3d to, double t)
         {
@@ -289,18 +290,14 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             return vector3_4;
         }
 
-        public static Vector3d Scale(Vector3d a, Vector3d b) { return new Vector3d(a.x * b.x, a.y * b.y, a.z * b.z); }
+        public static Vector3d Scale(Vector3d a, Vector3d b) => new(a.x * b.x, a.y * b.y, a.z * b.z);
 
-        public static Vector3d Cross(Vector3d lhs, Vector3d rhs)
-        {
-            return new Vector3d(lhs.y * rhs.z - lhs.z * rhs.y, lhs.z * rhs.x - lhs.x * rhs.z,
-                                lhs.x * rhs.y - lhs.y * rhs.x);
-        }
+        public static Vector3d Cross(Vector3d lhs, Vector3d rhs) =>
+            new(lhs.y * rhs.z - lhs.z * rhs.y, lhs.z * rhs.x - lhs.x * rhs.z,
+                lhs.x * rhs.y - lhs.y * rhs.x);
 
-        public static Vector3d Reflect(Vector3d inDirection, Vector3d inNormal)
-        {
-            return -2d * Dot(inNormal, inDirection) * inNormal + inDirection;
-        }
+        public static Vector3d Reflect(Vector3d inDirection, Vector3d inNormal) =>
+            -2d * Dot(inNormal, inDirection) * inNormal + inDirection;
 
         public static Vector3d Normalize(Vector3d value)
         {
@@ -313,7 +310,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             return zero;
         }
 
-        public static double Dot(Vector3d lhs, Vector3d rhs) { return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z; }
+        public static double Dot(Vector3d lhs, Vector3d rhs) => lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
 
         public static Vector3d Project(Vector3d vector, Vector3d onNormal)
         {
@@ -326,7 +323,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             return onNormal * Dot(vector, onNormal) / num;
         }
 
-        public static Vector3d Exclude(Vector3d excludeThis, Vector3d fromThat) { return fromThat - Project(fromThat, excludeThis); }
+        public static Vector3d Exclude(Vector3d excludeThis, Vector3d fromThat) => fromThat - Project(fromThat, excludeThis);
 
         /// <summary>
         ///     Returns the angle between from and to in degrees.
@@ -334,10 +331,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns>The angle in degrees.</returns>
-        public static double Angle(Vector3d from, Vector3d to)
-        {
-            return Math.Acos(Math.Clamp(Dot(from.normalized, to.normalized), -1d, 1d)) * 57.29578d;
-        }
+        public static double Angle(Vector3d from, Vector3d to) =>
+            Math.Acos(Math.Clamp(Dot(from.normalized, to.normalized), -1d, 1d)) * 57.29578d;
 
         public static double Distance(Vector3d a, Vector3d b)
         {
@@ -355,19 +350,15 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             return vector;
         }
 
-        public static double Magnitude(Vector3d a) { return Math.Sqrt(a.x * a.x + a.y * a.y + a.z * a.z); }
+        public static double Magnitude(Vector3d a) => Math.Sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
 
-        public static double SqrMagnitude(Vector3d a) { return a.x * a.x + a.y * a.y + a.z * a.z; }
+        public static double SqrMagnitude(Vector3d a) => a.x * a.x + a.y * a.y + a.z * a.z;
 
-        public static Vector3d Min(Vector3d lhs, Vector3d rhs)
-        {
-            return new Vector3d(Math.Min(lhs.x, rhs.x), Math.Min(lhs.y, rhs.y), Math.Min(lhs.z, rhs.z));
-        }
+        public static Vector3d Min(Vector3d lhs, Vector3d rhs) =>
+            new(Math.Min(lhs.x, rhs.x), Math.Min(lhs.y, rhs.y), Math.Min(lhs.z, rhs.z));
 
-        public static Vector3d Max(Vector3d lhs, Vector3d rhs)
-        {
-            return new Vector3d(Math.Max(lhs.x, rhs.x), Math.Max(lhs.y, rhs.y), Math.Max(lhs.z, rhs.z));
-        }
+        public static Vector3d Max(Vector3d lhs, Vector3d rhs) =>
+            new(Math.Max(lhs.x, rhs.x), Math.Max(lhs.y, rhs.y), Math.Max(lhs.z, rhs.z));
 
         // Projects a vector onto a plane defined by a normal orthogonal to the plane.
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -383,6 +374,18 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             return new Vector3d(vector.x - planeNormal.x * dot / sqrMag,
                                 vector.y - planeNormal.y * dot / sqrMag,
                                 vector.z - planeNormal.z * dot / sqrMag);
+        }
+
+
+        public static double SignedAngle(Vector3d from, Vector3d to, Vector3d axis)
+        {
+            double unsignedAngle = Angle(from, to);
+
+            double cross_x = from.y * to.z - from.z * to.y;
+            double cross_y = from.z * to.x - from.x * to.z;
+            double cross_z = from.x * to.y - from.y * to.x;
+            double sign    = math.sign(axis.x * cross_x + axis.y * cross_y + axis.z * cross_z);
+            return unsignedAngle * sign;
         }
     }
 }

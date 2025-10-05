@@ -1,4 +1,7 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using System;
 using System.Collections;
@@ -37,6 +40,8 @@ namespace VindemiatrixCollective.Universe.Model
 
         public IEnumerable<Star> Stars => _Orbiters.Values.OfType<Star>().OrderByDescending(o => o.PhysicalData.Mass);
 
+        public int Index { get; internal set; }
+
         public int StarCount => Stars.Count();
 
         [CreateProperty] public Length DistanceFromSol => Length.FromParsecs(Coordinates.magnitude);
@@ -55,12 +60,15 @@ namespace VindemiatrixCollective.Universe.Model
 
         protected Dictionary<string, CelestialBody> _Orbiters { get; }
 
-        public StarSystem() { _Orbiters = new Dictionary<string, CelestialBody>(); }
+        public StarSystem()
+        {
+            _Orbiters = new Dictionary<string, CelestialBody>();
+        }
 
         public StarSystem(string name) : this()
         {
             Name = name;
-            Id = MakeId(name);
+            Id   = MakeId(name);
         }
 
         public StarSystem(string name, Star primary) : this(name, new[] { primary }) { }
@@ -73,17 +81,17 @@ namespace VindemiatrixCollective.Universe.Model
             }
         }
 
-        public bool ContainsStar(string starName) { return _Orbiters.ContainsKey(starName); }
+        public bool ContainsStar(string starName) => _Orbiters.ContainsKey(starName);
 
         public CelestialBody[] ToArray()
         {
             return _Orbiters.Values.OrderByDescending(star => star.PhysicalData.Mass.SolarMasses).ToArray();
         }
 
-        public IEnumerator<CelestialBody> GetEnumerator()
-        {
-            return _Orbiters?.Values.GetEnumerator() ?? Enumerable.Empty<CelestialBody>().GetEnumerator();
-        }
+        public IEnumerator<CelestialBody> GetEnumerator() =>
+            _Orbiters?.Values.GetEnumerator() ?? Enumerable.Empty<CelestialBody>().GetEnumerator();
+
+        public Length DistanceFrom(StarSystem system) => Length.FromParsecs((Coordinates - system.Coordinates).magnitude);
 
         public string SystemTree()
         {
@@ -99,6 +107,7 @@ namespace VindemiatrixCollective.Universe.Model
         public void AddOrbiter(CelestialBody body)
         {
             body.StarSystem = this;
+            body.Index      = _Orbiters.Count;
             _Orbiters.Add(body.Name, body);
 
             foreach (CelestialBody orbiter in Hierarchy)
@@ -107,7 +116,10 @@ namespace VindemiatrixCollective.Universe.Model
             }
         }
 
-        public void SetBarycentre(Barycentre barycentre) { this.barycentre = barycentre; }
+        public void SetBarycentre(Barycentre barycentre)
+        {
+            this.barycentre = barycentre;
+        }
 
         public void VisitHierarchy<TBody>(Action<TBody> callback, Func<ITreeNode, IEnumerable<ITreeNode>> visitAlgorithm = null)
             where TBody : ITreeNode
@@ -126,14 +138,11 @@ namespace VindemiatrixCollective.Universe.Model
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return _Orbiters?.Values.GetEnumerator() ?? Enumerable.Empty<CelestialBody>().GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => _Orbiters?.Values.GetEnumerator() ?? Enumerable.Empty<CelestialBody>().GetEnumerator();
 
 
         /// <summary>
-        /// Returns a basic <see cref="StarSystem"/> model containing the Sun, Earth, the Moon, and Mars.
+        ///     Returns a basic <see cref="StarSystem" /> model containing the Sun, Earth, the Moon, and Mars.
         /// </summary>
         public static StarSystem Sol
         {

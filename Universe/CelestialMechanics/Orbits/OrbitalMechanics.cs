@@ -1,5 +1,5 @@
-﻿// Terminalizer © 2025 Vindemiatrix Collective
-// Website and Documentation - https://dev.vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
 
 #region
 
@@ -233,7 +233,6 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
 
         public static Vector3d MetresToAu(Vector3d position, float scale = 1) => position * UniversalConstants.Celestial.AuPerMetre * scale;
 
-
         private static double KeplerEquation(double E, double M, double e) => EccentricToMeanAnomaly(E, e) - M;
 
         private static double KeplerEquationPrime(double E, double M, double e) => 1 - e * Math.Cos(E);
@@ -286,7 +285,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
 
 
         /// <summary>
-        /// Converts latitude and longitude to xyz coordinates.
+        ///     Converts latitude and longitude to xyz coordinates.
         /// </summary>
         /// <param name="latitude">Positive values indicate N, negative S.</param>
         /// <param name="longitude">Positive values indicate E, negative W.</param>
@@ -303,6 +302,28 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             double y = radius * Math.Sin(latRad);
 
             return new Vector3d(x, y, z);
+        }
+
+        public static RotationalSpeed OrbitalFrequency(Mass stellarMass, Length a) =>
+            RotationalSpeed.FromRadiansPerSecond(math.sqrt(UniversalConstants.Celestial.GravitationalConstant * stellarMass.Kilograms
+                                                         / math.pow(a.Meters, 3)));
+
+        public static Speed KeplerianVelocity(Mass mass, Length orbitalRadius)
+        {
+            double r   = orbitalRadius.Meters;
+            double M   = mass.Kilograms;
+            double G   = UniversalConstants.Celestial.GravitationalConstant;
+            double v_k = math.sqrt(G * M / r);
+            return Speed.FromMetersPerSecond(v_k);
+        }
+
+        public static Acceleration GravityFromMassRadius(Mass mass, Length radius)
+        {
+            double M = mass.Kilograms;
+            double r = radius.Meters;
+            double G = UniversalConstants.Celestial.GravitationalConstant;
+
+            return Acceleration.FromMetersPerSecondSquared(G * M / (r * r));
         }
     }
 }

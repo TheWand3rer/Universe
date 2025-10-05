@@ -1,8 +1,9 @@
-﻿// Terminalizer © 2025 Vindemiatrix Collective
-// Website and Documentation - https://dev.vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
 
 #region
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,7 +62,7 @@ namespace VindemiatrixCollective.Universe.Model
             }
         }
 
-        public int Index { get; protected set; }
+        public int Index { get; protected internal set; }
 
         public int OrbiterCount => _Orbiters.Count;
 
@@ -87,6 +88,9 @@ namespace VindemiatrixCollective.Universe.Model
                 {
                     OrbitState = OrbitState.FromOrbitalElements(orbitalData);
                 }
+#if UNITY_EDITOR
+                CopyOrbitalValues();
+#endif
             }
         }
 
@@ -107,7 +111,7 @@ namespace VindemiatrixCollective.Universe.Model
         protected CelestialBody(string name, CelestialBodyType type)
         {
             Assert.IsFalse(string.IsNullOrEmpty(name));
-            Name = name;
+            Name       = name;
             Attributes = new Attributes { [nameof(Type)] = type.ToString() };
 
             _Orbiters = new Dictionary<string, CelestialBody>();
@@ -216,12 +220,44 @@ namespace VindemiatrixCollective.Universe.Model
             }
         }
 
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
 
 #if UNITY_EDITOR
-        protected virtual void CopyValues() { }
+
+        #region Unity_Editor
+
+#if UNITY_EDITOR
+
+        [Serializable]
+        public struct OrbitalDataValues
+        {
+            public string AxialTilt;
+            public string Eccentricity;
+            public string Inclination;
+            public string OrbitalPeriod;
+            public string SemiMajorAxis;
+            public string SiderealRotation;
+        }
+
+        public OrbitalDataValues orbitalDataValues;
+
+        protected void CopyOrbitalValues()
+        {
+            orbitalDataValues.SemiMajorAxis    = OrbitalData.SemiMajorAxis.AstronomicalUnits.ToString("0.00 au");
+            orbitalDataValues.Eccentricity     = OrbitalData.Eccentricity.Value.ToString("0.00");
+            orbitalDataValues.SiderealRotation = OrbitalData.SiderealRotationPeriod.Days.ToString("0.00 d");
+            orbitalDataValues.Inclination      = OrbitalData.Inclination.Degrees.ToString("0.00 °");
+            orbitalDataValues.AxialTilt        = OrbitalData.AxialTilt.Degrees.ToString("0.00 °");
+            orbitalDataValues.OrbitalPeriod = OrbitalData.Period.Years365 < 0.1f
+                ? OrbitalData.Period.Days.ToString("0.00 d")
+                : OrbitalData.Period.Years365.ToString("0.00 y");
+        }
 #endif
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        #endregion
+
+#endif
 
         #region ITreeNode
 

@@ -1,3 +1,6 @@
+// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
 #region
 
 using System;
@@ -24,7 +27,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
             DeltaVelocity = deltaVelocity;
         }
 
-        public override string ToString() { return $"dt: {DeltaTime.Days} d dV: {DeltaVelocity} m/s"; }
+        public override string ToString()
+        {
+            return $"dt: {DeltaTime.Days} d dV: {DeltaVelocity} m/s";
+        }
     }
 
     public class Manoeuvre : IEnumerable<Impulse>
@@ -33,11 +39,20 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
 
         public Impulse[] Impulses => impulses.ToArray();
 
-        public Manoeuvre(IEnumerable<Impulse> impulses) { this.impulses = new List<Impulse>(impulses); }
+        public Manoeuvre(IEnumerable<Impulse> impulses)
+        {
+            this.impulses = new List<Impulse>(impulses);
+        }
 
-        public Duration ComputeTotalDuration() { return impulses.Sum(i => i.DeltaTime, DurationUnit.Second); }
+        public Duration ComputeTotalDuration()
+        {
+            return impulses.Sum(i => i.DeltaTime, DurationUnit.Second);
+        }
 
-        public IEnumerator<Impulse> GetEnumerator() { return impulses.GetEnumerator(); }
+        public IEnumerator<Impulse> GetEnumerator()
+        {
+            return impulses.GetEnumerator();
+        }
 
         public Speed ComputeTotalCost()
         {
@@ -56,7 +71,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
             return sb.ToString();
         }
 
-        IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
 
         public static Manoeuvre Lambert(OrbitState initialState, OrbitState finalState, ILambertSolver solver)
         {

@@ -1,4 +1,7 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using System;
 using System.Runtime.CompilerServices;
@@ -46,7 +49,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //
         // Parameters:
         //   f:
-        public static double Asin(double f) { return Math.Asin(f); }
+        public static double Asin(double f)
+        {
+            return Math.Asin(f);
+        }
 
         //
         // Summary:
@@ -54,7 +60,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //
         // Parameters:
         //   f:
-        public static double Acos(double f) { return Math.Acos(f); }
+        public static double Acos(double f)
+        {
+            return Math.Acos(f);
+        }
 
         //
         // Summary:
@@ -62,7 +71,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //
         // Parameters:
         //   f:
-        public static double Atan(double f) { return Math.Atan(f); }
+        public static double Atan(double f)
+        {
+            return Math.Atan(f);
+        }
 
         //
         // Summary:
@@ -72,7 +84,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //   y:
         //
         //   x:
-        public static double Atan2(double y, double x) { return Math.Atan2(y, x); }
+        public static double Atan2(double y, double x)
+        {
+            return Math.Atan2(y, x);
+        }
 
         //
         // Summary:
@@ -80,7 +95,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //
         // Parameters:
         //   f:
-        public static double Sqrt(double f) { return Math.Sqrt(f); }
+        public static double Sqrt(double f)
+        {
+            return Math.Sqrt(f);
+        }
 
         //
         // Summary:
@@ -88,7 +106,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //
         // Parameters:
         //   f:
-        public static double Abs(double f) { return Math.Abs(f); }
+        public static double Abs(double f)
+        {
+            return Math.Abs(f);
+        }
 
         //
         // Summary:
@@ -96,7 +117,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //
         // Parameters:
         //   value:
-        public static int Abs(int value) { return Math.Abs(value); }
+        public static int Abs(int value)
+        {
+            return Math.Abs(value);
+        }
 
         //
         // Summary:
@@ -108,7 +132,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //   b:
         //
         //   values:
-        public static double Min(double a, double b) { return a < b ? a : b; }
+        public static double Min(double a, double b)
+        {
+            return a < b ? a : b;
+        }
 
         //
         // Summary:
@@ -150,7 +177,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //   b:
         //
         //   values:
-        public static int Min(int a, int b) { return a < b ? a : b; }
+        public static int Min(int a, int b)
+        {
+            return a < b ? a : b;
+        }
 
         //
         // Summary:
@@ -193,7 +223,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //   b:
         //
         //   values:
-        public static double Max(double a, double b) { return a > b ? a : b; }
+        public static double Max(double a, double b)
+        {
+            return a > b ? a : b;
+        }
 
         //
         // Summary:
@@ -237,7 +270,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //   b:
         //
         //   values:
-        public static int Max(int a, int b) { return a > b ? a : b; }
+        public static int Max(int a, int b)
+        {
+            return a > b ? a : b;
+        }
 
         //
         // Summary:
@@ -278,7 +314,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //   f:
         //
         //   p:
-        public static double Pow(double f, double p) { return Math.Pow(f, p); }
+        public static double Pow(double f, double p)
+        {
+            return Math.Pow(f, p);
+        }
 
         //
         // Summary:
@@ -286,7 +325,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //
         // Parameters:
         //   power:
-        public static double Exp(double power) { return Math.Exp(power); }
+        public static double Exp(double power)
+        {
+            return Math.Exp(power);
+        }
 
         //
         // Summary:
@@ -296,7 +338,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //   f:
         //
         //   p:
-        public static double Log(double f, double p) { return Math.Log(f, p); }
+        public static double Log(double f, double p)
+        {
+            return Math.Log(f, p);
+        }
 
         //
         // Summary:
@@ -304,7 +349,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //
         // Parameters:
         //   f:
-        public static double Log(double f) { return Math.Log(f); }
+        public static double Log(double f)
+        {
+            return Math.Log(f);
+        }
 
         //
         // Summary:
@@ -312,7 +360,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //
         // Parameters:
         //   f:
-        public static double Log10(double f) { return Math.Log10(f); }
+        public static double Log10(double f)
+        {
+            return Math.Log10(f);
+        }
 
         //
         // Summary:
@@ -320,7 +371,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //
         // Parameters:
         //   f:
-        public static double Ceil(double f) { return Math.Ceiling(f); }
+        public static double Ceil(double f)
+        {
+            return Math.Ceiling(f);
+        }
 
         //
         // Summary:
@@ -328,7 +382,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //
         // Parameters:
         //   f:
-        public static double Floor(double f) { return Math.Floor(f); }
+        public static double Floor(double f)
+        {
+            return Math.Floor(f);
+        }
 
         //
         // Summary:
@@ -336,7 +393,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //
         // Parameters:
         //   f:
-        public static double Round(double f) { return Math.Round(f); }
+        public static double Round(double f)
+        {
+            return Math.Round(f);
+        }
 
         //
         // Summary:
@@ -344,7 +404,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //
         // Parameters:
         //   f:
-        public static int CeilToInt(double f) { return (int)Math.Ceiling(f); }
+        public static int CeilToInt(double f)
+        {
+            return (int)Math.Ceiling(f);
+        }
 
         //
         // Summary:
@@ -352,7 +415,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //
         // Parameters:
         //   f:
-        public static int FloorToInt(double f) { return (int)Math.Floor(f); }
+        public static int FloorToInt(double f)
+        {
+            return (int)Math.Floor(f);
+        }
 
         //
         // Summary:
@@ -360,7 +426,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //
         // Parameters:
         //   f:
-        public static int RoundToInt(double f) { return (int)Math.Round(f); }
+        public static int RoundToInt(double f)
+        {
+            return (int)Math.Round(f);
+        }
 
         //
         // Summary:
@@ -370,7 +439,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //   f:
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double Sign(double f) { return f >= 0f ? 1f : -1f; }
+        public static double Sign(double f)
+        {
+            return f >= 0f ? 1f : -1f;
+        }
 
         //
         // Summary:
@@ -473,7 +545,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //
         // Returns:
         //     The interpolated double result between the two double values.
-        public static double Lerp(double a, double b, double t) { return a + (b - a) * Clamp01(t); }
+        public static double Lerp(double a, double b, double t)
+        {
+            return a + (b - a) * Clamp01(t);
+        }
 
         //
         // Summary:
@@ -491,7 +566,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //
         // Returns:
         //     The double value as a result from the linear interpolation.
-        public static double LerpUnclamped(double a, double b, double t) { return a + (b - a) * t; }
+        public static double LerpUnclamped(double a, double b, double t)
+        {
+            return a + (b - a) * t;
+        }
 
         //
         // Summary:
@@ -613,7 +691,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //   a:
         //
         //   b:
-        public static bool Approximately(double a, double b) { return Abs(b - a) < Max(1E-06f * Max(Abs(a), Abs(b)), Epsilon * 8f); }
+        public static bool Approximately(double a, double b)
+        {
+            return Abs(b - a) < Max(1E-06f * Max(Abs(a), Abs(b)), Epsilon * 8f);
+        }
 
         public static double SmoothDamp(
             double current, double target, ref double currentVelocity, double smoothTime, double maxSpeed, double deltaTime)
@@ -656,7 +737,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //   t:
         //
         //   length:
-        public static double Repeat(double t, double length) { return Clamp(t - Floor(t / length) * length, 0f, length); }
+        public static double Repeat(double t, double length)
+        {
+            return Clamp(t - Floor(t / length) * length, 0f, length);
+        }
 
         //
         // Summary:
@@ -923,7 +1007,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //
         // Parameters:
         //   value:
-        public static bool IsPowerOfTwo(int value) { return (value & (value - 1)) == 0; }
+        public static bool IsPowerOfTwo(int value)
+        {
+            return (value & (value - 1)) == 0;
+        }
 
         // [MethodImpl(MethodImplOptions.InternalCall)]
         // private static extern void CorrelatedColorTemperatureToRGB_Injected(double kelvin, out Color ret);
@@ -934,7 +1021,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         //
         // Parameters:
         //   Dimension 1:
-        public static double PerlinNoise(double x) { return PerlinNoise(x, 0); }
+        public static double PerlinNoise(double x)
+        {
+            return PerlinNoise(x, 0);
+        }
 
         // Summary:
         //     Perlin Noise 2D
@@ -963,9 +1053,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             int bb = p[p[X + 1] + Y + 1];
 
             // Add blended results from the corners
-            double res = Lerp(Lerp(grad(aa, x, y), grad(ba, x - 1, y), u),
-                              Lerp(grad(ab, x, y - 1), grad(bb, x - 1, y - 1), u),
-                              v);
+            double res = Lerp(Lerp(grad(aa, x, y), grad(ba, x - 1, y), u), Lerp(grad(ab, x, y - 1), grad(bb, x - 1, y - 1), u), v);
 
             // Map result from [-1,1] to [0,1]
             return (res + 1f) * 0.5f;
@@ -989,8 +1077,15 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             return total;
         }
 
-        private static double fade(double t) { return t * t * t * (t * (t * 6 - 15) + 10); }
-        private static double lerp(double t, double a, double b) { return a + t * (b - a); }
+        private static double fade(double t)
+        {
+            return t * t * t * (t * (t * 6 - 15) + 10);
+        }
+
+        private static double lerp(double t, double a, double b)
+        {
+            return a + t * (b - a);
+        }
 
         private static double grad(int hash, double x, double y)
         {
@@ -1014,11 +1109,20 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
 
         #region Methods
 
-        public static double Sin(double f) { return Math.Sin(f); }
+        public static double Sin(double f)
+        {
+            return Math.Sin(f);
+        }
 
-        public static double Cos(double f) { return Math.Cos(f); }
+        public static double Cos(double f)
+        {
+            return Math.Cos(f);
+        }
 
-        public static double Tan(double f) { return Math.Tan(f); }
+        public static double Tan(double f)
+        {
+            return Math.Tan(f);
+        }
 
         #endregion
     }

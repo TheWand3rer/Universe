@@ -1,4 +1,7 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using UnitsNet;
 
@@ -17,6 +20,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
         ///     Solves Lambert's problem.
         /// </summary>
         /// <returns>Returns velocities in km/s.</returns>
-        (Vector3d v1, Vector3d v2) Lambert(GravitationalParameter gravitationalParameter, Vector3d initialPosition, Vector3d finalPosition, Duration timeOfFlight);
+        (Vector3d v1, Vector3d v2) Lambert(
+            GravitationalParameter gravitationalParameter, Vector3d initialPosition, Vector3d finalPosition, Duration timeOfFlight);
     }
 }

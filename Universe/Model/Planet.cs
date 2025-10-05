@@ -1,11 +1,15 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
 
+#region
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnitsNet;
-using UnityEngine;
+using UnitsNet.Units;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
 
 #endregion
@@ -42,9 +46,10 @@ namespace VindemiatrixCollective.Universe.Model
         public Planet(string name, PhysicalData physical, OrbitalData orbital) : this(name)
         {
             PhysicalData = physical;
-            OrbitalData = orbital;
+            OrbitalData  = orbital;
 #if UNITY_EDITOR
-            CopyValues();
+            CopyPhysicalValues();
+            ;
 #endif
         }
 
@@ -131,39 +136,25 @@ namespace VindemiatrixCollective.Universe.Model
             }
         }
 
-        #region Unity_Editor
-
 #if UNITY_EDITOR
-        [SerializeField] private string AxialTiltDeg;
-
-        [SerializeField] private string EccentricityValue;
-
-        [SerializeField] private string InclinationDeg;
-
-        [SerializeField] private string MassEM;
-
-        [SerializeField] private string OrbitalPeriodYears;
-
-        [SerializeField] private string RadiusER;
-
-        [SerializeField] private string SemiMajorAxisAU;
-
-        [SerializeField] private string SiderealRotationDays;
-
-        protected override void CopyValues()
+        [Serializable]
+        public struct PhysicalDataValues
         {
-            base.CopyValues();
-            MassEM = PhysicalData.Mass.EarthMasses.ToString("0.00");
-            RadiusER = (PhysicalData.Radius.Kilometers / UniversalConstants.Physical.EarthRadiusKm).ToString("0.00");
-            SemiMajorAxisAU = OrbitalData.SemiMajorAxis.AstronomicalUnits.ToString("0.00");
-            EccentricityValue = OrbitalData.Eccentricity.Value.ToString("0.00");
-            OrbitalPeriodYears = OrbitalData.Period.Years365.ToString("0.00");
-            SiderealRotationDays = OrbitalData.SiderealRotationPeriod.Days.ToString("0.00");
-            InclinationDeg = OrbitalData.Inclination.Degrees.ToString("0.00 °");
-            AxialTiltDeg = OrbitalData.AxialTilt.Degrees.ToString("0.00 °");
+            public string Mass;
+            public string Radius;
+            public string Temperature;
+        }
+
+        public PhysicalDataValues physicalDataValues;
+
+        private void CopyPhysicalValues()
+        {
+            string massUnit = Mass.GetAbbreviation(Type == CelestialBodyType.Planet ? MassUnit.EarthMass : MassUnit.SolarMass);
+            physicalDataValues.Mass = PhysicalData.Mass.EarthMasses.ToString($"0.00 {massUnit}");
+            physicalDataValues.Radius =
+                (PhysicalData.Radius.Kilometers / UniversalConstants.Physical.EarthRadiusKm).ToString("0.00 R\ud83d\udf28");
+            physicalDataValues.Temperature = PhysicalData.Temperature.Kelvins.ToString("0.00 K");
         }
 #endif
-
-        #endregion
     }
 }

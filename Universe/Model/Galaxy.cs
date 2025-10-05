@@ -1,4 +1,7 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using System;
 using System.Collections;
@@ -15,9 +18,27 @@ namespace VindemiatrixCollective.Universe.Model
     {
         private string name;
 
+        public IEnumerable<StarSystem> Systems => _Systems.Values;
+
+        public int SystemCount => _Systems.Count;
+
+        public StarSystem this[string name]
+        {
+            get => _Systems[name];
+            set => _Systems[name] = value;
+        }
+
+        public string Name
+        {
+            get => name;
+            set => name = value;
+        }
+
+        protected Dictionary<string, StarSystem> _Systems { get; private set; }
+
         public Galaxy()
         {
-            name = nameof(Galaxy);
+            name     = nameof(Galaxy);
             _Systems = new Dictionary<string, StarSystem>();
         }
 
@@ -41,58 +62,7 @@ namespace VindemiatrixCollective.Universe.Model
             }
         }
 
-        public int SystemCount => _Systems.Count;
-
-        public IEnumerable<StarSystem> Systems => _Systems.Values;
-        protected Dictionary<string, StarSystem> _Systems { get; private set; }
-
-        public StarSystem this[string name]
-        {
-            get => _Systems[name];
-            set => _Systems[name] = value;
-        }
-
-        public string Name
-        {
-            get => name;
-            set => name = value;
-        }
-
-        public IEnumerator<StarSystem> GetEnumerator()
-        {
-            return _Systems?.Values.GetEnumerator() ?? Enumerable.Empty<StarSystem>().GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public bool ContainsSystem(string name)
-        {
-            return _Systems.ContainsKey(name);
-        }
-
-        public void AddSystem(StarSystem system)
-        {
-            _Systems.Add(system.Name, system);
-            system.Galaxy = this;
-        }
-
-        public void AddSystems(IEnumerable<StarSystem> systems)
-        {
-            foreach (StarSystem system in systems)
-            {
-                _Systems.Add(system.Name, system);
-            }
-        }
-
-        public TBody GetBody<TBody>(string path)
-            where TBody : CelestialBody
-        {
-            TBody body = (TBody)GetBody(path);
-            return body;
-        }
+        public bool ContainsSystem(string name) => _Systems.ContainsKey(name);
 
         /// <summary>
         ///     Traverses the Galaxy structure to retrieve the chosen body (Star or Planet/Satellite).
@@ -132,5 +102,31 @@ namespace VindemiatrixCollective.Universe.Model
 
             return current;
         }
+
+        public IEnumerator<StarSystem> GetEnumerator() =>
+            _Systems?.Values.GetEnumerator() ?? Enumerable.Empty<StarSystem>().GetEnumerator();
+
+        public TBody GetBody<TBody>(string path) where TBody : CelestialBody
+        {
+            TBody body = (TBody)GetBody(path);
+            return body;
+        }
+
+        public void AddSystem(StarSystem system)
+        {
+            system.Galaxy = this;
+            system.Index  = _Systems.Count;
+            _Systems.Add(system.Name, system);
+        }
+
+        public void AddSystems(IEnumerable<StarSystem> systems)
+        {
+            foreach (StarSystem system in systems)
+            {
+                AddSystem(system);
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

@@ -1,5 +1,12 @@
-﻿using NUnit.Framework;
+﻿// VindemiatrixCollective.Universe.Tests © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
+using NUnit.Framework;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.Tests
 {
@@ -49,9 +56,9 @@ namespace VindemiatrixCollective.Universe.Tests
 
             foreach (double[] row in data)
             {
-                double e = row[0];
+                double e         = row[0];
                 double expectedE = row[1];
-                double nu = row[2] * UniversalConstants.Tri.DegreeToRad;
+                double nu        = row[2] * UniversalConstants.Tri.DegreeToRad;
 
                 double E = OrbitalMechanics.TrueToEccentricAnomaly(nu, e);
                 Assert.AreEqual(expectedE, E * UniversalConstants.Tri.RadToDegree, 1e-2, nameof(OrbitState.EccentricAnomaly));
@@ -63,9 +70,9 @@ namespace VindemiatrixCollective.Universe.Tests
         {
             foreach (double[] row in ellipticAngles)
             {
-                double e = row[0];
+                double e         = row[0];
                 double expectedM = row[1];
-                double nu = row[2] * UniversalConstants.Tri.DegreeToRad;
+                double nu        = row[2] * UniversalConstants.Tri.DegreeToRad;
 
                 double M = OrbitalMechanics.EccentricToMeanAnomaly(OrbitalMechanics.TrueToEccentricAnomaly(nu, e), e);
                 Assert.AreEqual(expectedM, M * UniversalConstants.Tri.RadToDegree, 1e-2, "MeanAnomaly");

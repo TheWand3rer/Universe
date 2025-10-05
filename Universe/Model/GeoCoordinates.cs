@@ -1,9 +1,16 @@
-﻿using System;
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
+using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using UnityEngine.Assertions;
 using VindemiatrixCollective.Universe.CelestialMechanics;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.Model
 {
@@ -70,8 +77,7 @@ namespace VindemiatrixCollective.Universe.Model
         public bool Equals(GeoCoordinates other)
         {
             const double epsilon = 1e-5;
-            return Math.Abs(Latitude - other.Latitude) < epsilon &&
-                   Math.Abs(Longitude - other.Longitude) < epsilon;
+            return Math.Abs(Latitude - other.Latitude) < epsilon && Math.Abs(Longitude - other.Longitude) < epsilon;
         }
 
         public override bool Equals(object? obj) => obj is GeoCoordinates other && Equals(other);

@@ -1,3 +1,6 @@
+// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
 #region
 
 using System;
@@ -25,6 +28,18 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
             solver        = new IzzoLambertSolver();
         }
 
+        public IEnumerable<TransferData> OrderByDeltaV()
+        {
+            transfers.Sort((m1, m2) => m1.Manoeuvre.ComputeTotalCost().CompareTo(m2.Manoeuvre.ComputeTotalCost()));
+            return transfers;
+        }
+
+        public IEnumerable<TransferData> OrderByTransferTime()
+        {
+            transfers.Sort((m1, m2) => m1.Manoeuvre.ComputeTotalDuration().CompareTo(m2.Manoeuvre.ComputeTotalDuration()));
+            return transfers;
+        }
+
         public void CalculateTransferWindows(DateTime start, int windowDays = 180, int number = 20)
         {
             DateTime launchSpanEnd = start.AddDays(180);
@@ -40,18 +55,6 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
                 DateTime arrival = arrivalSpan[j];
                 CalculateTransfer(launch, arrival);
             }
-        }
-
-        public IEnumerable<TransferData> OrderByDeltaV()
-        {
-            transfers.Sort((m1, m2) => m1.Manoeuvre.ComputeTotalCost().CompareTo(m2.Manoeuvre.ComputeTotalCost()));
-            return transfers;
-        }
-
-        public IEnumerable<TransferData> OrderByTransferTime()
-        {
-            transfers.Sort((m1, m2) => m1.Manoeuvre.ComputeTotalDuration().CompareTo(m2.Manoeuvre.ComputeTotalDuration()));
-            return transfers;
         }
 
         private void CalculateTransfer(DateTime launch, DateTime arrival)

@@ -1,12 +1,15 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnitsNet;
+using UnitsNet.Units;
 using Unity.Properties;
-using UnityEngine;
 
 #endregion
 
@@ -45,7 +48,7 @@ namespace VindemiatrixCollective.Universe.Model
         {
             StellarData = data;
 #if UNITY_EDITOR
-            CopyValues();
+            CopyPhysicalValues();
 #endif
         }
 
@@ -101,38 +104,32 @@ namespace VindemiatrixCollective.Universe.Model
         #region UnityEditor
 
 #if UNITY_EDITOR
-        protected override void CopyValues()
+
+        [Serializable]
+        public struct StellarDataValues
         {
-            if (Planets?.Count() > 0)
-            {
-                PlanetArray = Planets.ToArray();
-            }
-
-            if (StellarData == null)
-            {
-                return;
-            }
-
-            MassSM = StellarData.Mass.SolarMasses.ToString("0.00");
-            LuminositySL = StellarData.Luminosity.SolarLuminosities.ToString("0.00");
-            TemperatureK = StellarData.Temperature.Kelvins.ToString("0");
-            AgeGY = (StellarData.Age.Years365 / 1E9).ToString("0.00");
-            RadiusSR = StellarData.Radius.SolarRadiuses.ToString("0.00");
-            //Class = SpectralClass.Signature;
-            //DistanceFromSol = Length.FromParsecs(Coordinates.magnitude).LightYears.ToString("0.00 LY");
+            public string Age;
+            public string Luminosity;
+            public string Mass;
+            public string Radius;
+            public string Temperature;
         }
 
-        [SerializeField] internal string MassSM;
+        public StellarDataValues stellarDataValues;
 
-        [SerializeField] internal string LuminositySL;
+        private void CopyPhysicalValues()
+        {
+            string massUnit   = Mass.GetAbbreviation(MassUnit.SolarMass);
+            string radiusUnit = Length.GetAbbreviation(LengthUnit.SolarRadius);
+            string lumUnit    = Luminosity.GetAbbreviation(LuminosityUnit.SolarLuminosity);
 
-        [SerializeField] internal string TemperatureK;
+            stellarDataValues.Mass        = StellarData.Mass.EarthMasses.ToString($"0.00 {massUnit}");
+            stellarDataValues.Radius      = StellarData.Radius.SolarRadiuses.ToString($"0.00 {radiusUnit}");
+            stellarDataValues.Temperature = StellarData.Temperature.ToString("0.00 K");
+            stellarDataValues.Luminosity  = StellarData.Luminosity.SolarLuminosities.ToString($"0.00 {lumUnit}");
+            stellarDataValues.Age         = (StellarData.Age.Years365 / 1E9).ToString("0.00 Gy");
+        }
 
-        [SerializeField] internal string AgeGY;
-
-        [SerializeField] internal string RadiusSR;
-
-        [SerializeField] private Planet[] PlanetArray;
 #endif
 
         #endregion

@@ -1,6 +1,13 @@
-﻿using NUnit.Framework;
+﻿// VindemiatrixCollective.Universe.Tests © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
+using NUnit.Framework;
 using VindemiatrixCollective.Universe.CelestialMechanics;
 using VindemiatrixCollective.Universe.Model;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.Tests
 {

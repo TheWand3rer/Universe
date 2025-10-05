@@ -1,3 +1,6 @@
+// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
 #region
 
 using System.Collections.Generic;

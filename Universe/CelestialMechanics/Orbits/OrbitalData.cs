@@ -1,4 +1,7 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using UnitsNet;
 using Unity.Properties;
@@ -45,15 +48,15 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             double? orbitalPeriodSeconds = null, double? siderealRotationSeconds = null, double? axialTilt = null,
             double? meanAnomaly = null)
         {
-            semiMajorAxisM = semiMajorAxisMetres;
-            this.eccentricity = eccentricity;
+            semiMajorAxisM          = semiMajorAxisMetres;
+            this.eccentricity       = eccentricity;
             siderealRotationPeriodS = siderealRotationSeconds ?? 0;
-            inclination = orbitalInclination;
-            longitudeAscendingNode = lan;
-            argumentPeriapsis = argp;
-            periodS = orbitalPeriodSeconds ?? 0;
+            inclination             = orbitalInclination;
+            longitudeAscendingNode  = lan;
+            argumentPeriapsis       = argp;
+            periodS                 = orbitalPeriodSeconds ?? 0;
 
-            this.axialTilt = axialTilt ?? 0;
+            this.axialTilt     = axialTilt ?? 0;
             meanAnomalyAtEpoch = meanAnomaly ?? 0;
             trueAnomalyAtEpoch = trueAnomaly;
 

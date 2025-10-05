@@ -1,5 +1,5 @@
-﻿// com.vindemiatrixcollective.universe.tests © 2025 Vindemiatrix Collective
-// Website and Documentation: https://dev.vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe.Tests © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
 
 #region
 
@@ -47,7 +47,7 @@ namespace VindemiatrixCollective.Universe.Tests
         public void DeserializeCompleteData(
             string input, double tol, double mass, double density, double radius, double g, double temp, double hsr, double gm)
         {
-            PhysicalData physicalData = dataHelper.DeserializeObjectNew<PhysicalData>(input, new PhysicalDataConverter());
+            PhysicalData physicalData = dataHelper.DeserializeObject<PhysicalData>(input, new PhysicalDataConverter());
             PhysicalData expected = new(Mass.FromKilograms(mass), Length.FromKilometers(radius), Acceleration.FromMetersPerSecondSquared(g),
                                         Density.FromGramsPerCubicCentimeter(density), Temperature.FromKelvins(temp));
             ComparePhysicalData(expected, physicalData, tol);
@@ -75,26 +75,12 @@ namespace VindemiatrixCollective.Universe.Tests
         public void DeserializeCompleteStellarData(
             string input, double tol, double mass, double lum, double age, double temp, double radius, double gravity)
         {
-            StellarData stellarData = dataHelper.DeserializeObjectNew<StellarData>(input, new StellarDataConverter());
+            StellarData stellarData = dataHelper.DeserializeObject<StellarData>(input, new StellarDataConverter());
             StellarData expected = new(Luminosity.FromSolarLuminosities(lum), Mass.FromSolarMasses(mass), Length.FromSolarRadiuses(radius),
                                        Acceleration.FromMetersPerSecondSquared(gravity), Temperature.FromKelvins(temp), Density.Zero,
                                        Duration.FromYears365(age * 1E9));
             CompareStellarData(expected, stellarData, tol);
         }
-
-
-        //[TestCase(@"{
-        //        ""Mass"": 3.302e+23, 
-        //        ""Gravity"": 3.701
-        //    }")]
-        //[TestCase(@"{
-        //        ""Density"": 5.427, 
-        //        ""Gravity"": 3.701
-        //    }")]
-        //public void DeserializeIncompleteData(string input)
-        //{
-        //    Assert.Throws<ArgumentException>(() => dataHelper.DeserializeObjectNew<PhysicalData>(input, new PhysicalDataConverter()));
-        //}
 
         public static void CompareStellarData(StellarData expected, StellarData actual, double tol)
         {

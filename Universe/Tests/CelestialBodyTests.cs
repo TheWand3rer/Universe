@@ -1,5 +1,5 @@
-// com.vindemiatrixcollective.universe.tests © 2025 Vindemiatrix Collective
-// Website and Documentation: https://dev.vindemiatrixcollective.com
+// VindemiatrixCollective.Universe.Tests © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
 
 #region
 
@@ -100,8 +100,8 @@ namespace VindemiatrixCollective.Universe.Tests
             }", 1e-5, "Mars")]
         public void DeserializePlanet(string input, double tol, string name)
         {
-            Planet planet = dataHelper.DeserializeObjectNew<Planet>(input, new PlanetConverter(), new PhysicalDataConverter(),
-                                                                    new OrbitalDataConverter());
+            Planet planet = dataHelper.DeserializeObject<Planet>(input, new PlanetConverter(), new PhysicalDataConverter(),
+                                                                 new OrbitalDataConverter());
             Planet expected = name switch
             {
                 nameof(Planet.Mars) => Planet.Mars,
@@ -111,7 +111,7 @@ namespace VindemiatrixCollective.Universe.Tests
 
             Assert.AreEqual(expected.Name, planet.Name, nameof(CelestialBody.Name));
             PhysicalDataTests.ComparePhysicalData(expected.PhysicalData, planet.PhysicalData, tol);
-            OrbitalDataTests.CompareOrbitalData(expected.OrbitalData, planet.OrbitalData, tol);
+            OrbitalDataTests.CompareOrbitalData(expected.OrbitalData, planet.OrbitalData, tol, name);
             Assert.That(expected.Attributes, Is.EquivalentTo(planet.Attributes));
         }
 
@@ -149,11 +149,11 @@ namespace VindemiatrixCollective.Universe.Tests
               ""argp"": 72.3
             }
           }", 1e-6, "Proxima")]
-        public void DeserializeStar(string input, double tol, string name)
+        public void DeserializeStar(string input, double tol, string body)
         {
-            Star star = dataHelper.DeserializeObjectNew<Star>(input, new StarConverter(), new StellarDataConverter(),
-                                                              new OrbitalDataConverter());
-            Star expected = name switch
+            Star star = dataHelper.DeserializeObject<Star>(input, new StarConverter(), new StellarDataConverter(),
+                                                           new OrbitalDataConverter());
+            Star expected = body switch
             {
                 nameof(Common.Proxima) => Common.Proxima,
                 _                      => Star.Sun
@@ -163,7 +163,7 @@ namespace VindemiatrixCollective.Universe.Tests
             PhysicalDataTests.ComparePhysicalData(expected.StellarData, star.StellarData, tol);
             if (star.OrbitalData != null)
             {
-                OrbitalDataTests.CompareOrbitalData(expected.OrbitalData, star.OrbitalData, tol);
+                OrbitalDataTests.CompareOrbitalData(expected.OrbitalData, star.OrbitalData, tol, body);
             }
 
             Assert.That(expected.Attributes, Is.EquivalentTo(star.Attributes));
@@ -179,7 +179,7 @@ namespace VindemiatrixCollective.Universe.Tests
 
             Assert.AreEqual(expected.Name, actual.Name);
             PhysicalDataTests.ComparePhysicalData(physicalEx, physicalActual, 1e-3);
-            OrbitalDataTests.CompareOrbitalData(orbitalEx, orbitalActual, 1e-3);
+            OrbitalDataTests.CompareOrbitalData(orbitalEx, orbitalActual, 1e-3, actual.Name);
         }
     }
 }

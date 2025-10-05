@@ -1,4 +1,7 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using System;
 using System.Runtime.CompilerServices;
@@ -106,7 +109,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             return new[] { x, y, z };
         }
 
-        public override int GetHashCode() => x.GetHashCode() ^ (y.GetHashCode() << 2) ^ (z.GetHashCode() >> 2);
+        public override int GetHashCode() => x.GetHashCode() ^ y.GetHashCode() << 2 ^ z.GetHashCode() >> 2;
 
         public override string ToString() => "(" + x + ", " + y + ", " + z + ")";
 
@@ -188,11 +191,12 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
 
         public static explicit operator Vector3d(Vector3 vector3) => new(vector3.x, vector3.y, vector3.z);
 
+        public static explicit operator double3(Vector3d vector3) => new(vector3.x, vector3.y, vector3.z);
+
         public static Vector3d Lerp(Vector3d from, Vector3d to, double t)
         {
             t = t < 0 ? 0 : t > 1.0 ? 1.0 : t;
-            return new Vector3d(from.x + (to.x - from.x) * t, from.y + (to.y - from.y) * t,
-                                from.z + (to.z - from.z) * t);
+            return new Vector3d(from.x + (to.x - from.x) * t, from.y + (to.y - from.y) * t, from.z + (to.z - from.z) * t);
         }
 
         public static Vector3d Slerp(Vector3d from, Vector3d to, double t)
@@ -238,26 +242,20 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             return current + vector3 / magnitude * maxDistanceDelta;
         }
 
-        public static Vector3d RotateTowards(
-            Vector3d current, Vector3d target, double maxRadiansDelta,
-            double maxMagnitudeDelta)
+        public static Vector3d RotateTowards(Vector3d current, Vector3d target, double maxRadiansDelta, double maxMagnitudeDelta)
         {
-            Vector3 v3 = Vector3.RotateTowards((Vector3)current, (Vector3)target, (float)maxRadiansDelta,
-                                               (float)maxMagnitudeDelta);
+            Vector3 v3 = Vector3.RotateTowards((Vector3)current, (Vector3)target, (float)maxRadiansDelta, (float)maxMagnitudeDelta);
             return new Vector3d(v3);
         }
 
         public static Vector3d SmoothDamp(
-            Vector3d current, Vector3d target, ref Vector3d currentVelocity,
-            double smoothTime, double maxSpeed)
+            Vector3d current, Vector3d target, ref Vector3d currentVelocity, double smoothTime, double maxSpeed)
         {
             double deltaTime = Time.deltaTime;
             return SmoothDamp(current, target, ref currentVelocity, smoothTime, maxSpeed, deltaTime);
         }
 
-        public static Vector3d SmoothDamp(
-            Vector3d current, Vector3d target, ref Vector3d currentVelocity,
-            double smoothTime)
+        public static Vector3d SmoothDamp(Vector3d current, Vector3d target, ref Vector3d currentVelocity, double smoothTime)
         {
             double deltaTime = Time.deltaTime;
             double maxSpeed  = double.PositiveInfinity;
@@ -265,14 +263,12 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         }
 
         public static Vector3d SmoothDamp(
-            Vector3d current, Vector3d target, ref Vector3d currentVelocity,
-            double smoothTime, double maxSpeed, double deltaTime)
+            Vector3d current, Vector3d target, ref Vector3d currentVelocity, double smoothTime, double maxSpeed, double deltaTime)
         {
             smoothTime = Math.Max(0.0001d, smoothTime);
-            double num1 = 2d / smoothTime;
-            double num2 = num1 * deltaTime;
-            double num3 = 1.0d / (1.0d + num2 + 0.479999989271164d * num2 * num2 +
-                                  0.234999999403954d * num2 * num2 * num2);
+            double   num1      = 2d / smoothTime;
+            double   num2      = num1 * deltaTime;
+            double   num3      = 1.0d / (1.0d + num2 + 0.479999989271164d * num2 * num2 + 0.234999999403954d * num2 * num2 * num2);
             Vector3d vector    = current - target;
             Vector3d vector3_1 = target;
             double   maxLength = maxSpeed * smoothTime;
@@ -293,8 +289,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         public static Vector3d Scale(Vector3d a, Vector3d b) => new(a.x * b.x, a.y * b.y, a.z * b.z);
 
         public static Vector3d Cross(Vector3d lhs, Vector3d rhs) =>
-            new(lhs.y * rhs.z - lhs.z * rhs.y, lhs.z * rhs.x - lhs.x * rhs.z,
-                lhs.x * rhs.y - lhs.y * rhs.x);
+            new(lhs.y * rhs.z - lhs.z * rhs.y, lhs.z * rhs.x - lhs.x * rhs.z, lhs.x * rhs.y - lhs.y * rhs.x);
 
         public static Vector3d Reflect(Vector3d inDirection, Vector3d inNormal) =>
             -2d * Dot(inNormal, inDirection) * inNormal + inDirection;
@@ -371,8 +366,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             }
 
             double dot = Dot(vector, planeNormal);
-            return new Vector3d(vector.x - planeNormal.x * dot / sqrMag,
-                                vector.y - planeNormal.y * dot / sqrMag,
+            return new Vector3d(vector.x - planeNormal.x * dot / sqrMag, vector.y - planeNormal.y * dot / sqrMag,
                                 vector.z - planeNormal.z * dot / sqrMag);
         }
 

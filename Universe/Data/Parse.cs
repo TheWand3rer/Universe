@@ -1,9 +1,18 @@
-﻿using System;
+﻿// VindemiatrixCollective.Universe.Data © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
+using UnityEditor;
 using UnityEngine;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.Data
 {
@@ -21,7 +30,15 @@ namespace VindemiatrixCollective.Universe.Data
             return Enum.Parse<TEnum>(value);
         }
 
+        public static bool Boolean(ref Utf8JsonReader reader, JsonSerializerOptions options) => reader.GetBoolean();
+
         public static string String(ref Utf8JsonReader reader, JsonSerializerOptions options) => reader.GetString();
+
+        public static Guid Guid(ref Utf8JsonReader reader, JsonSerializerOptions options) => reader.GetGuid();
+
+#if UNITY_EDITOR
+        public static GUID GuidUnity(ref Utf8JsonReader reader, JsonSerializerOptions options) => new(reader.GetString());
+#endif
 
         public static float Float(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
@@ -150,7 +167,7 @@ namespace VindemiatrixCollective.Universe.Data
             return new ValueUnit(v, u);
         }
 
-        public static T[] Array<T>(ref Utf8JsonReader reader, JsonSerializerOptions options) where T : struct =>
+        public static T[] Array<T>(ref Utf8JsonReader reader, JsonSerializerOptions options) =>
             JsonSerializer.Deserialize<T[]>(ref reader, options);
 
         public static string[] Array(ref Utf8JsonReader reader, JsonSerializerOptions options) =>
@@ -158,16 +175,51 @@ namespace VindemiatrixCollective.Universe.Data
 
         public static Vector2 Vector2(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
-            float[] array = Array<float>(ref reader, options);
-            return new Vector2(array[0], array[1]);
+            if (reader.TokenType == JsonTokenType.StartArray)
+            {
+                float[] array = Array<float>(ref reader, options);
+                return new Vector2(array[0], array[1]);
+            }
+
+            if (reader.TokenType == JsonTokenType.StartObject)
+            {
+                float x = 0, y = 0;
+
+                while (reader.Read())
+                {
+                    string propertyName = string.Empty;
+
+                    if (reader.TokenType == JsonTokenType.PropertyName)
+                    {
+                        propertyName = reader.GetString();
+                        reader.Read();
+                    }
+                    else if (reader.TokenType == JsonTokenType.EndObject)
+                    {
+                        break;
+                    }
+
+                    if (propertyName.ToLowerInvariant() == "x")
+                    {
+                        x = reader.GetSingle();
+                    }
+                    else if (propertyName.ToLowerInvariant() == "y")
+                    {
+                        y = reader.GetSingle();
+                    }
+                }
+
+                return new Vector2(x, y);
+            }
+
+            throw new JsonException($"Cannot parse {nameof(Vector2)}");
         }
 
         public static Vector3 Vector3(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
-            float[] array = null;
             if (reader.TokenType == JsonTokenType.StartArray)
             {
-                array = Array<float>(ref reader, options);
+                float[] array = Array<float>(ref reader, options);
                 return new Vector3(array[0], array[1], array[2]);
             }
 
@@ -207,7 +259,8 @@ namespace VindemiatrixCollective.Universe.Data
 
                 reader.Read();
 
-                object value = null;
+                bool   valueType = true;
+                object value     = null;
                 switch (reader.TokenType)
                 {
                     case JsonTokenType.Number:
@@ -231,13 +284,27 @@ namespace VindemiatrixCollective.Universe.Data
                         value = false;
                         break;
 
+                    case JsonTokenType.StartObject:
+                        value     = JsonSerializer.Deserialize<TValue>(ref reader, options);
+                        valueType = false;
+                        break;
+
                     default:
                         throw new JsonException($"{tag} {key}: Unsupported value type: {reader.TokenType}");
                 }
 
                 try
                 {
-                    TValue tValue = (TValue)Convert.ChangeType(value, typeof(TValue));
+                    TValue tValue;
+                    if (valueType)
+                    {
+                        tValue = (TValue)Convert.ChangeType(value, typeof(TValue));
+                    }
+                    else
+                    {
+                        tValue = (TValue)value;
+                    }
+
                     dict.Add(key, tValue);
                 }
                 catch (InvalidCastException ex)
@@ -249,6 +316,22 @@ namespace VindemiatrixCollective.Universe.Data
             return dict;
         }
 
+        public static string UnityType(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        {
+            string type = reader.GetString();
+            if (string.IsNullOrEmpty(type))
+            {
+                return string.Empty;
+            }
+
+            if (type.Contains("Unity"))
+            {
+                type = Regex.Replace(type, @"^Unity\.(.*)$", "UnityEngine.$1Module");
+            }
+
+            return type;
+        }
+
         public static List<T> List<T, TConverter>(ref Utf8JsonReader reader, JsonSerializerOptions options)
             where TConverter : JsonConverter<T>, new()
         {
@@ -256,20 +339,6 @@ namespace VindemiatrixCollective.Universe.Data
             {
                 throw new JsonException($"Invalid Token type: <{reader.TokenType}>");
             }
-
-            //List<T> list = new();
-
-            //while (reader.Read())
-            //{
-            //    if (reader.TokenType == JsonTokenType.EndArray)
-            //    {
-            //        return list;
-            //    }
-
-            //    TConverter converter = new();
-            //    T          item      = converter.Read(ref reader, typeof(T), options);
-            //    list.Add(item);
-            //}
 
             return JsonSerializer.Deserialize<List<T>>(ref reader, options);
         }

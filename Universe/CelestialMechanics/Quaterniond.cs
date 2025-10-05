@@ -1,6 +1,13 @@
+// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
 using System;
 using UnityEngine;
 using UnityEngine.Internal;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.CelestialMechanics
 {
@@ -62,9 +69,9 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         #region public double Length
 
         /// <summary>
-        /// Gets the length (magnitude) of the Quaterniond.
+        ///     Gets the length (magnitude) of the Quaterniond.
         /// </summary>
-        /// <seealso cref="LengthSquared"/>
+        /// <seealso cref="LengthSquared" />
         public double Length => Math.Sqrt(x * x + y * y + z * z + w * w);
 
         #endregion
@@ -72,14 +79,14 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         #region public double LengthSquared
 
         /// <summary>
-        /// Gets the square of the Quaterniond length (magnitude).
+        ///     Gets the square of the Quaterniond length (magnitude).
         /// </summary>
         public double LengthSquared => x * x + y * y + z * z + w * w;
 
         #endregion
 
         /// <summary>
-        ///   <para>Returns the euler angle representation of the rotation.</para>
+        ///     <para>Returns the euler angle representation of the rotation.</para>
         /// </summary>
         public Vector3d eulerAngles
         {
@@ -100,7 +107,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
 
 
         /// <summary>
-        ///   <para>Constructs new Quaterniond with given x,y,z,w components.</para>
+        ///     <para>Constructs new Quaterniond with given x,y,z,w components.</para>
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -115,7 +122,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         }
 
         /// <summary>
-        /// Construct a new Quaterniond from vector and w components
+        ///     Construct a new Quaterniond from vector and w components
         /// </summary>
         /// <param name="v">The vector part</param>
         /// <param name="w">The w part</param>
@@ -128,7 +135,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         }
 
         /// <summary>
-        /// Construct a new Quaterniond from Quaternion
+        ///     Construct a new Quaterniond from Quaternion
         /// </summary>
         /// <param name="v">The Quaternion part</param>
         public Quaterniond(Quaternion v)
@@ -150,7 +157,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             return x.Equals(Quaterniond.x) && y.Equals(Quaterniond.y) && z.Equals(Quaterniond.z) && w.Equals(Quaterniond.w);
         }
 
-        public bool Equals(Quaterniond other) { return x.Equals(other.x) && y.Equals(other.y) && z.Equals(other.z) && w.Equals(other.w); }
+        public bool Equals(Quaterniond other)
+        {
+            return x.Equals(other.x) && y.Equals(other.y) && z.Equals(other.z) && w.Equals(other.w);
+        }
 
         public override int GetHashCode()
         {
@@ -158,13 +168,16 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         }
 
         /// <summary>
-        ///   <para>Returns a nicely formatted string of the Quaterniond.</para>
+        ///     <para>Returns a nicely formatted string of the Quaterniond.</para>
         /// </summary>
         /// <param name="format"></param>
-        public override string ToString() { return string.Format("({0:F1}, {1:F1}, {2:F1}, {3:F1})", x, y, z, w); }
+        public override string ToString()
+        {
+            return string.Format("({0:F1}, {1:F1}, {2:F1}, {3:F1})", x, y, z, w);
+        }
 
         /// <summary>
-        ///   <para>Returns a nicely formatted string of the Quaterniond.</para>
+        ///     <para>Returns a nicely formatted string of the Quaterniond.</para>
         /// </summary>
         /// <param name="format"></param>
         public string ToString(string format)
@@ -175,7 +188,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         #region public void Normalize()
 
         /// <summary>
-        /// Scales the Quaterniond to unit length.
+        ///     Scales the Quaterniond to unit length.
         /// </summary>
         public void Normalize()
         {
@@ -188,7 +201,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
 
 
         /// <summary>
-        ///   <para>Set x, y, z and w components of an existing Quaterniond.</para>
+        ///     <para>Set x, y, z and w components of an existing Quaterniond.</para>
         /// </summary>
         /// <param name="new_x"></param>
         /// <param name="new_y"></param>
@@ -203,11 +216,14 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         }
 
         /// <summary>
-        ///   <para>Creates a rotation which rotates from /fromDirection/ to /toDirection/.</para>
+        ///     <para>Creates a rotation which rotates from /fromDirection/ to /toDirection/.</para>
         /// </summary>
         /// <param name="fromDirection"></param>
         /// <param name="toDirection"></param>
-        public void SetFromToRotation(Vector3d fromDirection, Vector3d toDirection) { this = FromToRotation(fromDirection, toDirection); }
+        public void SetFromToRotation(Vector3d fromDirection, Vector3d toDirection)
+        {
+            this = FromToRotation(fromDirection, toDirection);
+        }
 
         [ExcludeFromDocs]
         public void SetLookRotation(Vector3d view)
@@ -217,11 +233,14 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         }
 
         /// <summary>
-        ///   <para>Creates a rotation with the specified /forward/ and /upwards/ directions.</para>
+        ///     <para>Creates a rotation with the specified /forward/ and /upwards/ directions.</para>
         /// </summary>
         /// <param name="view">The direction to look in.</param>
         /// <param name="up">The vector that defines in which direction up is.</param>
-        public void SetLookRotation(Vector3d view, [DefaultValue("Vector3d.up")] Vector3d up) { this = LookRotation(view, up); }
+        public void SetLookRotation(Vector3d view, [DefaultValue("Vector3d.up")] Vector3d up)
+        {
+            this = LookRotation(view, up);
+        }
 
         public void ToAngleAxis(out double angle, out Vector3d axis)
         {
@@ -230,23 +249,29 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         }
 
         /// <summary>
-        ///   <para>The identity rotation (RO).</para>
+        ///     <para>The identity rotation (RO).</para>
         /// </summary>
         public static Quaterniond identity => new(0d, 0d, 0d, 1d);
 
         /// <summary>
-        ///   <para>The dot product between two rotations.</para>
+        ///     <para>The dot product between two rotations.</para>
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        public static double Dot(Quaterniond a, Quaterniond b) { return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w; }
+        public static double Dot(Quaterniond a, Quaterniond b)
+        {
+            return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+        }
 
         /// <summary>
-        ///   <para>Creates a rotation which rotates /angle/ degrees around /axis/.</para>
+        ///     <para>Creates a rotation which rotates /angle/ degrees around /axis/.</para>
         /// </summary>
         /// <param name="angle"></param>
         /// <param name="axis"></param>
-        public static Quaterniond AngleAxis(double angle, Vector3d axis) { return INTERNAL_CALL_AngleAxis(angle, ref axis); }
+        public static Quaterniond AngleAxis(double angle, Vector3d axis)
+        {
+            return INTERNAL_CALL_AngleAxis(angle, ref axis);
+        }
 
         private static Quaterniond INTERNAL_CALL_AngleAxis(double degrees, ref Vector3d axis)
         {
@@ -269,7 +294,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         }
 
         /// <summary>
-        ///   <para>Creates a rotation which rotates from /fromDirection/ to /toDirection/.</para>
+        ///     <para>Creates a rotation which rotates from /fromDirection/ to /toDirection/.</para>
         /// </summary>
         /// <param name="fromDirection"></param>
         /// <param name="toDirection"></param>
@@ -279,7 +304,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         }
 
         /// <summary>
-        ///   <para>Creates a rotation with the specified /forward/ and /upwards/ directions.</para>
+        ///     <para>Creates a rotation with the specified /forward/ and /upwards/ directions.</para>
         /// </summary>
         /// <param name="forward">The direction to look in.</param>
         /// <param name="upwards">The vector that defines in which direction up is.</param>
@@ -357,12 +382,15 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         }
 
         /// <summary>
-        ///   <para>Spherically interpolates between /a/ and /b/ by t. The parameter /t/ is clamped to the range [0, 1].</para>
+        ///     <para>Spherically interpolates between /a/ and /b/ by t. The parameter /t/ is clamped to the range [0, 1].</para>
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <param name="t"></param>
-        public static Quaterniond Slerp(Quaterniond a, Quaterniond b, double t) { return INTERNAL_CALL_Slerp(ref a, ref b, t); }
+        public static Quaterniond Slerp(Quaterniond a, Quaterniond b, double t)
+        {
+            return INTERNAL_CALL_Slerp(ref a, ref b, t);
+        }
 
         private static Quaterniond INTERNAL_CALL_Slerp(ref Quaterniond a, ref Quaterniond b, double t)
         {
@@ -372,7 +400,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         }
 
         /// <summary>
-        ///   <para>Spherically interpolates between /a/ and /b/ by t. The parameter /t/ is not clamped.</para>
+        ///     <para>Spherically interpolates between /a/ and /b/ by t. The parameter /t/ is not clamped.</para>
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -444,7 +472,10 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         }
 
         /// <summary>
-        ///   <para>Interpolates between /a/ and /b/ by /t/ and normalizes the result afterwards. The parameter /t/ is clamped to the range [0, 1].</para>
+        ///     <para>
+        ///         Interpolates between /a/ and /b/ by /t/ and normalizes the result afterwards. The parameter /t/ is clamped to
+        ///         the range [0, 1].
+        ///     </para>
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -459,15 +490,21 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         }
 
         /// <summary>
-        ///   <para>Interpolates between /a/ and /b/ by /t/ and normalizes the result afterwards. The parameter /t/ is not clamped.</para>
+        ///     <para>
+        ///         Interpolates between /a/ and /b/ by /t/ and normalizes the result afterwards. The parameter /t/ is not
+        ///         clamped.
+        ///     </para>
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <param name="t"></param>
-        public static Quaterniond LerpUnclamped(Quaterniond a, Quaterniond b, double t) { return INTERNAL_CALL_Slerp(ref a, ref b, t); }
+        public static Quaterniond LerpUnclamped(Quaterniond a, Quaterniond b, double t)
+        {
+            return INTERNAL_CALL_Slerp(ref a, ref b, t);
+        }
 
         /// <summary>
-        ///   <para>Rotates a rotation /from/ towards /to/.</para>
+        ///     <para>Rotates a rotation /from/ towards /to/.</para>
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
@@ -485,7 +522,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         }
 
         /// <summary>
-        ///   <para>Returns the Inverse of /rotation/.</para>
+        ///     <para>Returns the Inverse of /rotation/.</para>
         /// </summary>
         /// <param name="rotation"></param>
         public static Quaterniond Inverse(Quaterniond rotation)
@@ -501,7 +538,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         }
 
         /// <summary>
-        ///   <para>Returns the angle in degrees between two rotations /a/ and /b/.</para>
+        ///     <para>Returns the angle in degrees between two rotations /a/ and /b/.</para>
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -512,18 +549,30 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         }
 
         /// <summary>
-        ///   <para>Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).</para>
+        ///     <para>
+        ///         Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees
+        ///         around the y axis (in that order).
+        ///     </para>
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        public static Quaterniond Euler(double x, double y, double z) { return Internal_FromEulerRad(new Vector3d(x, y, z) * degToRad); }
+        public static Quaterniond Euler(double x, double y, double z)
+        {
+            return Internal_FromEulerRad(new Vector3d(x, y, z) * degToRad);
+        }
 
         /// <summary>
-        ///   <para>Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).</para>
+        ///     <para>
+        ///         Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees
+        ///         around the y axis (in that order).
+        ///     </para>
         /// </summary>
         /// <param name="euler"></param>
-        public static Quaterniond Euler(Vector3d euler) { return Internal_FromEulerRad(euler * degToRad); }
+        public static Quaterniond Euler(Vector3d euler)
+        {
+            return Internal_FromEulerRad(euler * degToRad);
+        }
 
         // from http://stackoverflow.com/questions/12088610/conversion-between-euler-Quaterniond-like-in-unity3d-engine
         private static Vector3d Internal_ToEulerRad(Quaterniond rotation)
@@ -655,17 +704,26 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             return result;
         }
 
-        public static bool operator ==(Quaterniond lhs, Quaterniond rhs) { return Dot(lhs, rhs) > 0.999999d; }
+        public static bool operator ==(Quaterniond lhs, Quaterniond rhs)
+        {
+            return Dot(lhs, rhs) > 0.999999d;
+        }
 
-        public static bool operator !=(Quaterniond lhs, Quaterniond rhs) { return Dot(lhs, rhs) <= 0.999999d; }
+        public static bool operator !=(Quaterniond lhs, Quaterniond rhs)
+        {
+            return Dot(lhs, rhs) <= 0.999999d;
+        }
 
-        public static explicit operator Quaternion(Quaterniond q) { return new Quaternion((float)q.x, (float)q.y, (float)q.z, (float)q.w); }
+        public static explicit operator Quaternion(Quaterniond q)
+        {
+            return new Quaternion((float)q.x, (float)q.y, (float)q.z, (float)q.w);
+        }
 
 
         #region Normalize
 
         /// <summary>
-        /// Scale the given Quaterniond to unit length
+        ///     Scale the given Quaterniond to unit length
         /// </summary>
         /// <param name="q">The Quaterniond to normalize</param>
         /// <returns>The normalized Quaterniond</returns>
@@ -677,7 +735,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         }
 
         /// <summary>
-        /// Scale the given Quaterniond to unit length
+        ///     Scale the given Quaterniond to unit length
         /// </summary>
         /// <param name="q">The Quaterniond to normalize</param>
         /// <param name="result">The normalized Quaterniond</param>

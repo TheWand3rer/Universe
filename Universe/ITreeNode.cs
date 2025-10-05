@@ -1,7 +1,14 @@
-﻿using System;
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe
 {
@@ -100,8 +107,7 @@ namespace VindemiatrixCollective.Universe
             }
         }
 
-        public static TOrbiter FindAncestor<TOrbiter>(ITreeNode treeNode)
-            where TOrbiter : class, ITreeNode
+        public static TOrbiter FindAncestor<TOrbiter>(ITreeNode treeNode) where TOrbiter : class, ITreeNode
         {
             foreach (ITreeNode ancestor in Ancestors<ITreeNode>(treeNode))
             {
@@ -114,8 +120,7 @@ namespace VindemiatrixCollective.Universe
             return null;
         }
 
-        public static IEnumerable<TOrbiter> Ancestors<TOrbiter>(ITreeNode treeNode)
-            where TOrbiter : ITreeNode
+        public static IEnumerable<TOrbiter> Ancestors<TOrbiter>(ITreeNode treeNode) where TOrbiter : ITreeNode
         {
             ITreeNode current = treeNode;
 

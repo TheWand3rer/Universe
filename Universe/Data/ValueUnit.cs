@@ -1,5 +1,12 @@
+// VindemiatrixCollective.Universe.Data © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
 using System;
 using UnitsNet;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.Data
 {

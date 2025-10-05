@@ -1,4 +1,7 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using System;
 using System.Collections;
@@ -35,6 +38,30 @@ namespace VindemiatrixCollective.Universe.Model
             return data.ContainsKey(key);
         }
 
+        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+        {
+            return data.GetEnumerator();
+        }
+
+        public string TryGet(string key)
+        {
+            data.TryGetValue(key, out string value);
+            return value;
+        }
+
+        public TEnum TryGet<TEnum>(string alternativeKey = null) where TEnum : struct, Enum
+        {
+            string value = TryGet(typeof(TEnum).Name);
+            if (string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(alternativeKey))
+            {
+                value = TryGet(alternativeKey);
+            }
+
+            if (string.IsNullOrEmpty(value))
+                return default(TEnum);
+            return Enum.Parse<TEnum>(value);
+        }
+
         public void CopyFrom(Attributes attributes)
         {
             CopyFrom(attributes.data);
@@ -48,29 +75,11 @@ namespace VindemiatrixCollective.Universe.Model
             }
         }
 
-        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+        public void Set<TEnum>(TEnum value) where TEnum : struct, Enum
         {
-            return data.GetEnumerator();
+            data[typeof(TEnum).Name] = value.ToString();
         }
 
-        public string TryGet(string key)
-        {
-            data.TryGetValue(key, out string value);
-            return value;
-        }
-
-        public TEnum TryGet<TEnum>(string alternativeKey = null)
-            where TEnum : struct, Enum
-        {
-            string key   = string.IsNullOrEmpty(alternativeKey) ? typeof(TEnum).Name : alternativeKey;
-            string value = TryGet(key);
-            if (string.IsNullOrEmpty(value))
-            {
-                return default(TEnum);
-            }
-
-            return Enum.Parse<TEnum>(value);
-        }
 
         IEnumerator IEnumerable.GetEnumerator()
         {

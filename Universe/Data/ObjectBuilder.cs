@@ -1,17 +1,24 @@
-﻿using System;
+﻿// VindemiatrixCollective.Universe.Data © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text.Json;
 using UnityEngine.Assertions;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.Data
 {
     public class ObjectBuilder<T, TState> : IConverterImplementation<T, TState> where TState : class, new()
     {
-        // readonly Dictionary<string, PropertySetter> propertyReaders = new();
         private readonly Dictionary<string, PropertySetter<TState>> propertyReaders = new();
 
         private readonly List<string> optionalProperties = new();
-        private Func<TState, T> createAction;
+        private Func<TState, T> create;
 
         public Type Type => typeof(T);
 
@@ -34,7 +41,30 @@ namespace VindemiatrixCollective.Universe.Data
             return true;
         }
 
-        public T Create(TState state) => createAction(state);
+        public bool Validate(TState state, out IEnumerable<string> missingProperties)
+        {
+            FieldInfo[]  fields  = state.GetType().GetFields();
+            List<string> missing = new();
+            bool         result  = true;
+            foreach (FieldInfo field in fields)
+            {
+                if (optionalProperties.Contains(field.Name))
+                    continue;
+
+                object value = field.GetValue(state);
+
+                if (value == null || string.IsNullOrEmpty(value.ToString()))
+                {
+                    result = false;
+                    missing.Add(field.Name);
+                }
+            }
+
+            missingProperties = missing;
+            return result;
+        }
+
+        public T Create(TState state) => create(state);
 
         public class Builder
         {
@@ -42,13 +72,13 @@ namespace VindemiatrixCollective.Universe.Data
 
             public ObjectBuilder<T, TState> Build()
             {
-                Assert.IsNotNull(objectBuilder.createAction, nameof(objectBuilder.createAction));
+                Assert.IsNotNull(objectBuilder.create, nameof(objectBuilder.create));
                 return objectBuilder;
             }
 
             public Builder SetCreate(Func<TState, T> creator)
             {
-                objectBuilder.createAction = creator;
+                objectBuilder.create = creator;
                 return this;
             }
 
@@ -63,42 +93,20 @@ namespace VindemiatrixCollective.Universe.Data
                 return this;
             }
 
-            //public Builder SetProperty<TProperty>(
-            //    string propertyName, PropertyReader<TProperty> getter, Action<TProperty> setter, bool optional = false,
-            //    string alternativeName = null)
-            //{
-            //    SetProperty(propertyName, (ref Utf8JsonReader reader, JsonSerializerOptions options) =>
-            //    {
-            //        TProperty value = getter(ref reader, options);
-            //        setter(value);
-            //    }, optional);
-
-            //    if (!string.IsNullOrEmpty(alternativeName))
-            //    {
-            //        SetProperty(alternativeName, (ref Utf8JsonReader reader, JsonSerializerOptions options) =>
-            //        {
-            //            TProperty value = getter(ref reader, options);
-            //            setter(value);
-            //        }, optional);
-            //    }
-
-            //    return this;
-            //}
-
             public Builder SetProperty<TProperty>(
                 string propertyName, PropertyReader<TProperty> getter, Action<TState, TProperty> setter, bool optional = false,
                 string alternativeName = null)
             {
-                SetProperty(propertyName, propertySetter, optional);
+                SetProperty(propertyName, PropertySetter, optional);
 
                 if (!string.IsNullOrEmpty(alternativeName))
                 {
-                    SetProperty(alternativeName, propertySetter, optional);
+                    SetProperty(alternativeName, PropertySetter, optional);
                 }
 
                 return this;
 
-                void propertySetter(ref Utf8JsonReader reader, JsonSerializerOptions options, TState state)
+                void PropertySetter(ref Utf8JsonReader reader, JsonSerializerOptions options, TState state)
                 {
                     TProperty value = getter(ref reader, options);
                     setter(state, value);

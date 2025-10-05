@@ -1,4 +1,7 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using System;
 using UnitsNet;
@@ -30,7 +33,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
 
         public GravitationalParameter(double value)
         {
-            this.M3S2 = value;
+            M3S2 = value;
         }
 
         public static GravitationalParameter Earth => new(3.9860044188e14);
@@ -38,14 +41,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
 
         public static GravitationalParameter Sun => new(1.32712440041279419e20);
 
-        public static GravitationalParameter FromMass(Mass mass)
-        {
-            return new GravitationalParameter(GravitationalConstant * mass.Kilograms);
-        }
+        public static GravitationalParameter FromMass(Mass mass) => new(GravitationalConstant * mass.Kilograms);
 
-        public static GravitationalParameter FromKm3S2(double value)
-        {
-            return new GravitationalParameter(value * Math.Pow(1000, 3));
-        }
+        public static GravitationalParameter FromKm3S2(double value) => new(value * Math.Pow(1000, 3));
     }
 }

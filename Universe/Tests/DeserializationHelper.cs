@@ -1,10 +1,17 @@
-﻿using System.Text.Json;
+﻿// VindemiatrixCollective.Universe.Tests © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
+using System.Text.Json;
 using UnityEngine;
 using UnityEngine.Assertions;
 using VindemiatrixCollective.Universe.Data;
 using VindemiatrixCollective.Universe.Model;
 using JsonConverter = System.Text.Json.Serialization.JsonConverter;
 using JsonSerializer = System.Text.Json.JsonSerializer;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.Tests
 {
@@ -19,7 +26,7 @@ namespace VindemiatrixCollective.Universe.Tests
 
         public Galaxy LoadGalaxy(string path = "Data/galaxy")
         {
-            Galaxy galaxy = DeserializeFileNew<Galaxy>(path, Converters);
+            Galaxy galaxy = DeserializeFile<Galaxy>(path, Converters);
             return galaxy;
         }
 
@@ -30,7 +37,7 @@ namespace VindemiatrixCollective.Universe.Tests
             return galaxy;
         }
 
-        public T DeserializeFileNew<T>(string filename, params JsonConverter[] converters)
+        public T DeserializeFile<T>(string filename, params JsonConverter[] converters)
         {
             TextAsset text = Resources.Load<TextAsset>(filename);
             Assert.IsNotNull(text, filename);
@@ -44,7 +51,7 @@ namespace VindemiatrixCollective.Universe.Tests
             return JsonSerializer.Deserialize<T>(text.text, options);
         }
 
-        public T DeserializeObjectNew<T>(string data, params JsonConverter[] converters)
+        public T DeserializeObject<T>(string data, params JsonConverter[] converters)
         {
             JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
 
@@ -58,7 +65,7 @@ namespace VindemiatrixCollective.Universe.Tests
 
         public void LoadSol(ref Galaxy galaxy, string path = "Data/SolarSystem")
         {
-            Galaxy additionalData = DeserializeFileNew<Galaxy>(path, Converters);
+            Galaxy additionalData = DeserializeFile<Galaxy>(path, Converters);
             foreach (StarSystem system in additionalData.Systems)
             {
                 galaxy.AddSystem(system);

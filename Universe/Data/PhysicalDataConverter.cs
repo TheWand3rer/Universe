@@ -1,5 +1,5 @@
-﻿// com.vindemiatrixcollective.universe.data © 2025 Vindemiatrix Collective
-// Website and Documentation: https://dev.vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe.Data © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
 
 #region
 
@@ -18,10 +18,10 @@ namespace VindemiatrixCollective.Universe.Data
         public PhysicalDataConverter()
         {
             Converter = new ObjectBuilder<PhysicalData, PhysicalDataState>.Builder()
-               .SetProperty(nameof(PhysicalData.Mass), Parse.ValueUnit, (state, value) => state.m = value, true, "m")
-               .SetProperty(nameof(PhysicalData.Density), Parse.ValueUnit, (state, value) => state.d = value, true, "d")
-               .SetProperty(nameof(PhysicalData.Gravity), Parse.ValueUnit, (state, value) => state.g = value, true, "g")
-               .SetProperty(nameof(PhysicalData.Radius), Parse.ValueUnit, (state, value) => state.r = value, true, "r")
+               .SetProperty(nameof(PhysicalData.Mass), Parse.ValueUnit, (state, value) => state.m        = value, true, "m")
+               .SetProperty(nameof(PhysicalData.Density), Parse.ValueUnit, (state, value) => state.d     = value, true, "d")
+               .SetProperty(nameof(PhysicalData.Gravity), Parse.ValueUnit, (state, value) => state.g     = value, true, "g")
+               .SetProperty(nameof(PhysicalData.Radius), Parse.ValueUnit, (state, value) => state.r      = value, true, "r")
                .SetProperty(nameof(PhysicalData.Temperature), Parse.ValueUnit, (state, value) => state.t = value, true, "t")
                .SkipProperty("HillSphereRadius")
                .SetProperty(nameof(GravitationalParameter), Parse.Double, (state, value) => state.GmKm3S2 = value, true, "gm")

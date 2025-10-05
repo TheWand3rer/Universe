@@ -1,5 +1,5 @@
 {
-    "name": "com.vindemiatrixcollective.universe.data",
+    "name": "VindemiatrixCollective.Universe.Data",
     "rootNamespace": "VindemiatrixCollective.Universe.Data",
     "references": [
         "GUID:7173e24e3974c4641a794a3e6509cc53"
@@ -13,7 +13,6 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "Newtonsoft.Json.dll",
         "UnitsNet.dll",
         "System.Text.Json.dll"
     ],

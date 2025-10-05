@@ -1,5 +1,5 @@
-// Terminalizer © 2025 Vindemiatrix Collective
-// Website and Documentation - https://dev.vindemiatrixcollective.com
+// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
 
 #region
 
@@ -24,10 +24,10 @@ namespace VindemiatrixCollective.Universe.Model
 
         public Barycentre(StarSystem system, Mass mass)
         {
-            StarSystem = system;
-            Mass = mass;
+            StarSystem  = system;
+            Mass        = mass;
             OrbitalData = OrbitalData.Empty;
-            OrbitState = new OrbitState();
+            OrbitState  = new OrbitState();
         }
 
         public Barycentre(StarSystem system) : this(system, system.Mass) { }

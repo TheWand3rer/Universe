@@ -1,6 +1,13 @@
-﻿using UnitsNet;
+﻿// VindemiatrixCollective.Universe.Data © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
+using UnitsNet;
 using UnitsNet.Units;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.Data
 {
@@ -10,8 +17,8 @@ namespace VindemiatrixCollective.Universe.Data
         {
             Converter = new ObjectBuilder<OrbitalData, OrbitalDataState>.Builder()
                .SetProperty(nameof(OrbitalData.SemiMajorAxis), Parse.ValueUnit, (state, value) => state.a = value, alternativeName: "a")
-               .SetProperty(nameof(OrbitalData.Eccentricity), Parse.ValueUnit, (state, value) => state.e = value, alternativeName: "e")
-               .SetProperty(nameof(OrbitalData.Inclination), Parse.ValueUnit, (state, value) => state.i = value, alternativeName: "i")
+               .SetProperty(nameof(OrbitalData.Eccentricity), Parse.ValueUnit, (state, value) => state.e  = value, alternativeName: "e")
+               .SetProperty(nameof(OrbitalData.Inclination), Parse.ValueUnit, (state, value) => state.i   = value, alternativeName: "i")
                .SetProperty(nameof(OrbitalData.LongitudeAscendingNode), Parse.ValueUnit, (state, value) => state.lan = value,
                             alternativeName: "lan")
                .SetProperty(nameof(OrbitalData.ArgumentPeriapsis), Parse.ValueUnit, (state, value) => state.argp = value,

@@ -1,11 +1,14 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using System;
 using System.Runtime.CompilerServices;
 
 #endregion
 
-[assembly: InternalsVisibleTo("com.vindemiatrixcollective.universe.data")]
+[assembly: InternalsVisibleTo("VindemiatrixCollective.Universe.Data")]
 
 namespace VindemiatrixCollective.Universe
 {
@@ -13,8 +16,6 @@ namespace VindemiatrixCollective.Universe
     {
         public struct Physical
         {
-            public const double EarthDensityGCm3 = 5.515;
-
             /// <summary>
             ///     Earth equatorial radius from https://arxiv.org/abs/1510.07674
             /// </summary>
@@ -45,6 +46,18 @@ namespace VindemiatrixCollective.Universe
             public const double LightSpeedKilometresPerSecond = 299792.458;
             public const double LightSpeedMetresPerSecond = 299792458;
             public const double MetresPerAu = 149597870700;
+            public const double SquareAuPerSquareKm = 4.4683704831421e-17;
+        }
+
+        public struct Gas
+        {
+            public const double AvogadroConstant = 6.02214076e23; // mol -1
+            public const double BoltzmannConstant = 1.380649e-23; // J/K
+        }
+
+        public struct Chemistry
+        {
+            public const double H = 1.007825;
         }
 
         public struct Energy

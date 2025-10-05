@@ -1,4 +1,7 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using System;
 using UnitsNet;
@@ -122,9 +125,9 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits.Propagation
             double nu;
             if (e < 1 - delta)
             {
-                n = Math.Sqrt(mu * Math.Pow(1 - e, 3) / Math.Pow(q, 3));
-                M = n * dt;
-                E = OrbitalMechanics.MeanToEccentricAnomaly((M + pi) % pi2 - pi, e);
+                n  = Math.Sqrt(mu * Math.Pow(1 - e, 3) / Math.Pow(q, 3));
+                M  = n * dt;
+                E  = OrbitalMechanics.MeanToEccentricAnomaly((M + pi) % pi2 - pi, e);
                 nu = OrbitalMechanics.EccentricToTrueAnomaly(E, e);
             }
             else if (e > 1 - delta && e < 1)
@@ -135,7 +138,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits.Propagation
                 if (OrbitalMechanics.EccentricToMeanAnomaly(Edelta, e) <= Math.Abs(M))
                 {
                     // Strong elliptic
-                    E = OrbitalMechanics.MeanToEccentricAnomaly((M + pi) % pi2 - pi, e);
+                    E  = OrbitalMechanics.MeanToEccentricAnomaly((M + pi) % pi2 - pi, e);
                     nu = OrbitalMechanics.EccentricToMeanAnomaly(E, e);
                 }
                 else

@@ -1,4 +1,7 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using System;
 using UnitsNet;
@@ -23,10 +26,10 @@ namespace VindemiatrixCollective.Universe.Model
 
         public PhysicalData(Mass mass, Length radius, Acceleration gravity, Density density = default, Temperature temperature = default)
         {
-            Mass = mass;
-            Radius = radius;
-            Gravity = gravity;
-            Density = density;
+            Mass        = mass;
+            Radius      = radius;
+            Gravity     = gravity;
+            Density     = density;
             Temperature = temperature;
         }
 

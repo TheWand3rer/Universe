@@ -1,10 +1,14 @@
-﻿// com.vindemiatrixcollective.universe.data © 2025 Vindemiatrix Collective
-// Website and Documentation: https://dev.vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe.Data © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using UnitsNet;
 using UnitsNet.Units;
 using VindemiatrixCollective.Universe.Model;
 using static VindemiatrixCollective.Universe.Data.StellarDataConverter;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.Data
 {
@@ -13,13 +17,13 @@ namespace VindemiatrixCollective.Universe.Data
         public StellarDataConverter()
         {
             Converter = new ObjectBuilder<StellarData, StellarDataState>.Builder()
-               .SetProperty(nameof(StellarData.Luminosity), Parse.ValueUnit, (state, value) => state.l = value, alternativeName: "l")
-               .SetProperty(nameof(StellarData.Mass), Parse.ValueUnit, (state, value) => state.m = value, true, "m")
-               .SetProperty(nameof(StellarData.Density), Parse.ValueUnit, (state, value) => state.d = value, true, "d")
-               .SetProperty(nameof(StellarData.Gravity), Parse.ValueUnit, (state, value) => state.g = value, true, "g")
-               .SetProperty(nameof(StellarData.Radius), Parse.ValueUnit, (state, value) => state.r = value, true, "r")
+               .SetProperty(nameof(StellarData.Luminosity), Parse.ValueUnit, (state, value) => state.l  = value, alternativeName: "l")
+               .SetProperty(nameof(StellarData.Mass), Parse.ValueUnit, (state, value) => state.m        = value, true, "m")
+               .SetProperty(nameof(StellarData.Density), Parse.ValueUnit, (state, value) => state.d     = value, true, "d")
+               .SetProperty(nameof(StellarData.Gravity), Parse.ValueUnit, (state, value) => state.g     = value, true, "g")
+               .SetProperty(nameof(StellarData.Radius), Parse.ValueUnit, (state, value) => state.r      = value, true, "r")
                .SetProperty(nameof(StellarData.Temperature), Parse.ValueUnit, (state, value) => state.t = value, true, "t")
-               .SetProperty(nameof(StellarData.Age), Parse.ValueUnit, (state, value) => state.y = value, true, "age")
+               .SetProperty(nameof(StellarData.Age), Parse.ValueUnit, (state, value) => state.y         = value, true, "age")
                .SetCreate(Creator)
                .Build();
         }

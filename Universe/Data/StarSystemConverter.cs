@@ -1,6 +1,13 @@
-﻿using System.Collections.Generic;
+﻿// VindemiatrixCollective.Universe.Data © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
+using System.Collections.Generic;
 using UnityEngine;
 using VindemiatrixCollective.Universe.Model;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.Data
 {

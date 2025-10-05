@@ -1,4 +1,7 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using System;
 using System.Text.RegularExpressions;
@@ -18,7 +21,8 @@ namespace VindemiatrixCollective.Universe.Model
         SubGiant,
         Giant,
         BrightGiant,
-        SuperGiant
+        SuperGiant,
+        HyperGiant
     }
 
     public enum StarType
@@ -39,10 +43,20 @@ namespace VindemiatrixCollective.Universe.Model
     [Serializable]
     public struct SpectralClass
     {
+        public int SubType { get; }
+
+        public LuminosityClass Class { get; }
+
+        public StarType Type1 { get; }
+
+        [CreateProperty]
+        public readonly string Description => $"{ColorFromStarType(Type1)} {FindStarClass(Class.ToString().SplitCamelCase())}";
+
+        public string Extra { get; }
+        [CreateProperty] public readonly string Signature => $"{Type1}{SubType}{Class}";
+
         public SpectralClass(
-            StarType type = StarType.Undefined,
-            int subType = 0,
-            LuminosityClass luminosityClass = LuminosityClass.Undefined,
+            StarType type = StarType.Undefined, int subType = 0, LuminosityClass luminosityClass = LuminosityClass.Undefined,
             string extra = null)
         {
             Type1   = type;
@@ -98,23 +112,10 @@ namespace VindemiatrixCollective.Universe.Model
             Extra = m.Groups[5].Value;
         }
 
-        public StarType Type1 { get; }
-
-        public int SubType { get; }
-
-        public LuminosityClass Class { get; }
-        public string Extra { get; }
-        [CreateProperty] public readonly string Signature => $"{Type1}{SubType}{Class}";
-
-        [CreateProperty] public readonly string Description => $"{ColorFromStarType(Type1)} {FindStarClass(Class.ToString().SplitCamelCase())}";
+        public readonly override string ToString() => Signature;
 
         public static SpectralClass Sol => new(StarType.G, 2, LuminosityClass.V);
         public static SpectralClass Undefined => new(StarType.Undefined);
-
-        public readonly override string ToString()
-        {
-            return Signature;
-        }
 
         public static StarType FindStarType(char t)
         {
@@ -160,6 +161,7 @@ namespace VindemiatrixCollective.Universe.Model
                 "III" or "IIIa" or "IIIb" => StarClass.Giant,
                 "II"                      => StarClass.BrightGiant,
                 "Ia" or "Ib" or "Iab"     => StarClass.SuperGiant,
+                "Ia0"                     => StarClass.HyperGiant,
                 _                         => StarClass.Undefined
             };
 
@@ -207,9 +209,6 @@ namespace VindemiatrixCollective.Universe.Model
         private static readonly Regex regex1 = new(@"(\P{Ll})(\P{Ll}\p{Ll})", RegexOptions.Compiled | RegexOptions.CultureInvariant);
         private static readonly Regex regex2 = new(@"(\p{Ll})(\P{Ll})", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
-        public static string SplitCamelCase(this string str)
-        {
-            return regex2.Replace(regex1.Replace(str, "$1 $2"), "$1 $2");
-        }
+        public static string SplitCamelCase(this string str) => regex2.Replace(regex1.Replace(str, "$1 $2"), "$1 $2");
     }
 }

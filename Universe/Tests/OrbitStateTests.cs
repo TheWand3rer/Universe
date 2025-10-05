@@ -1,4 +1,9 @@
-﻿using System;
+﻿// VindemiatrixCollective.Universe.Tests © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
+using System;
 using System.Linq;
 using NUnit.Framework;
 using UnitsNet;
@@ -6,6 +11,8 @@ using UnityEngine;
 using VindemiatrixCollective.Universe.CelestialMechanics;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
 using VindemiatrixCollective.Universe.Model;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.Tests
 {
@@ -114,8 +121,7 @@ namespace VindemiatrixCollective.Universe.Tests
             Planet earth = new()
             {
                 Name = "Earth",
-                PhysicalData = new PhysicalData(Density.FromKilogramsPerCubicMeter(eMass.Kilograms / volume),
-                                                eRadius,
+                PhysicalData = new PhysicalData(Density.FromKilogramsPerCubicMeter(eMass.Kilograms / volume), eRadius,
                                                 GravitationalParameter.FromMass(eMass)),
                 OrbitalData = Planet.Earth.OrbitalData
             };
@@ -123,10 +129,8 @@ namespace VindemiatrixCollective.Universe.Tests
             Planet moon = new()
             {
                 Name = "Luna",
-                PhysicalData = new PhysicalData(Mass.FromKilograms(7.346e22),
-                                                Length.FromKilometers(1737.4),
-                                                Acceleration.FromMetersPerSecondSquared(1.622),
-                                                Density.FromGramsPerCubicCentimeter(3.34)),
+                PhysicalData = new PhysicalData(Mass.FromKilograms(7.346e22), Length.FromKilometers(1737.4),
+                                                Acceleration.FromMetersPerSecondSquared(1.622), Density.FromGramsPerCubicCentimeter(3.34)),
                 OrbitalData = Planet.Moon.OrbitalData
             };
 
@@ -158,8 +162,7 @@ namespace VindemiatrixCollective.Universe.Tests
 
             DateTime date = DateTime.Now;
 
-            OrbitState orbit = OrbitState.FromVectors(new Vector3d(altitude, 0, 0), new Vector3d(0, orbitSpeed.MetersPerSecond, 0),
-                                                      earth,
+            OrbitState orbit = OrbitState.FromVectors(new Vector3d(altitude, 0, 0), new Vector3d(0, orbitSpeed.MetersPerSecond, 0), earth,
                                                       date);
 
             Assert.AreEqual(altitude, orbit.PeriapsisDistance.Meters, 5, "PeriapsisDistance Before");

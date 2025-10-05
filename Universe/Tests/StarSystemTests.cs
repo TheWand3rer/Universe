@@ -1,8 +1,15 @@
+// VindemiatrixCollective.Universe.Tests © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
 using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
 using VindemiatrixCollective.Universe.Model;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.Tests
 {

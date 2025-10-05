@@ -1,6 +1,13 @@
+// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
 using System.Linq;
 using UnitsNet;
 using VindemiatrixCollective.Universe.Model;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
 {
@@ -9,30 +16,22 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         private double elapsedTime;
 
         /// <summary>
-        /// Local coordinate frame.
+        ///     Local coordinate frame.
         /// </summary>
         public (Vector3d east, Vector3d north, Vector3d up) Frame { get; private set; }
 
         public Angle SiderealRotationObserver => ObserverBody.OrbitState.SiderealRotation;
-
         public CelestialBody ClosestBody { get; }
-
         public CelestialBody ObserverBody { get; }
-
         public Quaterniond ObserverPhysicalRotation { get; private set; }
-
         public Quaterniond WorldToObserverLocalRotation { get; private set; }
-
         public Star Primary { get; }
-
         public Vector3d ObserverLocalPosition { get; }
-
         public Vector3d ObserverPositionSSF { get; private set; }
-
         public Vector3d SpinAxis { get; private set; }
 
-        public SkyMapper(StarSystem system, CelestialBody observerBody, double latitude, double longitude)
-            : this(system, observerBody, new GeoCoordinates(latitude, longitude)) { }
+        public SkyMapper(StarSystem system, CelestialBody observerBody, double latitude, double longitude) : this(system, observerBody,
+            new GeoCoordinates(latitude, longitude)) { }
 
         public SkyMapper(StarSystem system, CelestialBody observerBody, GeoCoordinates coordinates)
         {
@@ -42,6 +41,9 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             Primary     = (Star)celestialBodies.First(body => body.Type == CelestialBodyType.Star);
 
             ObserverLocalPosition = coordinates.ToCartesian(observerBody.PhysicalData.Radius.Meters);
+
+            // This should only be valid for tidally locked bodies. 
+            // Others should derive it from their ra/dec at J2000 epoch, not yet implemented.
             DetermineInitialRotationAngle();
         }
 
@@ -60,9 +62,41 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             WorldToObserverLocalRotation = Quaterniond.Inverse(observerLocalToWorldRotation);
         }
 
+
         /// <summary>
-        /// Returns the rotation quaternion for the planet's axis rotation,
-        /// according to how much time has passed since the last <see cref="Update"/> call.
+        ///     Calculates a given depth offset in proportional world units for the placement of minor bodies around a major
+        ///     <see cref="CelestialBody" />.
+        /// </summary>
+        /// <param name="celestialBody">The <see cref="CelestialBody" />. For example, a minor satellite.</param>
+        /// <param name="fixedDistance">The distance in world units at which the major body is placed.</param>
+        /// <remarks>
+        ///     If a major celestial body is placed at a distance <c>d</c>, then the result would be a value <c>delta</c>
+        ///     to add to this distance d to make it appear that the minor body is either in front or behind the major one.
+        /// </remarks>
+        /// <returns>A depth offset in world unit.</returns>
+        public double CalculateDistanceOffset(CelestialBody celestialBody, double fixedDistance)
+        {
+            Vector3d parentPositionSSF = celestialBody.ParentBody.OrbitState.Position.ToXZYd();
+            Vector3d celestialBodySSF  = celestialBody.OrbitState.Position.ToXZYd();
+
+            // Direction observer -> parent
+            Vector3d toParent       = parentPositionSSF - ObserverPositionSSF;
+            double   parentDistance = toParent.magnitude;
+            Vector3d viewDirection  = toParent.normalized;
+
+            // Project satellite’s offset onto view direction
+            Vector3d parentToSatellite = celestialBodySSF - parentPositionSSF;
+            double   depthOffset       = Vector3d.Dot(parentToSatellite, viewDirection);
+
+            double scale  = fixedDistance / parentDistance; // Unity units per km
+            double offset = depthOffset * scale;
+
+            return offset;
+        }
+
+        /// <summary>
+        ///     Returns the rotation quaternion for the planet's axis rotation,
+        ///     according to how much time has passed since the last <see cref="Update" /> call.
         /// </summary>
         /// <param name="planet">The planet to rotate.</param>
         /// <param name="elapsedTime">How much time has passed.</param>
@@ -72,12 +106,12 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             planet.OrbitState.Rotate(elapsedTime);
             double      siderealRotation  = planet.OrbitState.SiderealRotation.Degrees;
             Vector3d    spinAxisSSF       = planet.OrbitState.AngularMomentum.normalized.ToXZYd();
-            Quaterniond planetRotationSSF = Quaterniond.AngleAxis(siderealRotation, spinAxisSSF.normalized);
+            Quaterniond planetRotationSSF = Quaterniond.AngleAxis(siderealRotation, spinAxisSSF);
             return WorldToObserverLocalRotation * planetRotationSSF;
         }
 
         /// <summary>
-        /// Returns a vector pointing from the origin to where this celestial body should be located in the sky.
+        ///     Returns a vector pointing from the origin to where this celestial body should be located in the sky.
         /// </summary>
         /// <param name="celestialBody">The celestial body.</param>
         /// <returns>The direction vector.</returns>
@@ -118,9 +152,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         }
 
         private static Vector3d TransformSystemToSurface(
-            CelestialBody celestialBody,
-            Vector3d observerLocalPositionSSF,
-            Quaterniond worldToObserverLocalRotation)
+            CelestialBody celestialBody, Vector3d observerLocalPositionSSF, Quaterniond worldToObserverLocalRotation)
         {
             Vector3d celestialBodySSF = celestialBody.OrbitState?.Position.ToXZYd() ?? Vector3d.zero;
             Vector3d observedDir      = (celestialBodySSF - observerLocalPositionSSF).normalized;

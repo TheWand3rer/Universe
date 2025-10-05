@@ -1,12 +1,20 @@
+// VindemiatrixCollective.Universe.Tests © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
 using System;
 using UnitsNet;
 using VindemiatrixCollective.Universe.CelestialMechanics;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.Tests
 {
     public static class TextbookMethods
     {
-        public static (double f, double g, double fDot) CalculateTransferParameters(Length r1Mag, Length r2Mag, Length p, Angle deltaV, double gmM3S2)
+        public static (double f, double g, double fDot) CalculateTransferParameters(
+            Length r1Mag, Length r2Mag, Length p, Angle deltaV, double gmM3S2)
         {
             // (5.5)  f = 1 - r2 / p × (1 - cos )
             double f = 1 - r2Mag.Meters / p.Meters * (1 - Math.Cos(deltaV.Radians));
@@ -15,8 +23,8 @@ namespace VindemiatrixCollective.Universe.Tests
             double g = r1Mag.Meters * r2Mag.Meters * Math.Sin(deltaV.Radians) / Math.Sqrt(gmM3S2 * p.Meters);
 
             // (5.7)  fdot = SQRT[ GM / p ] × tan(/2) × [(1 - cos ) / p - 1/r1 - 1/r2 ]
-            double fDot = Math.Sqrt(gmM3S2 / p.Meters) * Math.Tan(deltaV.Radians / 2) *
-                          ((1 - Math.Cos(deltaV.Radians)) / p.Meters - 1 / r1Mag.Meters - 1 / r2Mag.Meters);
+            double fDot = Math.Sqrt(gmM3S2 / p.Meters) * Math.Tan(deltaV.Radians / 2)
+                                                       * ((1 - Math.Cos(deltaV.Radians)) / p.Meters - 1 / r1Mag.Meters - 1 / r2Mag.Meters);
 
             return (f, g, fDot);
         }
@@ -35,8 +43,7 @@ namespace VindemiatrixCollective.Universe.Tests
 
 
         public static Duration CalculateTransferTime(
-            Length p, Length r1Mag, Length r2Mag, Length k, Length l, Length m, Angle deltaV,
-            GravitationalParameter gm)
+            Length p, Length r1Mag, Length r2Mag, Length k, Length l, Length m, Angle deltaV, GravitationalParameter gm)
         {
             (double f, double g, double fDot) = CalculateTransferParameters(r1Mag, r2Mag, p, deltaV, gm.M3S2);
             double a = CalculateSemiMajorAxisFromSemiLatusRectum(p, k, l, m).AstronomicalUnits;

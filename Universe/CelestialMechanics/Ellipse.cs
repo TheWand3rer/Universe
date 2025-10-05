@@ -1,4 +1,7 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using System;
 using UnitsNet;
@@ -13,11 +16,11 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
     public class Ellipse
     {
         public double A;
+        public double B;
+        public Ratio Eccentricity;
         public Vector3d AxisMain;
         public Vector3d AxisSecondary;
-        public double B;
         public Vector3d Center;
-        public Ratio Eccentricity;
         public Vector3d Focus0;
         public Vector3d Focus1;
         public Vector3d FocusDistance;
@@ -47,9 +50,27 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             }
         }
 
+        /// <summary>
+        ///     Calculate eccentric anomaly in radians for point.
+        /// </summary>
+        /// <param name="point">Point in plane of elliptic shape.</param>
+        /// <returns>Eccentric anomaly radians.</returns>
+        public Angle GetEccentricAnomalyForPoint(Vector3d point)
+        {
+            Vector3d vector      = point - Focus0;
+            double   trueAnomaly = Vector3d.Angle(vector, AxisMain) * UniversalConstants.Tri.DegreeToRad;
+
+            if (Vector3d.Dot(vector, AxisSecondary) > 0)
+            {
+                trueAnomaly = UniversalConstants.Tri.Pi2 - trueAnomaly;
+            }
+
+            Angle result = OrbitalMechanics.TrueToEccentricAnomaly(Angle.FromRadians(trueAnomaly), Eccentricity);
+            return result;
+        }
+
         public Vector3[] CalculateEllipseArcPoints(
-            Angle eStart, Angle eEnd, Vector3d startPosition, Vector3d endPosition, int steps = 64,
-            float scale = 1, bool ccw = true)
+            Angle eStart, Angle eEnd, Vector3d startPosition, Vector3d endPosition, int steps = 64, float scale = 1, bool ccw = true)
         {
             Vector3[] points = new Vector3[steps];
             Vector3d  point  = startPosition;
@@ -74,25 +95,6 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             points[steps - 1] = scale * endPosition.ToXZY();
 
             return points;
-        }
-
-        /// <summary>
-        ///     Calculate eccentric anomaly in radians for point.
-        /// </summary>
-        /// <param name="point">Point in plane of elliptic shape.</param>
-        /// <returns>Eccentric anomaly radians.</returns>
-        public Angle GetEccentricAnomalyForPoint(Vector3d point)
-        {
-            Vector3d vector      = point - Focus0;
-            double   trueAnomaly = Vector3d.Angle(vector, AxisMain) * UniversalConstants.Tri.DegreeToRad;
-
-            if (Vector3d.Dot(vector, AxisSecondary) > 0)
-            {
-                trueAnomaly = UniversalConstants.Tri.Pi2 - trueAnomaly;
-            }
-
-            Angle result = OrbitalMechanics.TrueToEccentricAnomaly(Angle.FromRadians(trueAnomaly), Eccentricity);
-            return result;
         }
 
         /// <summary>

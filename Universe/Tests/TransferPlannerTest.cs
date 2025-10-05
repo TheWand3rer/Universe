@@ -1,3 +1,8 @@
+// VindemiatrixCollective.Universe.Tests © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
 using System;
 using System.Linq;
 using System.Text;
@@ -9,12 +14,14 @@ using VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
 using VindemiatrixCollective.Universe.Model;
 
+#endregion
+
 namespace VindemiatrixCollective.Universe.Tests
 {
     public class TransferPlannerTest
     {
-        private Galaxy galaxy;
         private CelestialBody star;
+        private Galaxy galaxy;
 
         [Test]
         // Problem 5.4 & 5.5
@@ -29,7 +36,8 @@ namespace VindemiatrixCollective.Universe.Tests
             Length   a       = Length.FromAstronomicalUnits(1.320971);
             Angle    deltaV  = Angle.FromDegrees(149.770967);
 
-            (double f, double g, double fDot) = TextbookMethods.CalculateTransferParameters(rOneMag, rTwoMag, p, deltaV, GravitationalParameter.Sun.M3S2);
+            (double f, double g, double fDot) =
+                TextbookMethods.CalculateTransferParameters(rOneMag, rTwoMag, p, deltaV, GravitationalParameter.Sun.M3S2);
 
             //double f = 1 - ((rTwoMag.AstronomicalUnits / p.AstronomicalUnits) * (1 - Math.Cos(deltaV.Radians)));
             //double g = (rOneMag.AstronomicalUnits * rTwoMag.AstronomicalUnits * Math.Sin(deltaV.Radians)) / Math.Sqrt(gmAu * p.AstronomicalUnits);
@@ -91,11 +99,12 @@ namespace VindemiatrixCollective.Universe.Tests
             Angle deltaV = Angle.FromDegrees(Vector3d.Angle(r1, r2));
             Assert.AreEqual(149.770967, deltaV.Degrees, deltaAu);
 
-            Length k   = Length.FromAstronomicalUnits(rOneMag.AstronomicalUnits * rTwoMag.AstronomicalUnits * (1 - Math.Cos(deltaV.Radians)));
-            Length m   = Length.FromAstronomicalUnits(rOneMag.AstronomicalUnits * rTwoMag.AstronomicalUnits * (1 + Math.Cos(deltaV.Radians)));
-            Length l   = rOneMag + rTwoMag;
-            Length pi  = Length.FromAstronomicalUnits(k.AstronomicalUnits / (l.AstronomicalUnits + Math.Pow(2 * m.AstronomicalUnits, 0.5d)));
-            Length pii = Length.FromAstronomicalUnits(k.AstronomicalUnits / (l.AstronomicalUnits - Math.Pow(2 * m.AstronomicalUnits, 0.5d)));
+            Length k = Length.FromAstronomicalUnits(rOneMag.AstronomicalUnits * rTwoMag.AstronomicalUnits * (1 - Math.Cos(deltaV.Radians)));
+            Length m = Length.FromAstronomicalUnits(rOneMag.AstronomicalUnits * rTwoMag.AstronomicalUnits * (1 + Math.Cos(deltaV.Radians)));
+            Length l = rOneMag + rTwoMag;
+            Length pi = Length.FromAstronomicalUnits(k.AstronomicalUnits / (l.AstronomicalUnits + Math.Pow(2 * m.AstronomicalUnits, 0.5d)));
+            Length pii = Length.FromAstronomicalUnits(k.AstronomicalUnits
+                                                    / (l.AstronomicalUnits - Math.Pow(2 * m.AstronomicalUnits, 0.5d)));
 
             Assert.AreEqual(2.960511, k.AstronomicalUnits, deltaAu);
             Assert.AreEqual(2.579146, l.AstronomicalUnits, deltaAu);
@@ -115,10 +124,11 @@ namespace VindemiatrixCollective.Universe.Tests
             Assert.AreEqual(1.270478, a.AstronomicalUnits, deltaAu);
 
             double f = 1 - rTwoMag.AstronomicalUnits / p.AstronomicalUnits * (1 - Math.Cos(deltaV.Radians));
-            double g = rOneMag.AstronomicalUnits * rTwoMag.AstronomicalUnits * Math.Sin(deltaV.Radians) /
-                       Math.Pow(gmSunAu3S2 * p.AstronomicalUnits, 0.5);
-            double fDot = Math.Pow(gmSunAu3S2 / p.AstronomicalUnits, 0.5) * Math.Tan(deltaV.Radians / 2) *
-                          ((1 - Math.Cos(deltaV.Radians)) / p.AstronomicalUnits - 1 / rOneMag.AstronomicalUnits - 1 / rTwoMag.AstronomicalUnits);
+            double g = rOneMag.AstronomicalUnits * rTwoMag.AstronomicalUnits * Math.Sin(deltaV.Radians)
+                     / Math.Pow(gmSunAu3S2 * p.AstronomicalUnits, 0.5);
+            double fDot = Math.Pow(gmSunAu3S2 / p.AstronomicalUnits, 0.5) * Math.Tan(deltaV.Radians / 2)
+                                                                          * ((1 - Math.Cos(deltaV.Radians)) / p.AstronomicalUnits
+                                                                           - 1 / rOneMag.AstronomicalUnits - 1 / rTwoMag.AstronomicalUnits);
             double gDot = 1 - rOneMag.AstronomicalUnits / p.AstronomicalUnits * (1 - Math.Cos(deltaV.Radians));
 
             Length r1Mag = Length.FromAstronomicalUnits(r1.magnitude);
@@ -138,8 +148,9 @@ namespace VindemiatrixCollective.Universe.Tests
             Length   pnMinus1 = p;
             Length   pn       = Length.FromAstronomicalUnits(1.3);
             Duration tnMinus1 = TextbookMethods.CalculateTransferTime(pnMinus1, rOneMag, rTwoMag, k, l, m, deltaV, gmSun);
-            Duration tn       = TextbookMethods.CalculateTransferTime(Length.FromAstronomicalUnits(1.3), rOneMag, rTwoMag, k, l, m, deltaV, gmSun);
-            Length   pn1      = pn + (t - tn).Days * (pn - pnMinus1) / (tn - tnMinus1).Days;
+            Duration tn = TextbookMethods.CalculateTransferTime(Length.FromAstronomicalUnits(1.3), rOneMag, rTwoMag, k, l, m, deltaV,
+                                                                gmSun);
+            Length pn1 = pn + (t - tn).Days * (pn - pnMinus1) / (tn - tnMinus1).Days;
 
             Assert.AreEqual(247.4647, tnMinus1.Days, deltaAu);
             Assert.AreEqual(1.259067, pn1.AstronomicalUnits, deltaAu);
@@ -175,9 +186,8 @@ namespace VindemiatrixCollective.Universe.Tests
 
             Assert.AreEqual(11009, escapeVelocity.MetersPerSecond, 1);
             Assert.AreEqual(3325, hyperbolicExcessVelocity.MetersPerSecond, 1, "Hyperbolic Excess Velocity");
-            Assert.AreEqual(3325,
-                            OrbitalMechanics.CalculateHyperbolicExcessVelocity(burnoutVelocity, escapeVelocity)
-                                            .MetersPerSecond, 1, "Hyperbolic Excess Velocity from Escape Velocity");
+            Assert.AreEqual(3325, OrbitalMechanics.CalculateHyperbolicExcessVelocity(burnoutVelocity, escapeVelocity).MetersPerSecond, 1,
+                            "Hyperbolic Excess Velocity from Escape Velocity");
 
             Vector3d vp   = new(25876.6, 13759.5, 0);
             Vector3d vs   = new(28996.6, 15232.7, 1289.2);
@@ -292,11 +302,13 @@ namespace VindemiatrixCollective.Universe.Tests
             Angle trueAnomaly = Angle.FromRadians(Math.Acos((atx * (1 - e * e) / rb - 1) / e));
             Assert.AreEqual(146.488d, trueAnomaly.Degrees, 0.1);
 
-            Angle eccentricAnomaly = Angle.FromRadians(Math.Acos((e + Math.Cos(trueAnomaly.Radians)) / (1 + e * Math.Cos(trueAnomaly.Radians))));
+            Angle eccentricAnomaly =
+                Angle.FromRadians(Math.Acos((e + Math.Cos(trueAnomaly.Radians)) / (1 + e * Math.Cos(trueAnomaly.Radians))));
             Assert.AreEqual(2.41383d, eccentricAnomaly.Radians, 0.1);
 
-            double   gmSun = 1.327124e20;
-            Duration tof   = Duration.FromSeconds((eccentricAnomaly.Radians - e * Math.Sin(eccentricAnomaly.Radians)) * Math.Sqrt(Math.Pow(atx.Meters, 3) / gmSun));
+            double gmSun = 1.327124e20;
+            Duration tof = Duration.FromSeconds((eccentricAnomaly.Radians - e * Math.Sin(eccentricAnomaly.Radians))
+                                              * Math.Sqrt(Math.Pow(atx.Meters, 3) / gmSun));
 
             Assert.AreEqual(194.77, tof.Days, 0.1);
 

@@ -1,4 +1,7 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using System;
 using UnitsNet;
@@ -39,7 +42,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
         /// <param name="initialPosition">Initial position (km).</param>
         /// <param name="finalPosition">Final position (km).</param>
         /// <param name="timeOfFlight">Time of flight (s).</param>
-        public (Vector3d v1, Vector3d v2) Lambert(GravitationalParameter gravitationalParameter, Vector3d initialPosition, Vector3d finalPosition, Duration timeOfFlight)
+        public (Vector3d v1, Vector3d v2) Lambert(
+            GravitationalParameter gravitationalParameter, Vector3d initialPosition, Vector3d finalPosition, Duration timeOfFlight)
         {
             double   k   = gravitationalParameter.Km3S2;
             Vector3d r1  = initialPosition;
@@ -239,9 +243,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
                 double fDer3 = tofEquation_p3(p0, y, T, fDer, fDer2, ll);
 
                 // Householder step (quartic)
-                double p = p0 - fVal * (
-                    (math.pow(fDer, 2) - fVal * fDer2 / 2)
-                  / (fDer * (math.pow(fDer, 2) - fVal * fDer2) + fDer3 * math.pow(fVal, 2) / 6));
+                double p = p0 - fVal * ((math.pow(fDer, 2) - fVal * fDer2 / 2)
+                                      / (fDer * (math.pow(fDer, 2) - fVal * fDer2) + fDer3 * math.pow(fVal, 2) / 6));
 
                 if (math.abs(p - p0) < Tolerance)
                     return p;
@@ -298,10 +301,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
             }
 
             // Multiple revolution
-            double x0l = (math.pow((M * pi + pi) / (8 * T), 2 / 3d) - 1)
-                       / (math.pow((M * pi + pi) / (8 * T), 2 / 3d) + 1);
-            double x0r = (math.pow((8 * T) / (M * pi), 2 / 3d) - 1)
-                       / (math.pow((8 * T) / (M * pi), 2 / 3d) + 1);
+            double x0l = (math.pow((M * pi + pi) / (8 * T), 2 / 3d) - 1) / (math.pow((M * pi + pi) / (8 * T), 2 / 3d) + 1);
+            double x0r = (math.pow((8 * T) / (M * pi), 2 / 3d) - 1) / (math.pow((8 * T) / (M * pi), 2 / 3d) + 1);
 
             // Select one of the solutions according to desired type of path
 

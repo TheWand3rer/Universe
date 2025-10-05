@@ -1,4 +1,7 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using System.Text;
 using UnitsNet;
@@ -34,12 +37,9 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         public Speed MaxSpeed { get; }
 
         public RelativisticTravelData(
-            Length distance, Speed maxSpeed, Acceleration acceleration,
-            Duration shipTimeAcceleration, Duration observerTimeAcceleration,
-            Duration shipTimeCruise, Duration observerTimeCruise,
-            Duration totalShipTime, Duration totalObserverTime,
-            Length distanceAcceleration, Length distanceCruise,
-            double rapidity, bool orbit = true)
+            Length distance, Speed maxSpeed, Acceleration acceleration, Duration shipTimeAcceleration, Duration observerTimeAcceleration,
+            Duration shipTimeCruise, Duration observerTimeCruise, Duration totalShipTime, Duration totalObserverTime,
+            Length distanceAcceleration, Length distanceCruise, double rapidity, bool orbit = true)
         {
             Distance                 = distance;
             MaxSpeed                 = maxSpeed;
@@ -90,7 +90,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
         /// <param name="acceleration">The constant acceleration provided by the engines.</param>
         /// <param name="decelerate">If the ship should decelerate.</param>
         /// <returns>A <see cref="RelativisticTravelData" /> struct.</returns>
-        public static RelativisticTravelData CalculateTravel(Length distance, Speed shipMaxSpeed, Acceleration acceleration, bool decelerate = true)
+        public static RelativisticTravelData CalculateTravel(
+            Length distance, Speed shipMaxSpeed, Acceleration acceleration, bool decelerate = true)
         {
             Assert.IsTrue(!double.IsNaN(distance.Value) && distance.Value > 0, nameof(distance));
             Assert.IsTrue(!double.IsNaN(shipMaxSpeed.Value) && shipMaxSpeed.Value > 0, nameof(shipMaxSpeed));
@@ -109,11 +110,9 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             Duration totalObserverTime = (observerTimeAcceleration * (decelerate ? 2 : 1)) + observerTimeCruise;
             Duration totalShipTime     = (shipTimeAcceleration * (decelerate ? 2 : 1)) + shipTimeCruise;
 
-            return new RelativisticTravelData(distance, shipMaxSpeed, acceleration,
-                                              shipTimeAcceleration, observerTimeAcceleration,
-                                              shipTimeCruise, observerTimeCruise,
-                                              totalShipTime, totalObserverTime,
-                                              distanceAcceleration, distanceCruise, rapidity, decelerate);
+            return new RelativisticTravelData(distance, shipMaxSpeed, acceleration, shipTimeAcceleration, observerTimeAcceleration,
+                                              shipTimeCruise, observerTimeCruise, totalShipTime, totalObserverTime, distanceAcceleration,
+                                              distanceCruise, rapidity, decelerate);
         }
 
         /// <summary>

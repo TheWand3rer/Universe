@@ -1,6 +1,11 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using UnitsNet;
 using Unity.Mathematics;
@@ -15,13 +20,15 @@ using Impulse = VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres.Im
 
 namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
 {
+    [DebuggerDisplay("OrbitState at {epoch.ToString(\"dd/MM/yyyy\")}")]
     public class OrbitState
     {
         public Angle ArgumentPeriapsis => Angle.FromRadians(argP);
         public Angle EccentricAnomaly => Angle.FromRadians(E);
         public Angle Inclination => Angle.FromRadians(i);
-
         public Angle LongitudeAscendingNode => Angle.FromRadians(loAN);
+        public Angle MeanAnomaly => Angle.FromRadians(M);
+        public Angle SiderealRotation => Angle.FromRadians(sra);
 
         public Angle TrueAnomaly => Angle.FromRadians(nu);
 
@@ -62,23 +69,55 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             }
         }
 
-        public Vector3d AngularMomentum => Vector3d.Cross(Position, Velocity);
+        public Vector3d AngularMomentum => Vector3d.Cross(LocalPosition, Velocity);
 
-        public Vector3d EccentricityVector => 1 / mu.M3S2 *
-                                              ((Velocity.sqrMagnitude - mu.M3S2 / Position.magnitude) * Position -
-                                               Vector3d.Dot(Position, Velocity) * Velocity);
+        public Vector3d EccentricityVector => 1 / mu.M3S2 * ((Velocity.sqrMagnitude - mu.M3S2 / LocalPosition.magnitude) * LocalPosition
+                                                           - Vector3d.Dot(LocalPosition, Velocity) * Velocity);
+
+        /// <summary>
+        ///     Local orbital position (m), relative to its attractor if any.
+        /// </summary>
+        public Vector3d LocalPosition { get; private set; }
 
         public Vector3d NodeVector => Vector3d.Cross(Vector3d.Z, AngularMomentum);
 
         /// <summary>
-        ///     Orbital position (m).
+        ///     Absolute orbital position (m), relative to the system.
         /// </summary>
-        public Vector3d Position { get; private set; }
+        public Vector3d Position
+        {
+            get
+            {
+                Vector3d attractorPosition = ((ICelestialBody)Attractor).OrbitState?.LocalPosition ?? Vector3d.zero;
+                return Tree
+                   .Ancestors<CelestialBody>(Attractor)
+                   .Aggregate(LocalPosition + attractorPosition,
+                              (sum, ancestor) => sum + (ancestor.OrbitState?.LocalPosition ?? Vector3d.zero));
+            }
+        }
 
         /// <summary>
         ///     Orbital velocity (m/s).
         /// </summary>
         public Vector3d Velocity { get; private set; }
+
+        public (Length p, Ratio e, Angle i, Angle loAN, Angle argP, Angle nu) ToElements() => (
+            SemiLatusRectum, Eccentricity, Inclination, LongitudeAscendingNode, ArgumentPeriapsis, TrueAnomaly);
+
+        public (Vector3d r, Vector3d v) ToVectors() => ClassicalElementsToVectors(a, e, mu.M3S2, i, loAN, argP, nu);
+
+        public double[] ToArrayElements()
+        {
+            return new[]
+            {
+                SemiLatusRectum.Meters,
+                Eccentricity.Value,
+                Inclination.Radians,
+                LongitudeAscendingNode.Radians,
+                ArgumentPeriapsis.Radians,
+                TrueAnomaly.Radians
+            };
+        }
 
 
         public OrbitState ApplyManoeuvre(Manoeuvre manoeuvre, int impulseCount = 0)
@@ -107,6 +146,50 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             return newOrbit;
         }
 
+        public OrbitState Clone()
+        {
+            OrbitState state = new()
+            {
+                Attractor     = Attractor,
+                Propagator    = Propagator,
+                a             = a,
+                b             = b,
+                e             = e,
+                i             = i,
+                loAN          = loAN,
+                argP          = argP,
+                M             = M,
+                nu            = nu,
+                mu            = mu,
+                LocalPosition = LocalPosition,
+                Velocity      = Velocity,
+                epoch         = epoch
+            };
+            return state;
+        }
+
+        public OrbitState PropagateAsNew(DateTime toDate)
+        {
+            Duration tof = Duration.FromSeconds((toDate - Epoch).TotalSeconds);
+            return Propagate(this, tof);
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new();
+
+            sb.AppendLine($"OrbitState at {epoch: dd/MM/yyyy}:");
+            sb.AppendLine($"  {nameof(SemiMajorAxis)}: {SemiMajorAxis.AstronomicalUnits:F2} AU");
+            sb.AppendLine($"  {nameof(Eccentricity)}: {Eccentricity.DecimalFractions}");
+            sb.AppendLine($"  {nameof(Period)}: {Period.Days:F2} d");
+            sb.AppendLine($"  {nameof(Inclination)}: {Inclination.Degrees:F2}°");
+            sb.AppendLine($"  {nameof(TrueAnomaly)}: {TrueAnomaly.Degrees:F2}°");
+            sb.AppendLine($"  {nameof(LocalPosition)}: {LocalPosition.FromMetresToKm()} km");
+            sb.AppendLine($"  {nameof(Velocity)}: {Velocity.FromMetresToKm()} km/s");
+
+            return sb.ToString();
+        }
+
         public void CalculateOrbitPointsMtoAu(ref Vector3[] array, int points, float scale)
         {
             double eccentricAnomaly = 0;
@@ -124,28 +207,6 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             }
         }
 
-        public OrbitState Clone()
-        {
-            OrbitState state = new()
-            {
-                Attractor  = Attractor,
-                Propagator = Propagator,
-                a          = a,
-                b          = b,
-                e          = e,
-                i          = i,
-                loAN       = loAN,
-                argP       = argP,
-                M          = M,
-                nu         = nu,
-                mu         = mu,
-                Position   = Position,
-                Velocity   = Velocity,
-                epoch      = epoch
-            };
-            return state;
-        }
-
         public void Propagate(DateTime toDate)
         {
             Duration tof = Duration.FromSeconds((toDate - Epoch).TotalSeconds);
@@ -155,11 +216,14 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         public void Propagate(Duration tof)
         {
             Assert.IsNotNull(Propagator);
-            epoch                    = epoch.AddSeconds(tof.Seconds);
-            nu                       = (nu + UniversalConstants.Tri.Pi) % UniversalConstants.Tri.Pi2 - UniversalConstants.Tri.Pi;
-            nu                       = Propagator.PropagateOrbit(this, tof).Radians;
+            epoch = epoch.AddSeconds(tof.Seconds);
+            nu    = (nu + UniversalConstants.Tri.Pi) % UniversalConstants.Tri.Pi2 - UniversalConstants.Tri.Pi;
+            (Angle nu, Angle E, Angle M) anomalies = Propagator.PropagateOrbit(this, tof);
+            nu                       = anomalies.nu.Radians;
+            E                        = anomalies.E.Radians;
+            M                        = anomalies.M.Radians;
             (Vector3d r, Vector3d v) = ToVectors();
-            Position                 = r;
+            LocalPosition            = r;
             Velocity                 = v;
         }
 
@@ -173,10 +237,11 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             Propagate(Duration.FromSeconds(tofSeconds));
         }
 
-        public OrbitState PropagateAsNew(DateTime toDate)
+        public void Rotate(double tofSeconds)
         {
-            Duration tof = Duration.FromSeconds((toDate - Epoch).TotalSeconds);
-            return Propagate(this, tof);
+            double rotationRateRadPerDay = 2 * Math.PI / srp;
+            double angle                 = sra - rotationRateRadPerDay * tofSeconds;
+            sra = Math.Atan2(Math.Sin(angle), Math.Cos(angle));
         }
 
         public void SetAttractor(IAttractor attractor)
@@ -189,6 +254,15 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             Attractor = attractor;
             mu        = GravitationalParameter.FromMass(attractor.Mass);
             CalculateStateFromElements();
+
+            if (srp > 0)
+            {
+                // Tidal lock, use orbital period to avoid accumulation of error
+                if (math.abs(Period.Seconds - srp) < 12 * UniversalConstants.Time.SecondsPerHour)
+                {
+                    srp = Period.Seconds;
+                }
+            }
         }
 
         public void SetDate(DateTime date)
@@ -199,40 +273,6 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         public void SetPropagator(IPropagator propagator)
         {
             Propagator = propagator;
-        }
-
-        public double[] ToArrayElements()
-        {
-            return new[]
-            {
-                SemiLatusRectum.Meters, Eccentricity.Value, Inclination.Radians, LongitudeAscendingNode.Radians, ArgumentPeriapsis.Radians, TrueAnomaly.Radians
-            };
-        }
-
-        public (Length p, Ratio e, Angle i, Angle loAN, Angle argP, Angle nu) ToElements()
-        {
-            return (SemiLatusRectum, Eccentricity, Inclination, LongitudeAscendingNode, ArgumentPeriapsis, TrueAnomaly);
-        }
-
-        public override string ToString()
-        {
-            StringBuilder sb = new();
-
-            sb.AppendLine($"OrbitState at {epoch: dd/MM/yyyy}:");
-            sb.AppendLine($"  {nameof(SemiMajorAxis)}: {SemiMajorAxis.AstronomicalUnits:F2} AU");
-            sb.AppendLine($"  {nameof(Eccentricity)}: {Eccentricity.DecimalFractions}");
-            sb.AppendLine($"  {nameof(Period)}: {Period.Days:F2} d");
-            sb.AppendLine($"  {nameof(Inclination)}: {Inclination.Degrees:F2}°");
-            sb.AppendLine($"  {nameof(TrueAnomaly)}: {TrueAnomaly.Degrees:F2}°");
-            sb.AppendLine($"  {nameof(Position)}: {Position.FromMetresToKm()} km");
-            sb.AppendLine($"  {nameof(Velocity)}: {Velocity.FromMetresToKm()} km/s");
-
-            return sb.ToString();
-        }
-
-        public (Vector3d r, Vector3d v) ToVectors()
-        {
-            return ClassicalElementsToVectors(a, e, mu.M3S2, i, loAN, argP, nu);
         }
 
         private void CalculateStateFromElements()
@@ -258,13 +298,13 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
 
             (Vector3d r, Vector3d v) = ToVectors();
 
-            Position = r;
-            Velocity = v;
+            LocalPosition = r;
+            Velocity      = v;
         }
 
         private void CalculateStateFromVectors()
         {
-            Vector3d r    = Position;
+            Vector3d r    = LocalPosition;
             Vector3d v    = Velocity;
             Vector3d h    = AngularMomentum;
             Vector3d n    = NodeVector;
@@ -311,7 +351,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
                 {
                     double eSinH = Vector3d.Dot(r, v) / Math.Sqrt(mu.M3S2 * -SemiMajorAxis.Meters);
                     double eCosH = r.magnitude * v.sqrMagnitude / mu.M3S2 - 1;
-                    nu = OrbitalMechanics.HyperbolicAnomalyToTrueAnomaly(Math.Log((eCosH + eSinH) / (eCosH - eSinH)) / 2, Eccentricity.Value);
+                    nu = OrbitalMechanics.HyperbolicAnomalyToTrueAnomaly(Math.Log((eCosH + eSinH) / (eCosH - eSinH)) / 2,
+                                                                         Eccentricity.Value);
                 }
 
                 loAN = Math.Atan2(n.y, n.x) % UniversalConstants.Tri.Pi2;
@@ -327,7 +368,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             nu = (nu + UniversalConstants.Tri.Pi) % UniversalConstants.Tri.Pi2 - UniversalConstants.Tri.Pi;
         }
 
-        public static (Vector3d r, Vector3d v) ClassicalElementsToVectors(double a, double e, double mu, double i, double loAN, double argP, double nu)
+        public static (Vector3d r, Vector3d v) ClassicalElementsToVectors(
+            double a, double e, double mu, double i, double loAN, double argP, double nu)
         {
             double3x3 mRotation = OrbitalMechanics.RotationMatrix(loAN, 2);
             mRotation = math.mul(mRotation, OrbitalMechanics.RotationMatrix(i, 0));
@@ -362,10 +404,12 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
                 i          = orbitalData.Inclination.Radians,
                 loAN       = orbitalData.LongitudeAscendingNode.Radians,
                 argP       = orbitalData.ArgumentPeriapsis.Radians,
-                M          = orbitalData.MeanAnomalyAtEpoch.Radians,
-                nu         = orbitalData.TrueAnomalyAtEpoch.Radians,
+                M          = orbitalData.MeanAnomaly.Radians,
+                nu         = orbitalData.TrueAnomaly.Radians,
+                srp        = orbitalData.SiderealRotationPeriod.Seconds,
                 Propagator = new Farnocchia()
             };
+
             return state;
         }
 
@@ -373,11 +417,11 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         {
             OrbitState state = new()
             {
-                Position   = r,
-                Velocity   = v,
-                Attractor  = attractor,
-                epoch      = epoch,
-                Propagator = new Farnocchia()
+                LocalPosition = r,
+                Velocity      = v,
+                Attractor     = attractor,
+                epoch         = epoch,
+                Propagator    = new Farnocchia()
             };
 
             if (attractor != null)
@@ -390,10 +434,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
             return state;
         }
 
-        public static OrbitState FromEphemerides(CelestialBody attractor, CelestialBody body, DateTime epoch)
-        {
+        public static OrbitState FromEphemerides(CelestialBody attractor, CelestialBody body, DateTime epoch) =>
             throw new NotImplementedException();
-        }
 
         public static OrbitState Propagate(OrbitState state, Duration tof)
         {
@@ -444,6 +486,16 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         ///     Mean Anomaly (rad)
         /// </summary>
         private double M;
+
+        /// <summary>
+        ///     Sidereal Rotation Angle (rad)
+        /// </summary>
+        public double sra;
+
+        /// <summary>
+        ///     Sidereal Rotation Period (s)
+        /// </summary>
+        private double srp;
 
         /// <summary>
         ///     True Anomaly (rad) ν

@@ -1,4 +1,7 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using System;
 using System.Collections;
@@ -14,19 +17,9 @@ namespace VindemiatrixCollective.Universe.Model
 {
     public class StarSystem : IEnumerable<CelestialBody>
     {
-#if UNITY_EDITOR
-        /// <summary>
-        ///     Convenience variable to see some values in the inspector.
-        /// </summary>
-        public string DistanceFromSolLy;
-#endif
-
         private Barycentre barycentre;
-
         public Barycentre Barycentre => barycentre ??= new Barycentre(this);
-
         public CelestialBody this[string name] => _Orbiters[name];
-
         public Galaxy Galaxy { get; internal set; }
 
         public IEnumerable<CelestialBody> Hierarchy
@@ -35,9 +28,9 @@ namespace VindemiatrixCollective.Universe.Model
             {
                 foreach (CelestialBody body in _Orbiters.Values)
                 {
-                    foreach (CelestialBody orbiter in CelestialBody.PreOrderVisit(body))
+                    foreach (ITreeNode orbiter in Tree.PreOrderVisit(body))
                     {
-                        yield return orbiter;
+                        yield return (CelestialBody)orbiter;
                     }
                 }
             }
@@ -46,6 +39,8 @@ namespace VindemiatrixCollective.Universe.Model
         public IEnumerable<CelestialBody> Orbiters => _Orbiters.Values;
 
         public IEnumerable<Star> Stars => _Orbiters.Values.OfType<Star>().OrderByDescending(o => o.PhysicalData.Mass);
+
+        public int Index { get; internal set; }
 
         public int StarCount => Stars.Count();
 
@@ -80,12 +75,39 @@ namespace VindemiatrixCollective.Universe.Model
 
         public StarSystem(string name, IEnumerable<CelestialBody> orbiters) : this(name)
         {
-            _Orbiters = orbiters.ToDictionary(star => star.Name, star => star);
+            foreach (CelestialBody body in orbiters)
+            {
+                AddOrbiter(body);
+            }
+        }
+
+        public bool ContainsStar(string starName) => _Orbiters.ContainsKey(starName);
+
+        public CelestialBody[] ToArray()
+        {
+            return _Orbiters.Values.OrderByDescending(star => star.PhysicalData.Mass.SolarMasses).ToArray();
+        }
+
+        public IEnumerator<CelestialBody> GetEnumerator() =>
+            _Orbiters?.Values.GetEnumerator() ?? Enumerable.Empty<CelestialBody>().GetEnumerator();
+
+        public Length DistanceFrom(StarSystem system) => Length.FromParsecs((Coordinates - system.Coordinates).magnitude);
+
+        public string SystemTree()
+        {
+            string tree = "*\n";
+            foreach (CelestialBody body in Orbiters)
+            {
+                tree += Tree.RenderTree(body);
+            }
+
+            return tree;
         }
 
         public void AddOrbiter(CelestialBody body)
         {
             body.StarSystem = this;
+            body.Index      = _Orbiters.Count;
             _Orbiters.Add(body.Name, body);
 
             foreach (CelestialBody orbiter in Hierarchy)
@@ -94,47 +116,19 @@ namespace VindemiatrixCollective.Universe.Model
             }
         }
 
-        public bool ContainsStar(string starName)
+        public void SetBarycentre(Barycentre barycentre)
         {
-            return _Orbiters.ContainsKey(starName);
+            this.barycentre = barycentre;
         }
 
-        public IEnumerator<CelestialBody> GetEnumerator()
+        public void VisitHierarchy<TBody>(Action<TBody> callback, Func<ITreeNode, IEnumerable<ITreeNode>> visitAlgorithm = null)
+            where TBody : ITreeNode
         {
-            return _Orbiters?.Values.GetEnumerator() ?? Enumerable.Empty<CelestialBody>().GetEnumerator();
-        }
+            visitAlgorithm ??= Tree.PreOrderVisit;
 
-        public void Init()
-        {
-#if UNITY_EDITOR
-            DistanceFromSolLy = DistanceFromSol.LightYears.ToString("0.00 LY");
-#endif
-        }
-
-        public string SystemTree()
-        {
-            string tree = "*\n";
-            foreach (CelestialBody body in Orbiters)
+            foreach (ITreeNode body in _Orbiters.Values)
             {
-                tree += CelestialBody.RenderTree(body);
-            }
-
-            return tree;
-        }
-
-        public CelestialBody[] ToArray()
-        {
-            return _Orbiters.Values.OrderByDescending(star => star.PhysicalData.Mass.SolarMasses).ToArray();
-        }
-
-        public void VisitHierarchy<TBody>(Action<TBody> callback, Func<CelestialBody, IEnumerable<CelestialBody>> visitAlgorithm = null)
-            where TBody : CelestialBody
-        {
-            visitAlgorithm ??= CelestialBody.PreOrderVisit;
-
-            foreach (CelestialBody body in _Orbiters.Values)
-            {
-                foreach (CelestialBody orbiter in visitAlgorithm(body))
+                foreach (ITreeNode orbiter in visitAlgorithm(body))
                 {
                     if (orbiter is TBody tBody)
                     {
@@ -144,10 +138,28 @@ namespace VindemiatrixCollective.Universe.Model
             }
         }
 
+        IEnumerator IEnumerable.GetEnumerator() => _Orbiters?.Values.GetEnumerator() ?? Enumerable.Empty<CelestialBody>().GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
+
+        /// <summary>
+        ///     Returns a basic <see cref="StarSystem" /> model containing the Sun, Earth, the Moon, and Mars.
+        /// </summary>
+        public static StarSystem Sol
         {
-            return _Orbiters?.Values.GetEnumerator() ?? Enumerable.Empty<CelestialBody>().GetEnumerator();
+            get
+            {
+                Star   sun   = Star.Sun;
+                Planet earth = Planet.Earth;
+                Planet moon  = Planet.Moon;
+                Planet mars  = Planet.Mars;
+
+                sun.AddOrbiter(earth);
+                sun.AddOrbiter(mars);
+                earth.AddOrbiter(moon);
+
+                StarSystem sol = new("Sol", sun);
+                return sol;
+            }
         }
 
         public static string MakeId(string name)

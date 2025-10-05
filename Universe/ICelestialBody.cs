@@ -1,3 +1,6 @@
+// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
 #region
 
 using System.Collections.Generic;
@@ -8,12 +11,16 @@ using VindemiatrixCollective.Universe.Model;
 
 namespace VindemiatrixCollective.Universe
 {
-    public interface ICelestialBody : IAttractor
+    public interface ICelestialBody : IOrbiter
     {
         IEnumerable<CelestialBody> Orbiters { get; }
         int OrbiterCount { get; }
+        PhysicalData PhysicalData { get; }
+    }
+
+    public interface IOrbiter : ITreeNode
+    {
         OrbitalData OrbitalData { get; }
         OrbitState OrbitState { get; }
-        PhysicalData PhysicalData { get; }
     }
 }

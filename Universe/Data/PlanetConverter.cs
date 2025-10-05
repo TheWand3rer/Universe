@@ -1,145 +1,60 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using UnitsNet;
-using UnitsNet.Units;
-using UnityEngine.Assertions;
-using VindemiatrixCollective.Universe.CelestialMechanics;
+﻿// VindemiatrixCollective.Universe.Data © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
+using System.Collections.Generic;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
 using VindemiatrixCollective.Universe.Model;
 
+#endregion
+
 namespace VindemiatrixCollective.Universe.Data
 {
-    public struct ValueUnit
+    public class PlanetConverter : CoreObjectConverter<Planet, PlanetConverter.PlanetState>
     {
-        public string u;
-        public double v;
-    }
-
-    public class PlanetConverter : IConverterReader<Planet>
-    {
-        public const string Orbiters = nameof(Orbiters);
-
-        public Planet Create(JObject jo)
+        public PlanetConverter()
         {
-            return new Planet();
+            Converter = new ObjectBuilder<Planet, PlanetState>.Builder()
+               .SetProperty(nameof(CelestialBody.Name), Parse.String, (state, value) => state.Name                               = value)
+               .SetProperty(nameof(CelestialBody.Attributes), Parse.Dictionary<string>, (state, value) => state.Attributes       = value)
+               .SetProperty(nameof(CelestialBody.PhysicalData), Parse.Object<PhysicalData>, (state, value) => state.PhysicalData = value)
+               .SetProperty(nameof(CelestialBody.OrbitalData), Parse.Object<OrbitalData>, (state, value) => state.OrbitalData    = value)
+               .SetProperty(nameof(StarSystem.Orbiters), Parse.List<CelestialBody, CelestialBodyConverter>,
+                            (state, value) => state.Orbiters = value, true)
+               .SetCreate(Creator)
+               .Build();
         }
 
-        public void Read(JObject jo, JsonReader reader, JsonSerializer serializer, ref Planet planet)
+        private Planet Creator(PlanetState state)
         {
-            double? gravity = (double?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(PhysicalData.Gravity)}");
-            double? density = (double?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(PhysicalData.Density)}");
-            double? mass    = (double?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(PhysicalData.Mass)}");
-            double? radius  = (double?)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(PhysicalData.Radius)}");
-            double? gmKm3S2 = (double)jo.SelectToken($"{nameof(PhysicalData)}.{nameof(GravitationalParameter)}");
-
-            JToken semiMajorAxisToken = jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.SemiMajorAxis)}");
-            semiMajorAxisToken ??= jo.SelectToken($"{nameof(OrbitalData)}.a");
-
-            double? eccentricity       = (double?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.Eccentricity)}");
-            double? orbitalPeriod      = (double?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.Period)}");
-            double? siderealRotation   = (double?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.SiderealRotationPeriod)}");
-            double? orbitalInclination = (double?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.Inclination)}");
-            double? axialTilt          = (double?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.AxialTilt)}");
-            double? ascendingNode      = (double?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.LongitudeAscendingNode)}");
-            double? argumentPeriapsis  = (double?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitalData.ArgumentPeriapsis)}");
-            double? meanAnomaly        = (double?)jo.SelectToken($"{nameof(OrbitalData)}.MeanAnomaly");
-            double? trueAnomaly        = (double?)jo.SelectToken($"{nameof(OrbitalData)}.{nameof(OrbitState.TrueAnomaly)}");
-
-            JToken                     attributesToken = jo[nameof(Attributes)];
-            Dictionary<string, string> attributes      = serializer.Deserialize<Dictionary<string, string>>(attributesToken.CreateReader());
-
-            planet.Name = reader.ParentNameFromContainer(nameof(CelestialBody.Orbiters));
-            Assert.IsFalse(string.IsNullOrEmpty(planet.Name));
-
-            PhysicalData physical;
-            if (mass > 0)
+            if (state.PhysicalData == null)
             {
-                physical = new PhysicalData(Mass.FromKilograms(mass ?? 0),
-                                            Length.FromKilometers(radius ?? 0),
-                                            Acceleration.FromMetersPerSecondSquared(gravity ?? 0),
-                                            Density.FromGramsPerCubicCentimeter(density ?? 0));
-            }
-            else
-            {
-                physical = new PhysicalData(Density.FromGramsPerCubicCentimeter(density ?? 0),
-                                            Length.FromKilometers(radius ?? 0),
-                                            GravitationalParameter.FromKm3S2(gmKm3S2 ?? 0));
+                state.PhysicalData = PhysicalData.Null;
             }
 
-            planet.Attributes.CopyFrom(attributes);
+            Planet planet = new(state.Name, state.PhysicalData, state.OrbitalData);
 
-            double semiMajorAxis;
-
-            if (semiMajorAxisToken.HasValues)
+            if (state.Attributes != null)
             {
-                ValueUnit a = serializer.Deserialize<ValueUnit>(semiMajorAxisToken.CreateReader());
-                IQuantity l = Quantity.FromUnitAbbreviation(a.v, a.u);
-                semiMajorAxis = (float)l.ToUnit(LengthUnit.Meter).Value;
-            }
-            else
-            {
-                semiMajorAxis = semiMajorAxisToken.Value<double>() * UniversalConstants.Celestial.MetresPerAu;
+                planet.Attributes.CopyFrom(state.Attributes);
             }
 
-            OrbitalData orbital = new(Length.FromMeters(semiMajorAxis),
-                                      Ratio.FromDecimalFractions(eccentricity.Value),
-                                      Angle.FromDegrees(orbitalInclination.Value),
-                                      Angle.FromDegrees(ascendingNode.Value),
-                                      Angle.FromDegrees(argumentPeriapsis.Value),
-                                      Duration.FromSeconds(orbitalPeriod.Value * UniversalConstants.Time.SecondsPerDay),
-                                      Duration.FromSeconds(siderealRotation.Value * UniversalConstants.Time.SecondsPerHour),
-                                      Angle.FromDegrees(axialTilt ?? 0),
-                                      Angle.FromDegrees(trueAnomaly.Value),
-                                      Angle.FromDegrees(meanAnomaly.Value));
-
-            if (bool.TryParse(planet.Attributes.TryGet("Retrograde"), out bool retrograde))
+            if (state.Orbiters != null)
             {
-                orbital.Retrograde = retrograde;
-            }
-            else
-            {
-                orbital.Retrograde = false;
+                planet.AddOrbiters(state.Orbiters);
             }
 
-            planet.OrbitalData  = orbital;
-            planet.PhysicalData = physical;
+            return planet;
+        }
 
-            JToken moons = jo[nameof(Orbiters)];
-
-            if (moons is { HasValues: true })
-            {
-                Dictionary<string, Planet> orbiters = serializer.Deserialize<Dictionary<string, Planet>>(moons.CreateReader());
-
-                planet.AddOrbiters(orbiters.Values);
-            }
-
-#if UNITY_EDITOR
-            KeyValuePair<string, string>[] requiredStringFields = { new(nameof(planet.Name), planet.Name) };
-
-            KeyValuePair<string, double?>[] fields =
-            {
-                new(nameof(semiMajorAxis), semiMajorAxis), new(nameof(eccentricity), eccentricity), new(nameof(orbitalPeriod), orbitalPeriod),
-                new(nameof(meanAnomaly), meanAnomaly), new(nameof(gravity), gravity), new(nameof(density), density), new(nameof(mass), mass),
-                new(nameof(radius), radius), new(nameof(orbitalPeriod), orbitalPeriod), new(nameof(siderealRotation), siderealRotation),
-                new(nameof(orbitalInclination), orbitalInclination), new(nameof(axialTilt), axialTilt), new(nameof(ascendingNode), ascendingNode),
-                new(nameof(argumentPeriapsis), argumentPeriapsis)
-            };
-
-
-            if (ConverterOptions.VerboseLog)
-            {
-                foreach (KeyValuePair<string, string> f in requiredStringFields)
-                {
-                    ConverterExtensions.CheckValue(f.Key, f.Value);
-                }
-
-                foreach (KeyValuePair<string, double?> f in fields)
-                {
-                    ConverterExtensions.CheckValue(f.Key, f.Value);
-                }
-            }
-#endif
+        public class PlanetState
+        {
+            public Dictionary<string, string> Attributes;
+            public List<CelestialBody> Orbiters;
+            public OrbitalData OrbitalData;
+            public PhysicalData PhysicalData;
+            public string Name;
         }
     }
 }

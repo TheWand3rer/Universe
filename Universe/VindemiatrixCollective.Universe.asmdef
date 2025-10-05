@@ -1,18 +1,18 @@
 {
-    "name": "com.vindemiatrixcollective.universe.data",
-    "rootNamespace": "VindemiatrixCollective.Universe.Data",
+    "name": "VindemiatrixCollective.Universe",
+    "rootNamespace": "VindemiatrixCollective.Universe",
     "references": [
-        "GUID:7173e24e3974c4641a794a3e6509cc53"
+        "GUID:d8b63aba1907145bea998dd612889d6b"
     ],
     "includePlatforms": [
         "Editor",
+        "LinuxStandalone64",
         "WindowsStandalone64"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "Newtonsoft.Json.dll",
         "UnitsNet.dll"
     ],
     "autoReferenced": false,

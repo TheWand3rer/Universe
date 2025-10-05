@@ -1,50 +1,54 @@
-ï»¿using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+// VindemiatrixCollective.Universe.Data © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using VindemiatrixCollective.Universe.Model;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.Data
 {
-    public class CelestialBodyConverter : IConverterReader<CelestialBody>
+    public class CelestialBodyConverter : JsonConverter<CelestialBody>
     {
-        private readonly PlanetConverter planetConverter = new();
-        private readonly StarConverter starConverter = new();
-
-        private CelestialBodyType type;
-
-        public CelestialBody Create(JObject jo)
+        public override CelestialBody Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (jo.TryGetValue(nameof(SpectralClass), out JToken value) || jo.TryGetValue("SC", out value))
+            using JsonDocument jsonDoc    = JsonDocument.ParseValue(ref reader);
+            JsonElement        jsonObject = jsonDoc.RootElement;
+            CelestialBody      body       = null;
+
+            if (jsonObject.TryGetProperty(nameof(Star.StellarData), out _))
             {
-                type = CelestialBodyType.Star;
-                return new Star();
+                body = jsonObject.Deserialize<Star>(options);
             }
 
-            if (jo.SelectToken($"{nameof(Attributes)}.{nameof(CelestialBody.Type)}") != null)
+            if (jsonObject.TryGetProperty(nameof(Star.Attributes), out JsonElement value))
             {
-                type = CelestialBodyType.Planet;
-                return new Planet();
+                if (value.TryGetProperty("otypes", out _))
+                {
+                    body = jsonObject.Deserialize<Star>(options);
+                }
             }
 
-            throw new InvalidOperationException($"Invalid Orbiter type: {jo.Path}");
+            if (jsonObject.TryGetProperty(nameof(Planet.PhysicalData), out _))
+            {
+                body = jsonObject.Deserialize<Planet>(options);
+            }
+
+            if (body == null)
+            {
+                throw new InvalidOperationException($"Unknown {nameof(CelestialBody)} type in: {jsonObject.ToString()}");
+            }
+
+            return body;
         }
 
-        public void Read(JObject jo, JsonReader reader, JsonSerializer serializer, ref CelestialBody target)
+        public override void Write(Utf8JsonWriter writer, CelestialBody value, JsonSerializerOptions options)
         {
-            switch (type)
-            {
-                case CelestialBodyType.Star:
-                    Star star = (Star)target;
-                    starConverter.Read(jo, reader, serializer, ref star);
-                    break;
-
-                case CelestialBodyType.Planet:
-                    Planet planet = (Planet)target;
-                    planetConverter.Read(jo, reader, serializer, ref planet);
-                    break;
-                default:
-                    throw new InvalidOperationException("Invalid orbiter type");
-            }
+            throw new NotImplementedException();
         }
     }
 }

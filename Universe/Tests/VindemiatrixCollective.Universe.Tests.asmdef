@@ -1,11 +1,11 @@
 {
-    "name": "com.vindemiatrixcollective.universe.tests",
+    "name": "VindemiatrixCollective.Universe.Tests",
     "rootNamespace": "VindemiatrixCollective.Universe.Tests",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "com.vindemiatrixcollective.universe",
-        "com.vindemiatrixcollective.universe.data"
+        "VindemiatrixCollective.Universe",
+        "VindemiatrixCollective.Universe.Data"
     ],
     "includePlatforms": [
         "Editor"
@@ -16,7 +16,7 @@
     "precompiledReferences": [
         "nunit.framework.dll",
         "UnitsNet.dll",
-        "Newtonsoft.Json.dll"
+        "System.Text.Json.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [

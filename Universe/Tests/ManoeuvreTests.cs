@@ -1,4 +1,9 @@
-﻿using System;
+﻿// VindemiatrixCollective.Universe.Tests © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
+using System;
 using NUnit.Framework;
 using UnitsNet;
 using UnityEngine;
@@ -6,6 +11,8 @@ using VindemiatrixCollective.Universe.CelestialMechanics;
 using VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
 using Impulse = VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres.Impulse;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.Tests
 {
@@ -25,10 +32,8 @@ namespace VindemiatrixCollective.Universe.Tests
 
             Manoeuvre m = new(new[]
             {
-                new Impulse(Duration.Zero,
-                            new Vector3d(-2064.20560746, 2587.9683653, 239.11542941)), // m/s
-                new Impulse(Duration.FromSeconds(21910501),
-                            new Vector3d(3331.39946578, 682.12917585, -1089.77932679)) // m/s
+                new Impulse(Duration.Zero, new Vector3d(-2064.20560746, 2587.9683653, 239.11542941)),                  // m/s
+                new Impulse(Duration.FromSeconds(21910501), new Vector3d(3331.39946578, 682.12917585, -1089.77932679)) // m/s
             });
 
             double deltaV   = m.ComputeTotalCost().MetersPerSecond;

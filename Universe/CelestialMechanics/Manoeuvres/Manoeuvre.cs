@@ -1,3 +1,6 @@
+// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
 #region
 
 using System;
@@ -41,12 +44,6 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
             this.impulses = new List<Impulse>(impulses);
         }
 
-        public Speed ComputeTotalCost()
-        {
-            double dV = impulses.Sum(i => i.DeltaVelocity.magnitude);
-            return Speed.FromMetersPerSecond(dV);
-        }
-
         public Duration ComputeTotalDuration()
         {
             return impulses.Sum(i => i.DeltaTime, DurationUnit.Second);
@@ -55,6 +52,12 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
         public IEnumerator<Impulse> GetEnumerator()
         {
             return impulses.GetEnumerator();
+        }
+
+        public Speed ComputeTotalCost()
+        {
+            double dV = impulses.Sum(i => i.DeltaVelocity.magnitude);
+            return Speed.FromMetersPerSecond(dV);
         }
 
         public override string ToString()
@@ -77,8 +80,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
         {
             // Get initial algorithm conditions
             GravitationalParameter mu = initialState.GravitationalParameter;
-            Vector3d               r0 = initialState.Position.FromMetresToKm();
-            Vector3d               r1 = finalState.Position.FromMetresToKm();
+            Vector3d               r0 = initialState.LocalPosition.FromMetresToKm();
+            Vector3d               r1 = finalState.LocalPosition.FromMetresToKm();
 
             Duration tof = Duration.FromSeconds((finalState.Epoch - initialState.Epoch).TotalSeconds);
 
@@ -93,7 +96,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
             return new Manoeuvre(new[]
             {
                 new Impulse(Duration.Zero, deltaV_a.FromKmToMetres() - initialState.Velocity),
-                new Impulse(tof, finalState.Velocity - deltaV_b.FromKmToMetres()),
+                new Impulse(tof, finalState.Velocity - deltaV_b.FromKmToMetres())
             });
         }
     }

@@ -1,33 +1,46 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿// VindemiatrixCollective.Universe.Data © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
+
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using VindemiatrixCollective.Universe.Model;
+using static VindemiatrixCollective.Universe.Data.GalaxyConverter;
+
+#endregion
 
 namespace VindemiatrixCollective.Universe.Data
 {
-    public class GalaxyConverter : IConverterReader<Galaxy>
+    public class GalaxyConverter : CoreObjectConverter<Galaxy, GalaxyState>
     {
-        public Galaxy Create(JObject jo)
+        public GalaxyConverter()
         {
-            return new Galaxy();
+            Converter = new ObjectBuilder<Galaxy, GalaxyState>.Builder()
+               .SetProperty(nameof(CelestialBody.Name), Parse.String, (state, value) => state.Name                               = value)
+               .SetProperty(nameof(Galaxy.Systems), Parse.List<StarSystem, StarSystemConverter>, (state, value) => state.Systems = value)
+               .SetCreate(Creator)
+               .Build();
         }
 
-        public void Read(JObject jo, JsonReader reader, JsonSerializer serializer, ref Galaxy galaxy)
+        private Galaxy Creator(GalaxyState state)
         {
-            galaxy.Name = (string)jo[nameof(Galaxy.Name)];
-            JToken systems = jo[nameof(Galaxy.Systems)];
+            Galaxy galaxy = new(state.Name);
+            galaxy.AddSystems(state.Systems);
+            return galaxy;
+        }
 
-            if (systems is { HasValues: true })
-            {
-                Dictionary<string, StarSystem> systemDict = serializer.Deserialize<Dictionary<string, StarSystem>>(systems.CreateReader());
+        public static JsonConverter[] Converters => new JsonConverter[]
+        {
+            new GalaxyConverter(), new StarSystemConverter(),
+            new StarConverter(), new PlanetConverter(), new CelestialBodyConverter(),
+            new PhysicalDataConverter(), new StellarDataConverter(), new OrbitalDataConverter()
+        };
 
-                foreach ((string key, StarSystem system) in systemDict)
-                {
-                    system.Id   = StarSystem.MakeId(key);
-                    system.Name = system.Name = key;
-                    galaxy.AddSystem(system);
-                }
-            }
+        public class GalaxyState
+        {
+            public List<StarSystem> Systems;
+            public string Name;
         }
     }
 }

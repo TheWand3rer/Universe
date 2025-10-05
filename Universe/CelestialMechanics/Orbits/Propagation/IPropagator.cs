@@ -1,4 +1,7 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using UnitsNet;
 
@@ -8,6 +11,6 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits.Propagation
 {
     public interface IPropagator
     {
-        Angle PropagateOrbit(OrbitState state, Duration tof);
+        (Angle nu, Angle E, Angle M) PropagateOrbit(OrbitState state, Duration tof);
     }
 }

@@ -1,10 +1,13 @@
-﻿#region
+﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
+// Website and Documentation: https://vindemiatrixcollective.com
+
+#region
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
+using UnityEngine.Assertions;
 
 #endregion
 
@@ -14,6 +17,24 @@ namespace VindemiatrixCollective.Universe.Model
     public class Galaxy : IEnumerable<StarSystem>
     {
         private string name;
+
+        public IEnumerable<StarSystem> Systems => _Systems.Values;
+
+        public int SystemCount => _Systems.Count;
+
+        public StarSystem this[string name]
+        {
+            get => _Systems[name];
+            set => _Systems[name] = value;
+        }
+
+        public string Name
+        {
+            get => name;
+            set => name = value;
+        }
+
+        protected Dictionary<string, StarSystem> _Systems { get; private set; }
 
         public Galaxy()
         {
@@ -41,97 +62,71 @@ namespace VindemiatrixCollective.Universe.Model
             }
         }
 
-        public int SystemCount => _Systems.Count;
+        public bool ContainsSystem(string name) => _Systems.ContainsKey(name);
 
-        public IEnumerable<StarSystem> Systems => _Systems.Values;
-        protected Dictionary<string, StarSystem> _Systems { get; private set; }
-
-        public StarSystem this[string name]
+        /// <summary>
+        ///     Traverses the Galaxy structure to retrieve the chosen body (Star or Planet/Satellite).
+        /// </summary>
+        /// <param name="path">
+        ///     Must be in the format "SystemName/StarName*/PlanetName*/SatelliteName*", e.g.: "Sol/Sun/Earth/Moon".
+        ///     Asterisks indicate optional parts. Only the SystemName is required. If no StarName is specified,
+        ///     it will return the primary object.
+        /// </param>
+        /// <returns>The specified body</returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public CelestialBody GetBody(string path)
         {
-            get => _Systems[name];
-            set => _Systems[name] = value;
+            Assert.IsFalse(string.IsNullOrEmpty(path), $"Path cannot be null or empty: {nameof(path)}");
+            string[] parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            Assert.IsTrue(parts.Length > 1, $"Invalid path format: [{path}]");
+
+            if (!_Systems.TryGetValue(parts[0], out StarSystem system))
+            {
+                throw new InvalidOperationException($"System {parts[0]} not found: [{path}]");
+            }
+
+            if (parts.Length == 1)
+            {
+                return system.Primary;
+            }
+
+            CelestialBody current = system[parts[1]];
+            for (int i = 2; i < parts.Length; i++)
+            {
+                current = current[parts[i]];
+                if (current == null)
+                {
+                    throw new InvalidOperationException($"{parts[i]} not found: [{path}]");
+                }
+            }
+
+            return current;
         }
 
-        public string Name
-        {
-            get => name;
-            set => name = value;
-        }
+        public IEnumerator<StarSystem> GetEnumerator() =>
+            _Systems?.Values.GetEnumerator() ?? Enumerable.Empty<StarSystem>().GetEnumerator();
 
-        public IEnumerator<StarSystem> GetEnumerator()
+        public TBody GetBody<TBody>(string path) where TBody : CelestialBody
         {
-            return _Systems?.Values.GetEnumerator() ?? Enumerable.Empty<StarSystem>().GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
+            TBody body = (TBody)GetBody(path);
+            return body;
         }
 
         public void AddSystem(StarSystem system)
         {
-            _Systems.Add(system.Name, system);
             system.Galaxy = this;
+            system.Index  = _Systems.Count;
+            _Systems.Add(system.Name, system);
         }
 
         public void AddSystems(IEnumerable<StarSystem> systems)
         {
             foreach (StarSystem system in systems)
             {
-                _Systems.Add(system.Name, system);
+                AddSystem(system);
             }
         }
 
-        public TBody GetBody<TBody>(string path)
-            where TBody : CelestialBody
-        {
-            TBody body = (TBody)GetBody(path);
-            return body;
-        }
-
-        /// <summary>
-        ///     Traverses the Galaxy structure to retrieve the chosen body (Star or Planet/Satellite).
-        /// </summary>
-        /// <param name="path">
-        ///     Must be in the format "SystemName/StarName*/PlanetName*/SatelliteName*", e.g.: "Sol/A/Earth/Moon".
-        ///     Asterisks indicate optional parts. Only the SystemName is required.
-        /// </param>
-        /// <returns>The specified body</returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        public CelestialBody GetBody(string path)
-        {
-            Regex           regex   = new(@"(\w+)\/*");
-            MatchCollection matches = regex.Matches(path);
-
-            if (_Systems.TryGetValue(matches[0].Groups[1].Value, out StarSystem system))
-            {
-                if (matches.Count > 1)
-                {
-                    Star star = (Star)system[matches[1].Groups[1].Value];
-                    if (matches.Count > 2)
-                    {
-                        Planet planet = star[matches[2].Groups[1].Value];
-                        if (matches.Count > 3)
-                        {
-                            for (int i = 3; i < matches.Count; i++)
-                            {
-                                Match  match    = matches[i];
-                                string pathPart = match.Groups[1].Value;
-
-                                planet = planet[pathPart];
-                            }
-                        }
-
-                        return planet;
-                    }
-
-                    return star;
-                }
-
-                return system[0];
-            }
-
-            throw new InvalidOperationException($"Invalid path: <{path}>");
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

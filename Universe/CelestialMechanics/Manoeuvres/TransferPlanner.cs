@@ -1,7 +1,6 @@
-// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+// VindemiatrixCollective.Universe © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using System;
 using System.Collections.Generic;
@@ -17,15 +16,46 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
         private readonly IzzoLambertSolver solver;
 
         private List<TransferData> transfers;
-
+        private readonly IAttractor attractor;
+        private readonly GravitationalParameter mu;
+        private OrbitState initial;
+        private readonly OrbitState final;
         public ICelestialBody DepartureBody { get; }
         public ICelestialBody TargetBody { get; }
+        public IEnumerable<TransferData> Transfers => transfers;
 
         public TransferPlanner(ICelestialBody departureBody, ICelestialBody targetBody)
         {
             DepartureBody = departureBody;
             TargetBody    = targetBody;
+            attractor     = FindCommonAttractor(departureBody, targetBody);
+            mu            = attractor.Mu;
             solver        = new IzzoLambertSolver();
+
+            initial = DepartureBody.OrbitState.Clone();
+            final   = TargetBody.OrbitState.Clone();
+
+            DetermineReferenceFrame();
+        }
+
+        private void DetermineReferenceFrame()
+        {
+            if (DepartureBody.OrbitState.Attractor != attractor)
+            {
+                if (DepartureBody == attractor)
+                {
+                    initial = OrbitState.Circular(DepartureBody, Length.FromKilometers(100));
+                }
+                else
+                {
+                    initial.SetAttractor(attractor);
+                }
+            }
+
+            if (TargetBody.OrbitState.Attractor != attractor)
+            {
+                final.SetAttractor(attractor);
+            }
         }
 
         public IEnumerable<TransferData> OrderByDeltaV()
@@ -40,11 +70,17 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
             return transfers;
         }
 
-        public void CalculateTransferWindows(DateTime start, int windowDays = 180, int number = 20)
+        /// <summary>
+        /// Calculate a set of transfer windows between two celestial bodies.
+        /// </summary>
+        /// <param name="start">The date at which the calculation should start.</param>
+        /// <param name="timeWindow">The time window to use in the calculation.</param>
+        /// <param name="number">The number of transfer windows to return (n*n).</param>
+        public void CalculateTransferWindows(DateTime start, Duration timeWindow, int number = 20)
         {
-            DateTime launchSpanEnd = start.AddDays(180);
-            var      launchSpan    = OrbitalMechanics.TimeRange(start, launchSpanEnd);
-            var      arrivalSpan   = OrbitalMechanics.TimeRange(launchSpanEnd, launchSpanEnd.AddDays(180));
+            DateTime   launchSpanEnd = start.AddSeconds(timeWindow.Seconds);
+            DateTime[] launchSpan    = OrbitalMechanics.TimeRange(start, launchSpanEnd);
+            DateTime[] arrivalSpan   = OrbitalMechanics.TimeRange(launchSpanEnd, launchSpanEnd.AddSeconds(timeWindow.Seconds));
 
             transfers = new List<TransferData>(number);
 
@@ -57,30 +93,63 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
             }
         }
 
+        /// <summary>
+        /// Returns the minimum transfer time between the two celestial bodies.
+        /// </summary>
+        /// <returns>The duration of the transfer time.</returns>
+        public Duration EstimateParameters()
+        {
+            Length a1 = initial.SemiMajorAxis;
+            Length a2 = final.SemiMajorAxis;
+
+            Length   a = (a1 + a2) / 2;
+            Duration T = OrbitalMechanics.CalculatePeriod(a, attractor.Mu);
+
+            return T / 2;
+        }
+
         private void CalculateTransfer(DateTime launch, DateTime arrival)
         {
             if (DepartureBody == null)
+            {
                 throw new InvalidOperationException($"{nameof(DepartureBody)} cannot be null");
+            }
+
             if (TargetBody == null)
+            {
                 throw new InvalidOperationException($"{nameof(TargetBody)} cannot be null");
+            }
+
             if (launch > arrival)
+            {
                 throw new ArgumentException("Launch date cannot be after arrival date");
+            }
 
-
-            OrbitState orbitDeparture = DepartureBody.OrbitState.PropagateAsNew(launch);
-            OrbitState orbitArrival   = TargetBody.OrbitState.PropagateAsNew(arrival);
+            OrbitState orbitDeparture = initial.PropagateAsNew(launch);
+            OrbitState orbitArrival   = final.PropagateAsNew(arrival);
 
             Duration tof = Duration.FromSeconds((orbitArrival.Epoch - orbitDeparture.Epoch).TotalSeconds);
             if (tof.Seconds <= 0)
+            {
                 return;
+            }
+
             try
             {
-                Manoeuvre    m     = Manoeuvre.Lambert(orbitDeparture, orbitArrival, solver);
+                Manoeuvre    m     = Manoeuvre.Lambert(orbitDeparture, orbitArrival, solver, mu);
                 TransferData tData = new(launch, arrival, m, orbitDeparture, orbitArrival);
 
                 transfers.Add(tData);
             }
             catch (Exception ex) { }
+        }
+
+        private static IAttractor FindCommonAttractor(ICelestialBody origin, ICelestialBody destination)
+        {
+            if (origin.OrbitState.Attractor == destination.OrbitState.Attractor)
+                return origin.OrbitState.Attractor;
+
+            return (IAttractor)Tree.FindCommonAncestor(origin, destination);
         }
     }
 }

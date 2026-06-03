@@ -1,7 +1,6 @@
-﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using System;
 using System.Collections;
@@ -16,10 +15,10 @@ namespace VindemiatrixCollective.Universe.Model
     [Serializable]
     public class Galaxy : IEnumerable<StarSystem>
     {
+        public const string MilkyWay = "Milky Way";
+
         private string name;
-
         public IEnumerable<StarSystem> Systems => _Systems.Values;
-
         public int SystemCount => _Systems.Count;
 
         public StarSystem this[string name]

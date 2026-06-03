@@ -1,10 +1,10 @@
-// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+// VindemiatrixCollective.Universe © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using System.Linq;
 using UnitsNet;
+using VindemiatrixCollective.Universe.Extensions;
 using VindemiatrixCollective.Universe.Model;
 
 #endregion
@@ -30,7 +30,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         public Vector3d ObserverPositionSSF { get; private set; }
         public Vector3d SpinAxis { get; private set; }
 
-        public SkyMapper(StarSystem system, CelestialBody observerBody, double latitude, double longitude) : this(system, observerBody,
+        public SkyMapper(StarSystem system, CelestialBody observerBody, double latitude, double longitude) : this(system,
+            observerBody,
             new GeoCoordinates(latitude, longitude)) { }
 
         public SkyMapper(StarSystem system, CelestialBody observerBody, GeoCoordinates coordinates)
@@ -104,9 +105,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         public Quaterniond CalculateSiderealPlanetRotation(Planet planet)
         {
             planet.OrbitState.Rotate(elapsedTime);
-            double      siderealRotation  = planet.OrbitState.SiderealRotation.Degrees;
-            Vector3d    spinAxisSSF       = planet.OrbitState.AngularMomentum.normalized.ToXZYd();
-            Quaterniond planetRotationSSF = Quaterniond.AngleAxis(siderealRotation, spinAxisSSF);
+            Quaterniond planetRotationSSF = OrbitalMechanics.SiderealRotation(planet);
             return WorldToObserverLocalRotation * planetRotationSSF;
         }
 

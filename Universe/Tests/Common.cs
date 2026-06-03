@@ -1,7 +1,6 @@
-﻿// VindemiatrixCollective.Universe.Tests © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe.Tests © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using System;
 using System.Diagnostics;
@@ -10,7 +9,6 @@ using UnitsNet;
 using VindemiatrixCollective.Universe.CelestialMechanics;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
 using VindemiatrixCollective.Universe.Model;
-using Debug = UnityEngine.Debug;
 
 #endregion
 
@@ -22,38 +20,25 @@ namespace VindemiatrixCollective.Universe.Tests
         public static readonly DateTime J2000 = new(2000, 1, 1, 11, 58, 55, 816, DateTimeKind.Utc);
         public static Stopwatch timer = new();
 
-        internal static Planet Earth
-        {
-            get
-            {
-                Planet earth = Planet.Earth;
-                earth.SetParentBody(Sun);
-                return earth;
-            }
-        }
-
         internal static Planet Io
         {
             get
             {
-                OrbitalData orbital = new(Length.FromKilometers(421700), Ratio.FromDecimalFractions(0.0041), Angle.FromDegrees(0.0375),
-                                          Angle.FromDegrees(241.1210503807339), Angle.FromDegrees(127.39925384521484),
-                                          Angle.FromDegrees(13.08436484643558f), Duration.FromSeconds(152853.5047),
-                                          Duration.FromDays(1.77f), Angle.Zero, Angle.FromDegrees(33.54986953430662));
+                OrbitalData orbital = new(Length.FromKilometers(421700),
+                                          Ratio.FromDecimalFractions(0.0041),
+                                          Angle.FromDegrees(0.0375),
+                                          Angle.FromDegrees(241.1210503807339),
+                                          Angle.FromDegrees(127.39925384521484),
+                                          Angle.FromDegrees(13.08436484643558f),
+                                          Duration.FromSeconds(152853.5047),
+                                          Duration.FromDays(1.77f),
+                                          Angle.Zero,
+                                          Angle.FromDegrees(33.54986953430662));
 
-                PhysicalData physical = new(Density.FromGramsPerCubicCentimeter(3.528), Length.FromKilometers(1821.49),
+                PhysicalData physical = new(Density.FromGramsPerCubicCentimeter(3.528),
+                                            Length.FromKilometers(1821.49),
                                             GravitationalParameter.FromMass(Mass.FromKilograms(8.931938e22)));
                 return new Planet("Io", physical, orbital);
-            }
-        }
-
-        internal static Planet Mars
-        {
-            get
-            {
-                Planet mars = Planet.Mars;
-                mars.SetParentBody(Sun);
-                return mars;
             }
         }
 
@@ -84,8 +69,6 @@ namespace VindemiatrixCollective.Universe.Tests
             }
         }
 
-        internal static Star Sun => Star.Sun;
-
         public static void ArrayAreEqual(double[] expected, double[] actual, double tolerance, string name)
         {
             for (int i = 0; i < expected.Length; i++)
@@ -97,11 +80,6 @@ namespace VindemiatrixCollective.Universe.Tests
         public static void CompareVector3d(Vector3d expected, Vector3d actual, double tolerance, string name)
         {
             ArrayAreEqual(expected.ToArray(), actual.ToArray(), tolerance, name);
-        }
-
-        public static void LoadData()
-        {
-            Debug.Log($"Loaded {Galaxy.SystemCount} systems");
         }
 
         public static void VectorsAreEqual(Vector3d expected, Vector3d actual, double tolerance, string name = null)

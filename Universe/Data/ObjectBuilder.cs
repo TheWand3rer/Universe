@@ -1,7 +1,6 @@
-﻿// VindemiatrixCollective.Universe.Data © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe.Data © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using System;
 using System.Collections.Generic;
@@ -35,7 +34,7 @@ namespace VindemiatrixCollective.Universe.Data
             }
             catch (JsonException ex)
             {
-                throw new JsonException($"Error while reading property [{Type.Name}.{propertyName}]", ex);
+                throw new JsonException($"Error while reading property [{Type.Name}.{propertyName}]: {ex.Message}", ex);
             }
 
             return true;
@@ -49,7 +48,9 @@ namespace VindemiatrixCollective.Universe.Data
             foreach (FieldInfo field in fields)
             {
                 if (optionalProperties.Contains(field.Name))
+                {
                     continue;
+                }
 
                 object value = field.GetValue(state);
 
@@ -117,6 +118,7 @@ namespace VindemiatrixCollective.Universe.Data
             {
                 objectBuilder.propertyReaders[propertyName] = (ref Utf8JsonReader reader, JsonSerializerOptions options, TState state) =>
                     reader.Skip();
+                objectBuilder.optionalProperties.Add(propertyName);
                 return this;
             }
         }

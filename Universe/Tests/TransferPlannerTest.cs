@@ -1,7 +1,6 @@
-// VindemiatrixCollective.Universe.Tests © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+// VindemiatrixCollective.Universe.Tests © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using System;
 using System.Linq;
@@ -99,9 +98,9 @@ namespace VindemiatrixCollective.Universe.Tests
             Angle deltaV = Angle.FromDegrees(Vector3d.Angle(r1, r2));
             Assert.AreEqual(149.770967, deltaV.Degrees, deltaAu);
 
-            Length k = Length.FromAstronomicalUnits(rOneMag.AstronomicalUnits * rTwoMag.AstronomicalUnits * (1 - Math.Cos(deltaV.Radians)));
-            Length m = Length.FromAstronomicalUnits(rOneMag.AstronomicalUnits * rTwoMag.AstronomicalUnits * (1 + Math.Cos(deltaV.Radians)));
-            Length l = rOneMag + rTwoMag;
+            Length k  = Length.FromAstronomicalUnits(rOneMag.AstronomicalUnits * rTwoMag.AstronomicalUnits * (1 - Math.Cos(deltaV.Radians)));
+            Length m  = Length.FromAstronomicalUnits(rOneMag.AstronomicalUnits * rTwoMag.AstronomicalUnits * (1 + Math.Cos(deltaV.Radians)));
+            Length l  = rOneMag + rTwoMag;
             Length pi = Length.FromAstronomicalUnits(k.AstronomicalUnits / (l.AstronomicalUnits + Math.Pow(2 * m.AstronomicalUnits, 0.5d)));
             Length pii = Length.FromAstronomicalUnits(k.AstronomicalUnits
                                                     / (l.AstronomicalUnits - Math.Pow(2 * m.AstronomicalUnits, 0.5d)));
@@ -124,11 +123,15 @@ namespace VindemiatrixCollective.Universe.Tests
             Assert.AreEqual(1.270478, a.AstronomicalUnits, deltaAu);
 
             double f = 1 - rTwoMag.AstronomicalUnits / p.AstronomicalUnits * (1 - Math.Cos(deltaV.Radians));
-            double g = rOneMag.AstronomicalUnits * rTwoMag.AstronomicalUnits * Math.Sin(deltaV.Radians)
+            double g = rOneMag.AstronomicalUnits
+                     * rTwoMag.AstronomicalUnits
+                     * Math.Sin(deltaV.Radians)
                      / Math.Pow(gmSunAu3S2 * p.AstronomicalUnits, 0.5);
-            double fDot = Math.Pow(gmSunAu3S2 / p.AstronomicalUnits, 0.5) * Math.Tan(deltaV.Radians / 2)
-                                                                          * ((1 - Math.Cos(deltaV.Radians)) / p.AstronomicalUnits
-                                                                           - 1 / rOneMag.AstronomicalUnits - 1 / rTwoMag.AstronomicalUnits);
+            double fDot = Math.Pow(gmSunAu3S2 / p.AstronomicalUnits, 0.5)
+                        * Math.Tan(deltaV.Radians / 2)
+                        * ((1 - Math.Cos(deltaV.Radians)) / p.AstronomicalUnits
+                         - 1 / rOneMag.AstronomicalUnits
+                         - 1 / rTwoMag.AstronomicalUnits);
             double gDot = 1 - rOneMag.AstronomicalUnits / p.AstronomicalUnits * (1 - Math.Cos(deltaV.Radians));
 
             Length r1Mag = Length.FromAstronomicalUnits(r1.magnitude);
@@ -148,7 +151,13 @@ namespace VindemiatrixCollective.Universe.Tests
             Length   pnMinus1 = p;
             Length   pn       = Length.FromAstronomicalUnits(1.3);
             Duration tnMinus1 = TextbookMethods.CalculateTransferTime(pnMinus1, rOneMag, rTwoMag, k, l, m, deltaV, gmSun);
-            Duration tn = TextbookMethods.CalculateTransferTime(Length.FromAstronomicalUnits(1.3), rOneMag, rTwoMag, k, l, m, deltaV,
+            Duration tn = TextbookMethods.CalculateTransferTime(Length.FromAstronomicalUnits(1.3),
+                                                                rOneMag,
+                                                                rTwoMag,
+                                                                k,
+                                                                l,
+                                                                m,
+                                                                deltaV,
                                                                 gmSun);
             Length pn1 = pn + (t - tn).Days * (pn - pnMinus1) / (tn - tnMinus1).Days;
 
@@ -166,7 +175,7 @@ namespace VindemiatrixCollective.Universe.Tests
         [Test]
         public void CalculateVelocities()
         {
-            Planet earth    = Common.Earth;
+            Planet earth    = Planet.Earth;
             Length radius   = Length.FromKilometers(6378.14);
             Length altitude = Length.FromKilometers(200);
 
@@ -186,7 +195,9 @@ namespace VindemiatrixCollective.Universe.Tests
 
             Assert.AreEqual(11009, escapeVelocity.MetersPerSecond, 1);
             Assert.AreEqual(3325, hyperbolicExcessVelocity.MetersPerSecond, 1, "Hyperbolic Excess Velocity");
-            Assert.AreEqual(3325, OrbitalMechanics.CalculateHyperbolicExcessVelocity(burnoutVelocity, escapeVelocity).MetersPerSecond, 1,
+            Assert.AreEqual(3325,
+                            OrbitalMechanics.CalculateHyperbolicExcessVelocity(burnoutVelocity, escapeVelocity).MetersPerSecond,
+                            1,
                             "Hyperbolic Excess Velocity from Escape Velocity");
 
             Vector3d vp   = new(25876.6, 13759.5, 0);
@@ -205,8 +216,8 @@ namespace VindemiatrixCollective.Universe.Tests
         [Test]
         public void CompareToOrbitState()
         {
-            Star     sun   = Common.Sun;
-            Planet   earth = Common.Earth;
+            Star     sun   = Star.Sun;
+            Planet   earth = Planet.Earth;
             Vector3d r     = new(0.473265, -0.899215, 0);
             Vector3d v     = new(0.000000193828, 0.000000101824, 0.00000000861759);
             v = OrbitalMechanics.AuToMetres(v);
@@ -255,34 +266,63 @@ namespace VindemiatrixCollective.Universe.Tests
         }
 
         [Test]
-        public void PorkchopTest()
+        public void InterplanetaryEarthMars()
         {
             Common.timer.Start();
-            Planet earth = Common.Earth;
-            Planet mars  = Common.Mars;
+            Planet earth = Planet.Earth;
+            Planet mars  = Planet.Mars;
+            Star   sun   = Star.Sun;
+            earth.OrbitState.SetAttractor(sun);
+            mars.OrbitState.SetAttractor(sun);
 
-            earth.OrbitState.SetAttractor(Common.Sun);
-            mars.OrbitState.SetAttractor(Common.Sun);
+            CalculateTransferWindows(earth, mars);
+        }
 
-            TransferPlanner tp        = new(earth, mars);
+        [Test]
+        public void TransLunarEarthMoon()
+        {
+            Common.timer.Start();
+            Planet earth = Planet.Earth;
+            Planet moon  = Planet.Moon;
+            Star   sun   = Star.Sun;
+            earth.SetParentBody(sun);
+            moon.SetParentBody(earth);
+            CalculateTransferWindows(earth, moon);
+        }
+
+        private void CalculateTransferWindows(CelestialBody origin, CelestialBody destination, int n = 50)
+        {
+            TransferPlanner tp        = new(origin, destination);
             DateTime        startDate = new(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            tp.CalculateTransferWindows(startDate, 200, 50);
+
+            tp.CalculateTransferWindows(startDate, Duration.FromDays(200), n);
             Common.timer.Stop();
             StringBuilder sb = new();
-            sb.AppendLine($"Calculated 200 transfers in {Common.timer.ElapsedMilliseconds} ms");
+            sb.AppendLine($"Calculated {n * n} transfers in {Common.timer.ElapsedMilliseconds} ms");
 
             TransferData transfer = tp.OrderByDeltaV().First();
             Manoeuvre    m        = transfer.Manoeuvre;
 
-            sb.AppendLine("Fastest transfer:");
-            sb.AppendLine($"dt: {m.ComputeTotalDuration().Days} d | dv: {m.ComputeTotalCost().KilometersPerSecond:F3} km/s");
-
-            transfer = tp.OrderByTransferTime().First();
-            m        = transfer.Manoeuvre;
-
             sb.AppendLine("Cheapest transfer:");
             sb.AppendLine($"dt: {m.ComputeTotalDuration().Days} d | dv: {m.ComputeTotalCost().KilometersPerSecond:F3} km/s");
-            sb.AppendLine(transfer.TransferOrbit(1).ToString());
+
+            tp.OrderByTransferTime();
+
+            foreach (TransferData t in tp.Transfers)
+            {
+                m = t.Manoeuvre;
+                try
+                {
+                    OrbitState transferOrbit = origin.OrbitState.ApplyManoeuvre(m);
+                    if (transferOrbit.Eccentricity.Value >= 0.95f)
+                        continue;
+                    break;
+                }
+                catch (Exception) { }
+            }
+
+            sb.AppendLine("Fastest transfer:");
+            sb.AppendLine($"dt: {m.ComputeTotalDuration().Days} d | dv: {m.ComputeTotalCost().KilometersPerSecond:F3} km/s");
 
             Debug.Log(sb);
         }

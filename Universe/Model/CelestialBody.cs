@@ -1,14 +1,12 @@
-﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnitsNet;
-using Unity.Properties;
 using UnityEngine.Assertions;
 using VindemiatrixCollective.Universe.CelestialMechanics;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
@@ -22,18 +20,14 @@ namespace VindemiatrixCollective.Universe.Model
         private OrbitalData orbitalData;
 
         public Attributes Attributes { get; protected internal set; }
-
+        public bool HasOrbiters => _Orbiters.Count > 0;
+        public bool IsSatellite => ParentBody is { Type: CelestialBodyType.Planet or CelestialBodyType.MinorBody };
         public CelestialBody this[string key] => _Orbiters[key];
-
         public CelestialBody this[int index] => _Orbiters.Values.ElementAt(index);
-
         public CelestialBody ParentBody { get; internal set; }
-
-        [CreateProperty] public CelestialBodyType Type => Attributes.Type;
+        public CelestialBodyType Type => Attributes.Type;
         public GravitationalParameter Mu => GravitationalParameter.FromMass(PhysicalData.Mass);
-
         public IEnumerable<CelestialBody> Hierarchy => Tree.PreOrderVisit(this).Cast<CelestialBody>();
-
         public IEnumerable<CelestialBody> Orbiters => _Orbiters.Values;
 
         public IEnumerable<CelestialBody> Siblings
@@ -63,12 +57,9 @@ namespace VindemiatrixCollective.Universe.Model
         }
 
         public int Index { get; protected internal set; }
-
         public int OrbiterCount => _Orbiters.Count;
-
         public int SiblingsCount => Siblings.Count();
 
-        [CreateProperty]
         public OrbitalData OrbitalData
         {
             get => orbitalData;
@@ -94,19 +85,20 @@ namespace VindemiatrixCollective.Universe.Model
             }
         }
 
-        [CreateProperty] public OrbitState OrbitState { get; private set; }
-
-        [CreateProperty] public virtual PhysicalData PhysicalData { get; set; }
-
+        public OrbitState OrbitState { get; private set; }
+        public virtual PhysicalData PhysicalData { get; set; }
         public Star ParentStar => Tree.FindAncestor<Star>(this);
-
-        [CreateProperty] public StarSystem StarSystem { get; internal set; }
-
-        [CreateProperty] public virtual string FullName => Name;
-
+        public StarSystem StarSystem { get; internal set; }
+        public virtual string FullName => Name;
         public string Name { get; set; }
 
         protected Dictionary<string, CelestialBody> _Orbiters { get; }
+
+        #region IAttractor
+
+        Mass IAttractor.Mass => PhysicalData.Mass;
+
+        #endregion
 
         protected CelestialBody(string name, CelestialBodyType type)
         {
@@ -148,10 +140,11 @@ namespace VindemiatrixCollective.Universe.Model
         {
             Assert.IsNotNull(body, nameof(body));
             Vector3d from = OrbitState?.Position ?? Vector3d.zero;
-            Vector3d to   = body.OrbitState.Position;
+            Vector3d to   = body.OrbitState?.Position ?? Vector3d.zero;
             double   d    = Vector3d.Distance(from, to);
             return Length.FromMeters(d);
         }
+
 
         /// <summary>
         ///     Returns a string representing the location of this body in the Galaxy.
@@ -181,6 +174,16 @@ namespace VindemiatrixCollective.Universe.Model
             }
 
             return path[..^1];
+        }
+
+        public override string ToString() => GetPath();
+
+        public Vector3d DirectionFrom(CelestialBody body)
+        {
+            Assert.IsNotNull(body, nameof(body));
+            Vector3d a = OrbitState?.Position ?? Vector3d.zero;
+            Vector3d b = body.OrbitState?.Position ?? Vector3d.zero;
+            return b - a;
         }
 
         public virtual void AddOrbiter(CelestialBody orbiter)
@@ -213,22 +216,25 @@ namespace VindemiatrixCollective.Universe.Model
         /// <param name="parentBody"></param>
         public virtual void SetParentBody(CelestialBody parentBody)
         {
+            Assert.IsNotNull(parentBody, $"{nameof(parentBody)} cannot be null");
+            Assert.IsTrue(parentBody != this, $"{parentBody.Name} cannot be the parent of itself.");
             ParentBody = parentBody;
-            if (ParentBody != null && OrbitState != null)
-            {
-                OrbitState.SetAttractor(parentBody);
-            }
+            OrbitState?.SetAttractor(parentBody);
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerable<ICelestialBody> ICelestialBody.Orbiters => _Orbiters.Values;
 
+        #region ITreeNode
+
+        IEnumerable<ITreeNode> ITreeNode.Children => Orbiters;
+
+        ITreeNode ITreeNode.Parent => ParentBody;
+        ITreeNode ITreeNode.this[string name] => this[name];
+
+        #endregion
 
 #if UNITY_EDITOR
-
-        #region Unity_Editor
-
-#if UNITY_EDITOR
-
         [Serializable]
         public struct OrbitalDataValues
         {
@@ -254,24 +260,5 @@ namespace VindemiatrixCollective.Universe.Model
                 : OrbitalData.Period.Years365.ToString("0.00 y");
         }
 #endif
-
-        #endregion
-
-#endif
-
-        #region ITreeNode
-
-        IEnumerable<ITreeNode> ITreeNode.Children => Orbiters;
-
-        ITreeNode ITreeNode.Parent => ParentBody;
-        ITreeNode ITreeNode.this[string name] => this[name];
-
-        #endregion
-
-        #region IAttractor
-
-        Mass IAttractor.Mass => PhysicalData.Mass;
-
-        #endregion
     }
 }

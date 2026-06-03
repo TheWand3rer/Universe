@@ -1,11 +1,8 @@
 ﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
 
-#region
+#region using
 
-using System;
 using System.Text.RegularExpressions;
-using Unity.Properties;
 using UnityEngine;
 
 #endregion
@@ -40,26 +37,23 @@ namespace VindemiatrixCollective.Universe.Model
         T = 10
     }
 
-    [Serializable]
     public struct SpectralClass
     {
         public int SubType { get; }
 
         public LuminosityClass Class { get; }
 
-        public StarType Type1 { get; }
+        public StarType Type { get; }
 
-        [CreateProperty]
-        public readonly string Description => $"{ColorFromStarType(Type1)} {FindStarClass(Class.ToString().SplitCamelCase())}";
-
+        public readonly string Description => $"{ColorFromStarType(Type)} {FindStarClass(Class.ToString().SplitCamelCase())}";
         public string Extra { get; }
-        [CreateProperty] public readonly string Signature => $"{Type1}{SubType}{Class}";
+        public readonly string Signature => $"{Type}{SubType}{Class}";
 
         public SpectralClass(
             StarType type = StarType.Undefined, int subType = 0, LuminosityClass luminosityClass = LuminosityClass.Undefined,
             string extra = null)
         {
-            Type1   = type;
+            Type    = type;
             SubType = subType;
             Class   = luminosityClass;
             Extra   = extra ?? string.Empty;
@@ -67,7 +61,7 @@ namespace VindemiatrixCollective.Universe.Model
 
         public SpectralClass(string spectralClass)
         {
-            Type1   = StarType.Undefined;
+            Type    = StarType.Undefined;
             Class   = LuminosityClass.Undefined;
             SubType = 0;
             Extra   = null;
@@ -103,7 +97,7 @@ namespace VindemiatrixCollective.Universe.Model
             }
 
             char t = m.Groups[2].Value.Trim()[0];
-            Type1 = FindStarType(t);
+            Type = FindStarType(t);
             string sN     = m.Groups[3].Value;
             bool   result = float.TryParse(sN, out float fN);
             SubType = result ? (int)fN : 0;

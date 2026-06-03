@@ -1,15 +1,16 @@
-﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using System;
+using System.Diagnostics;
 using UnitsNet;
 
 #endregion
 
 namespace VindemiatrixCollective.Universe.CelestialMechanics
 {
+    [DebuggerDisplay("mu = {M3S2} m3/s2")]
     public readonly struct GravitationalParameter
     {
         public const double GravitationalConstant = UniversalConstants.Celestial.GravitationalConstant;

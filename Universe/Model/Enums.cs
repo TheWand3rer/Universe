@@ -1,11 +1,11 @@
-﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe © 2025-2026 Vindemiatrix Collective
 
 namespace VindemiatrixCollective.Universe.Model
 {
     public enum CelestialBodyType
     {
         Unknown,
+        MinorBody,
         Planet,
         Star,
         StarSystem

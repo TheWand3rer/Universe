@@ -1,7 +1,6 @@
-﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using UnitsNet;
 using Unity.Mathematics;
@@ -18,9 +17,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics
             return Angle.FromRadians(delta);
         }
 
-        public static float InGameScaleFactor(Angle angularSize, float sceneDistance)
-        {
-            return sceneDistance * math.tan((float)angularSize.Radians / 2f);
-        }
+        public static float InGameScaleFactor(Angle angularSize, float sceneDistance) =>
+            2 * sceneDistance * math.tan((float)angularSize.Radians / 2f);
     }
 }

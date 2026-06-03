@@ -1,5 +1,4 @@
 ﻿// VindemiatrixCollective.Universe.Data © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
 
 #region
 
@@ -29,10 +28,7 @@ namespace VindemiatrixCollective.Universe.Data
         {
             private readonly ObjectWriter<T> objectWriter = new();
 
-            public ObjectWriter<T> Build()
-            {
-                return objectWriter;
-            }
+            public ObjectWriter<T> Build() => objectWriter;
 
             public Builder SetPredicate(string propertyName, Func<T, bool> predicate)
             {
@@ -40,7 +36,7 @@ namespace VindemiatrixCollective.Universe.Data
                 return this;
             }
 
-            public Builder SetProperty<TValue>(string propertyName, Func<T, TValue> accessor, PropertyWriter<TValue> writer)
+            public Builder SetProperty<TValue>(string propertyName, PropertyWriter<TValue> writer, Func<T, TValue> accessor)
             {
                 objectWriter.writers.Add((w, value, o) =>
                 {
@@ -55,11 +51,21 @@ namespace VindemiatrixCollective.Universe.Data
                     if (objectWriter.predicates.TryGetValue(propertyName, out Func<T, bool> predicate))
                     {
                         if (!predicate(value))
+                        {
                             return;
+                        }
                     }
 
-                    w.WritePropertyName(propertyName);
-                    writer(w, propValue, o);
+                    try
+                    {
+                        w.WritePropertyName(propertyName);
+                        writer(w, propValue, o);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"Error while serializing: <{typeof(T).Name}.{propertyName}> Value: {propValue.ToString()}");
+                        throw;
+                    }
                 });
 
                 return this;

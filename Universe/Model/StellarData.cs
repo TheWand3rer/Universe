@@ -1,10 +1,8 @@
-﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using UnitsNet;
-using Unity.Properties;
 
 #endregion
 
@@ -12,8 +10,8 @@ namespace VindemiatrixCollective.Universe.Model
 {
     public class StellarData : PhysicalData
     {
-        [CreateProperty] public Duration Age { get; private set; }
-        [CreateProperty] public Luminosity Luminosity { get; }
+        public Duration Age { get; private set; }
+        public Luminosity Luminosity { get; }
 
         public StellarData(
             Luminosity luminosity, Mass mass, Length radius = default, Acceleration gravity = default, Temperature temperature = default,
@@ -23,12 +21,9 @@ namespace VindemiatrixCollective.Universe.Model
             Age        = age;
         }
 
-        public bool IsValid()
-        {
-            return Luminosity.SolarLuminosities > 0 && Mass.SolarMasses > 0;
-        }
+        public bool IsValid() => Luminosity.SolarLuminosities > 0 && Mass.SolarMasses > 0;
 
-        internal static StellarData Null => new(Luminosity.Zero, Mass.Zero);
+        internal new static StellarData Null => new(Luminosity.Zero, Mass.Zero);
 
         private static Acceleration FromMassRadius(Mass m, Length r)
         {

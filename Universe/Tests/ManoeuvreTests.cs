@@ -1,7 +1,6 @@
-﻿// VindemiatrixCollective.Universe.Tests © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe.Tests © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using System;
 using NUnit.Framework;
@@ -10,6 +9,7 @@ using UnityEngine;
 using VindemiatrixCollective.Universe.CelestialMechanics;
 using VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
+using VindemiatrixCollective.Universe.Model;
 using Impulse = VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres.Impulse;
 
 #endregion
@@ -21,14 +21,13 @@ namespace VindemiatrixCollective.Universe.Tests
         [Test]
         public void EarthToMarsManoeuvre()
         {
-            // Values from Hapsira for the Mars Science Laboratory
+            // Values from BoInOr for the Mars Science Laboratory
             DateTime epochDeparture = new(2011, 11, 26, 15, 2, 0, DateTimeKind.Utc);
 
             Vector3d r = new(6.46006458e+10, 1.21424867e+11, 5.26400459e+10); // m
             Vector3d v = new(-27227.01764589, 11944.59987887, 5176.81664313); // m/s
 
-            OrbitState state = OrbitState.FromVectors(r, v, Common.Sun, epochDeparture);
-
+            OrbitState state = OrbitState.FromVectors(r, v, Star.Sun, epochDeparture);
 
             Manoeuvre m = new(new[]
             {

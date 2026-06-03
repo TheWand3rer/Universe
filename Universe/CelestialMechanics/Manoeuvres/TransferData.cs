@@ -1,9 +1,9 @@
-// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+// VindemiatrixCollective.Universe © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using System;
+using UnitsNet;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
 
 #endregion
@@ -17,7 +17,6 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
 
         public Manoeuvre Manoeuvre { get; }
         public OrbitState Final { get; }
-
         public OrbitState Initial { get; }
 
         public TransferData(DateTime launch, DateTime arrival, Manoeuvre manoeuvre, OrbitState initialState, OrbitState finalState)
@@ -29,9 +28,8 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Manoeuvres
             Final     = finalState;
         }
 
-        public OrbitState TransferOrbit(int impulses = 0)
-        {
-            return Initial.ApplyManoeuvre(Manoeuvre, impulses);
-        }
+        public Duration Duration => Duration.FromSeconds((Arrival - Launch).TotalSeconds);
+
+        public OrbitState TransferOrbit(int impulses = 0) => Initial.ApplyManoeuvre(Manoeuvre, impulses);
     }
 }

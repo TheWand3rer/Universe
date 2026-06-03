@@ -1,7 +1,6 @@
-// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+// VindemiatrixCollective.Universe © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using UnitsNet;
 using VindemiatrixCollective.Universe.Model;
@@ -14,7 +13,6 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
     {
         GravitationalParameter Mu { get; }
         Mass Mass { get; }
-
         StarSystem StarSystem { get; }
     }
 }

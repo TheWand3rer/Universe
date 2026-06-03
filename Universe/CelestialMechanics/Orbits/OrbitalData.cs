@@ -1,10 +1,8 @@
 ﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
 
-#region
+#region using
 
 using UnitsNet;
-using Unity.Properties;
 
 #endregion
 
@@ -12,8 +10,6 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
 {
     public class OrbitalData
     {
-        public bool Retrograde;
-
         private readonly double argumentPeriapsis;
         private readonly double axialTilt;
         private readonly double eccentricity;
@@ -24,6 +20,7 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         private readonly double semiMajorAxisM;
         private readonly double siderealRotationPeriodS;
         private readonly double trueAnomalyAtEpoch;
+
         public Angle ArgumentPeriapsis => Angle.FromDegrees(argumentPeriapsis);
         public Angle AxialTilt => Angle.FromDegrees(axialTilt);
         public Angle Inclination => Angle.FromDegrees(inclination);
@@ -31,14 +28,13 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits
         public Angle MeanAnomaly => Angle.FromDegrees(meanAnomalyAtEpoch);
         public Angle TrueAnomaly => Angle.FromDegrees(trueAnomalyAtEpoch);
 
-        [CreateProperty] public Duration Period => Duration.FromSeconds(periodS);
+        public Duration Period => Duration.FromSeconds(periodS);
 
         public Duration SiderealRotationPeriod => Duration.FromSeconds(siderealRotationPeriodS);
 
         /// <summary>
         ///     Semi-major axis of the orbit.
         /// </summary>
-        [CreateProperty]
         public Length SemiMajorAxis => Length.FromMeters(semiMajorAxisM);
 
         public Ratio Eccentricity => Ratio.FromDecimalFractions(eccentricity);

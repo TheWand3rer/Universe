@@ -1,7 +1,6 @@
-﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using System;
 using System.Collections;
@@ -33,32 +32,36 @@ namespace VindemiatrixCollective.Universe.Model
             this.data = data;
         }
 
-        public bool ContainsKey(string key)
-        {
-            return data.ContainsKey(key);
-        }
+        public bool ContainsKey(string key) => data.ContainsKey(key);
 
-        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
-        {
-            return data.GetEnumerator();
-        }
+        public IEnumerator<KeyValuePair<string, string>> GetEnumerator() => data.GetEnumerator();
 
-        public string TryGet(string key)
+        public bool TryGet(string key, out string value)
         {
-            data.TryGetValue(key, out string value);
-            return value;
+            bool result = data.TryGetValue(key, out value);
+            return result;
         }
 
         public TEnum TryGet<TEnum>(string alternativeKey = null) where TEnum : struct, Enum
         {
-            string value = TryGet(typeof(TEnum).Name);
-            if (string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(alternativeKey))
+            if (!TryGet(typeof(TEnum).Name, out string value))
             {
-                value = TryGet(alternativeKey);
+                if (!string.IsNullOrEmpty(alternativeKey))
+                    TryGet(alternativeKey, out value);
             }
 
-            if (string.IsNullOrEmpty(value))
-                return default(TEnum);
+            return string.IsNullOrEmpty(value) ? default : Enum.Parse<TEnum>(value);
+        }
+
+        public TEnum Get<TEnum>() where TEnum : struct, Enum
+        {
+            string value = data[typeof(TEnum).Name];
+            return Enum.Parse<TEnum>(value);
+        }
+
+        public TEnum Get<TEnum>(string key) where TEnum : struct, Enum
+        {
+            string value = data[key];
             return Enum.Parse<TEnum>(value);
         }
 
@@ -69,9 +72,9 @@ namespace VindemiatrixCollective.Universe.Model
 
         public void CopyFrom(IDictionary<string, string> attributes)
         {
-            foreach (var kvp in attributes)
+            foreach ((string key, string value) in attributes)
             {
-                data[kvp.Key] = kvp.Value;
+                data[key] = value;
             }
         }
 
@@ -81,9 +84,6 @@ namespace VindemiatrixCollective.Universe.Model
         }
 
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

@@ -1,10 +1,10 @@
-// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+// VindemiatrixCollective.Universe © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using System.Collections.Generic;
 using UnitsNet;
+using UnityEngine.Assertions;
 using VindemiatrixCollective.Universe.CelestialMechanics;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
 
@@ -16,7 +16,6 @@ namespace VindemiatrixCollective.Universe.Model
     {
         public GravitationalParameter Mu => GravitationalParameter.FromMass(Mass);
         public Mass Mass { get; }
-
         public OrbitalData OrbitalData { get; }
         public OrbitState OrbitState { get; }
         public StarSystem StarSystem { get; }
@@ -32,10 +31,10 @@ namespace VindemiatrixCollective.Universe.Model
 
         public Barycentre(StarSystem system) : this(system, system.Mass) { }
 
-        public (Length a1, Length a2) CalculateSemiMajorAxes(Star primary, Star companion, Length a)
+        public static (Length a1, Length a2) CalculateSemiMajorAxes(Mass m1, Mass m2, Length a)
         {
-            Mass   m1 = primary.PhysicalData.Mass;
-            Mass   m2 = companion.PhysicalData.Mass;
+            Assert.IsTrue(m1.SolarMasses > 0 && m2.SolarMasses > 0, $"Invalid m1: {m1.SolarMasses:f2}, m2:{m2.SolarMasses:f2}");
+
             Length a1 = m2 / (m1 + m2) * a;
             Length a2 = m1 / (m1 + m2) * a;
             return (a1, a2);

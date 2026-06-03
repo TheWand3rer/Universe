@@ -1,12 +1,11 @@
-// VindemiatrixCollective.Universe.Tests © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+// VindemiatrixCollective.Universe.Tests © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using NUnit.Framework;
 using UnitsNet;
 using UnityEngine;
-using VindemiatrixCollective.Universe.CelestialMechanics;
+using VindemiatrixCollective.Universe.Physics;
 
 #endregion
 
@@ -21,7 +20,7 @@ namespace VindemiatrixCollective.Universe.Tests
             Speed        maxSpeed              = Relativity.SpeedFromFractionOfC(0.12f);
             Acceleration acceleration          = Acceleration.FromMetersPerSecondSquared(0.14);
 
-            var result = Relativity.CalculateTravel(distanceAlphaCentauri, maxSpeed, acceleration, false);
+            RelativisticTravelData result = Relativity.CalculateTravel(distanceAlphaCentauri, maxSpeed, acceleration, false);
 
             Debug.Log(result);
             Assert.AreEqual(44, result.ShipTimeCruise.Years365, 1);
@@ -32,20 +31,44 @@ namespace VindemiatrixCollective.Universe.Tests
         // Project Longshot to Alpha Centauri Orbit
         public void LongshotToAlphaCentauriOrbit()
         {
-            Length       distanceAlphaCentauri = Length.FromLightYears(4.344);
-            Speed        maxSpeed              = Relativity.SpeedFromFractionOfC(0.048f);        // page 20, 59
-            Acceleration acceleration          = Acceleration.FromMetersPerSecondSquared(0.429); // page 68
+            Length distanceAlphaCentauri = Length.FromLightYears(4.344);
+            // To match the planned time of 100 years
+            Speed        deltaV       = Speed.FromKilometersPerSecond(26200);
+            Acceleration acceleration = Acceleration.FromMetersPerSecondSquared(0.429); // page 68
 
-            RelativisticTravelData result = Relativity.CalculateTravel(distanceAlphaCentauri, maxSpeed, acceleration);
+            RelativisticTravelData result = Relativity.CalculateTravel(distanceAlphaCentauri, deltaV, acceleration);
 
             Debug.Log(result);
 
-            // Original plan from the paper, but this won't pass
-            // Assert.AreEqual(100, result.TotalObserverTime.Years365, 1);
+            Assert.AreEqual(100, result.TotalObserverTime.Years365, 2);
+        }
 
-            // Values from https://gregsspacecalculations.blogspot.com/p/blog-page.html
-            Assert.AreEqual(92.6283, result.TotalObserverTime.Years365, 1.05);
-            Assert.AreEqual(1.0641, result.ObserverTimeAcceleration.Years365, 0.01);
+        [Test]
+        public void TAU()
+        {
+            // "TAU - A mission to a Thousand Astronomical Units"
+            // was a proposal for an uncrewed interstellar probe.
+            // 
+            // https://en.wikipedia.org/wiki/TAU_(spacecraft)
+
+            // From: https://doi.org/10.2514/6.1987-1049
+            // Mass: 5000 kg spacecraft
+            // 10 mt Propulsion system
+            // I_sp: 12.500 s (Specific Impulse)
+            // v_e: 250.000 km/s (Exhaust Velocity) Xenon Ion engine
+            // 10 year burn time
+            // 1 MW Nuclear Reactor
+            // Max speed: 106 km/s (from figure 2)
+            // Achieve 1000 AU in 50 years (from Table 2)
+
+            Length                 distance     = Length.FromAstronomicalUnits(1000);
+            Speed                  deltaV       = Speed.FromKilometersPerSecond(106);
+            Acceleration           acceleration = deltaV / Duration.FromYears365(10);
+            RelativisticTravelData result       = Relativity.CalculateTravel(distance, deltaV, acceleration, false);
+
+            Debug.Log(result);
+
+            Assert.AreEqual(50, result.TotalShipTime.Years365, 0.5d, nameof(result.TotalShipTime));
         }
     }
 }

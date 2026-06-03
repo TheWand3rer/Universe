@@ -1,7 +1,6 @@
-﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using System;
 using System.Collections.Generic;
@@ -9,19 +8,16 @@ using System.Diagnostics;
 using System.Linq;
 using UnitsNet;
 using UnitsNet.Units;
-using Unity.Properties;
 
 #endregion
 
 namespace VindemiatrixCollective.Universe.Model
 {
-    [Serializable]
     [DebuggerDisplay("{Name}")]
     public class Star : CelestialBody
     {
         public bool HasPlanets => Planets.Any();
         public float Distance => (float)StarSystem.DistanceFromSol.LightYears;
-
 
         /// <summary>
         ///     Returns a sequence of Planet objects ordered by distance from this star.
@@ -36,9 +32,8 @@ namespace VindemiatrixCollective.Universe.Model
             set => StellarData = (StellarData)value;
         }
 
-        [CreateProperty] public SpectralClass SpectralClass { get; set; }
-
-        [CreateProperty] public StellarData StellarData { get; set; }
+        public SpectralClass SpectralClass { get; set; }
+        public StellarData StellarData { get; set; }
         public override string FullName => Name.Length > 2 ? Name : $"{StarSystem.Name} {Name}";
         public Star() : base(nameof(Star), CelestialBodyType.Star) { }
 
@@ -93,7 +88,8 @@ namespace VindemiatrixCollective.Universe.Model
                     Density.FromGramsPerCubicCentimeter(3 * mass.Grams / (4 * UniversalConstants.Tri.Pi * Math.Pow(radius.Centimeters, 3)));
                 Temperature temperature = Temperature.FromKelvins(5770);
                 Acceleration gravity =
-                    Acceleration.FromMetersPerSecondSquared(UniversalConstants.Celestial.GravitationalConstant * mass.Kilograms
+                    Acceleration.FromMetersPerSecondSquared(UniversalConstants.Celestial.GravitationalConstant
+                                                          * mass.Kilograms
                                                           / Math.Pow(radius.Meters, 2));
                 Duration age = Duration.FromYears365(4.6 * 1E9);
 

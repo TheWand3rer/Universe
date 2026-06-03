@@ -150,25 +150,43 @@ You can calculate a transfer between two known planets at any moment in time (ba
 The full implementation is in [LambertTests](Universe/Tests/LambertTests.cs).
 
 ```cs
-CelestialBody earth = Common.Earth;
-CelestialBody mars  = Common.Mars;
+public void LambertTransferEarthMars()
+{
+    DateTime epochDeparture = new(2011, 11, 26, 15, 02, 0, DateTimeKind.Utc);
+    DateTime epochArrival   = new(2012, 08, 06, 05, 17, 0, DateTimeKind.Utc);
 
-DateTime epochDeparture = new DateTime(2018, 12, 1, 0, 0, 0, DateTimeKind.Utc);
-DateTime epochArrival   = epochDeparture.AddYears(2);
+    OrbitState afterManoeuvre = LambertTransfer(epochDeparture, epochArrival, earth, mars);
 
-earth.OrbitState.SetAttractor(Common.Sun);
-mars.OrbitState.SetAttractor(Common.Sun);
-earth.OrbitState.Propagate(epochDeparture);
-mars.OrbitState.Propagate(epochArrival);
+    Assert.AreEqual(1.5247995030657975, afterManoeuvre.SemiMajorAxis.AstronomicalUnits, 1.5e-3, nameof(OrbitState.SemiMajorAxis));
+}
 
-IzzoLambertSolver solver = new IzzoLambertSolver();
-Manoeuvre m = Manoeuvre.Lambert(earth.OrbitState, mars.OrbitState, solver);
+private OrbitState LambertTransfer(DateTime epochDeparture, DateTime epochArrival, CelestialBody origin, CelestialBody destination)
+{
+    StringBuilder sb = new();
+    sb.AppendLine(epochDeparture.ToLongDateString());
+    sb.AppendLine(epochArrival.ToLongDateString());
+
+    GravitationalParameter mu      = origin.OrbitState.GravitationalParameter;
+    OrbitState             initial = origin.OrbitState.Clone();
+    OrbitState             final   = destination.OrbitState.Clone();
+
+    initial.Propagate(epochDeparture);
+    final.Propagate(epochArrival);
+
+    IzzoLambertSolver solver   = new();
+    Manoeuvre         m        = Manoeuvre.Lambert(initial, final, solver, mu);
+    OrbitState        transfer = initial.ApplyManoeuvre(m);
+
+    LogManoeuvre(m, initial, final, transfer, ref sb);
+
+    return transfer;
+}
 ```
 
 If you print `m`, among other data it will output the manoeuvre's total DeltaV cost and transfer duration:
 ```
-Total duration: 731 d
-Total cost: 56.031 km/s
+Total duration: 253.59375 d
+Total cost: 7.040 km/s
 ```
 ### Mission Planner
 You can also request a full analysis of the potential transfer windows given a certain launch and arrival time span. This is the so-called ["porkchop"](https://docs.poliastro.space/en/stable/examples/Porkchops%20with%20poliastro.html) chart. You can replicate that poliastro example with `Universe` (except for the plotting). Full details in the `PorkchopTest` 

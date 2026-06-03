@@ -1,7 +1,6 @@
-﻿// VindemiatrixCollective.Universe.Tests © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe.Tests © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using System;
 using System.Linq;
@@ -23,7 +22,7 @@ namespace VindemiatrixCollective.Universe.Tests
         [Test]
         public void Clone()
         {
-            OrbitState state  = OrbitState.FromOrbitalElements(Common.MarsElements, Common.Sun);
+            OrbitState state  = OrbitState.FromOrbitalElements(Common.MarsElements, Star.Sun);
             OrbitState state1 = state.Clone();
 
             Duration week = Duration.FromDays(7);
@@ -45,13 +44,13 @@ namespace VindemiatrixCollective.Universe.Tests
             (Vector3d r, Vector3d v) = OrbitalMechanics.RVinPerifocalFrame(gm.M3S2, p, e, nu);
 
             Common.VectorsAreEqual(new Vector3d(-5312706.25105345, 9201877.15251336, 0), r, 1e-2, nameof(OrbitState.LocalPosition));
-            Common.VectorsAreEqual(new Vector3d(-5753.30180931, -1328.66813933, 0), v, 1e-2, nameof(OrbitState.Velocity));
+            Common.VectorsAreEqual(new Vector3d(-5753.30180931, -1328.66813933, 0), v, 1e-2, nameof(OrbitState.LocalVelocity));
         }
 
         [Test]
         public void CoeToRvTransitive()
         {
-            Star        sun           = Common.Sun;
+            Star        sun           = Star.Sun;
             OrbitalData marsElements  = OrbitalData.FromClassicElements(1.523679f, 0.093315f, 1.85f, 49.562f, 286.537f, 23.33f);
             OrbitState  stateExpected = OrbitState.FromOrbitalElements(marsElements, sun);
 
@@ -59,16 +58,24 @@ namespace VindemiatrixCollective.Universe.Tests
 
             OrbitState stateResult = OrbitState.FromVectors(r, v, sun, stateExpected.Epoch);
 
-            Assert.AreEqual(stateExpected.SemiMajorAxis.AstronomicalUnits, stateResult.SemiMajorAxis.AstronomicalUnits, 1e-3,
+            Assert.AreEqual(stateExpected.SemiMajorAxis.AstronomicalUnits,
+                            stateResult.SemiMajorAxis.AstronomicalUnits,
+                            1e-3,
                             nameof(OrbitState.SemiMajorAxis));
             Assert.AreEqual(stateExpected.Eccentricity.Value, stateResult.Eccentricity.Value, 1e-3, nameof(OrbitState.Eccentricity));
-            Assert.AreEqual(stateExpected.SemiLatusRectum.AstronomicalUnits, stateResult.SemiLatusRectum.AstronomicalUnits, 1e-3,
+            Assert.AreEqual(stateExpected.SemiLatusRectum.AstronomicalUnits,
+                            stateResult.SemiLatusRectum.AstronomicalUnits,
+                            1e-3,
                             nameof(OrbitState.SemiLatusRectum));
 
             Assert.AreEqual(stateExpected.TrueAnomaly.Degrees, stateResult.TrueAnomaly.Degrees, 0.5, nameof(OrbitState.TrueAnomaly));
-            Assert.AreEqual(stateExpected.LongitudeAscendingNode.Degrees, stateResult.LongitudeAscendingNode.Degrees, 1e-3,
+            Assert.AreEqual(stateExpected.LongitudeAscendingNode.Degrees,
+                            stateResult.LongitudeAscendingNode.Degrees,
+                            1e-3,
                             nameof(OrbitState.LongitudeAscendingNode));
-            Assert.AreEqual(stateExpected.ArgumentPeriapsis.Degrees, stateResult.ArgumentPeriapsis.Degrees, 1,
+            Assert.AreEqual(stateExpected.ArgumentPeriapsis.Degrees,
+                            stateResult.ArgumentPeriapsis.Degrees,
+                            1,
                             nameof(OrbitState.ArgumentPeriapsis));
             Assert.AreEqual(stateExpected.Inclination.Degrees, stateResult.Inclination.Degrees, 1e-3, nameof(OrbitState.Inclination));
         }
@@ -77,7 +84,7 @@ namespace VindemiatrixCollective.Universe.Tests
         public void FromClassicElements()
         {
             double tol = 1e-6;
-            Star   sun = Common.Sun;
+            Star   sun = Star.Sun;
 
             OrbitState state = OrbitState.FromOrbitalElements(Common.MarsElements, sun);
 
@@ -89,7 +96,7 @@ namespace VindemiatrixCollective.Universe.Tests
         [Test]
         public void FromVectorsMars()
         {
-            Star sun = Common.Sun;
+            Star sun = Star.Sun;
 
             Vector3d   r     = new(2.08047627e+11, -2.02006193e+09, -5.15689300e+09);
             Vector3d   v     = new(1164.20212, 26296.03633, 522.29379);
@@ -121,7 +128,8 @@ namespace VindemiatrixCollective.Universe.Tests
             Planet earth = new()
             {
                 Name = "Earth",
-                PhysicalData = new PhysicalData(Density.FromKilogramsPerCubicMeter(eMass.Kilograms / volume), eRadius,
+                PhysicalData = new PhysicalData(Density.FromKilogramsPerCubicMeter(eMass.Kilograms / volume),
+                                                eRadius,
                                                 GravitationalParameter.FromMass(eMass)),
                 OrbitalData = Planet.Earth.OrbitalData
             };
@@ -129,8 +137,10 @@ namespace VindemiatrixCollective.Universe.Tests
             Planet moon = new()
             {
                 Name = "Luna",
-                PhysicalData = new PhysicalData(Mass.FromKilograms(7.346e22), Length.FromKilometers(1737.4),
-                                                Acceleration.FromMetersPerSecondSquared(1.622), Density.FromGramsPerCubicCentimeter(3.34)),
+                PhysicalData = new PhysicalData(Mass.FromKilograms(7.346e22),
+                                                Length.FromKilometers(1737.4),
+                                                Acceleration.FromMetersPerSecondSquared(1.622),
+                                                Density.FromGramsPerCubicCentimeter(3.34)),
                 OrbitalData = Planet.Moon.OrbitalData
             };
 
@@ -151,10 +161,11 @@ namespace VindemiatrixCollective.Universe.Tests
 
             // this method uses Mu.M3S2 / (body.Radius + orbitHeight)
             Speed orbitSpeed1 =
-                OrbitalMechanics.CalculateOrbitalVelocity(Planet.Earth, Length.FromMeters(7000000 - earth.PhysicalData.Radius.Meters));
+                OrbitalMechanics.CalculateOrbitalSpeed(Planet.Earth, Length.FromMeters(7000000 - earth.PhysicalData.Radius.Meters));
 
             Speed orbitSpeed =
-                Speed.FromMetersPerSecond(Math.Sqrt(UniversalConstants.Celestial.GravitationalConstant * earth.PhysicalData.Mass.Kilograms
+                Speed.FromMetersPerSecond(Math.Sqrt(UniversalConstants.Celestial.GravitationalConstant
+                                                  * earth.PhysicalData.Mass.Kilograms
                                                   / altitude));
 
             Assert.AreEqual(orbitSpeed1.MetersPerSecond, orbitSpeed.MetersPerSecond, 1e-2, "Orbital Speed");
@@ -162,7 +173,9 @@ namespace VindemiatrixCollective.Universe.Tests
 
             DateTime date = DateTime.Now;
 
-            OrbitState orbit = OrbitState.FromVectors(new Vector3d(altitude, 0, 0), new Vector3d(0, orbitSpeed.MetersPerSecond, 0), earth,
+            OrbitState orbit = OrbitState.FromVectors(new Vector3d(altitude, 0, 0),
+                                                      new Vector3d(0, orbitSpeed.MetersPerSecond, 0),
+                                                      earth,
                                                       date);
 
             Assert.AreEqual(altitude, orbit.PeriapsisDistance.Meters, 5, "PeriapsisDistance Before");
@@ -192,10 +205,12 @@ namespace VindemiatrixCollective.Universe.Tests
         [Test]
         public void PropagationElements()
         {
-            Star sun = Common.Sun;
+            Star sun = Star.Sun;
 
             OrbitState halley = OrbitState.FromVectors(new Vector3d(-9018878635.69932, -94116054798.39276, 22619058699.43215),
-                                                       new Vector3d(-49950.92305, -12948.43055, -4292.51577), sun, Common.J2000);
+                                                       new Vector3d(-49950.92305, -12948.43055, -4292.51577),
+                                                       sun,
+                                                       Common.J2000);
 
             double[] elementsExpected = halley.ToArrayElements().SkipLast(1).ToArray();
             halley.Propagate(Duration.FromDays(1));
@@ -222,8 +237,45 @@ namespace VindemiatrixCollective.Universe.Tests
 
             (Vector3d r1, Vector3d v1) = state0.ToVectors();
 
-            Common.VectorsAreEqual(rExp, r1, 1e2, nameof(OrbitState.LocalPosition)); // 100 m precision
-            Common.VectorsAreEqual(vExp, v1, 1e-1, nameof(OrbitState.Velocity));     // 10 cm / s
+            Common.VectorsAreEqual(rExp, r1, 1e2, nameof(OrbitState.LocalPosition));  // 100 m precision
+            Common.VectorsAreEqual(vExp, v1, 1e-1, nameof(OrbitState.LocalVelocity)); // 10 cm / s
+        }
+
+        /// <summary>
+        ///     Verifies that <see cref="OrbitState.SetAttractor"/> correctly shifts the reference frame
+        ///     when re-parenting a body through <see cref="CelestialBody.SetParentBody"/>.
+        ///     Tests the Sun → Earth → Moon hierarchy using static celestial bodies.
+        ///     Case A: child → grandchild (Sun → Earth) — subtract child's state.
+        ///     Case B: grandchild → child (Earth → Sun) — add child's state.
+        /// </summary>
+        [Test]
+        public void SetAttractorChange()
+        {
+            Star sun = Star.Sun;
+
+            Planet earth = Planet.Earth;
+            Planet moon  = Planet.Moon;
+
+            sun.AddOrbiter(earth);
+            earth.AddOrbiter(moon);
+            earth.SetParentBody(sun);
+            moon.SetParentBody(earth);
+
+            Vector3d expectedPosA = new(29236642.370, 394152872.9690, -14749925.8);
+            Vector3d expectedVelA = new(-985.848, 23.821, -78.869);
+
+            Debug.Log(expectedPosA);
+
+            Common.VectorsAreEqual(expectedPosA, moon.OrbitState.LocalPosition, 1, "Hierarchical case position");
+            Common.VectorsAreEqual(expectedVelA, moon.OrbitState.LocalVelocity, 1, "Hierarchical case velocity");
+
+            moon.SetParentBody(sun);
+
+            Vector3d expectedPosB = expectedPosA + earth.OrbitState.LocalPosition;
+            Vector3d expectedVelB = expectedVelA + earth.OrbitState.LocalVelocity;
+
+            Common.VectorsAreEqual(expectedPosB, moon.OrbitState.LocalPosition, 1, "Heliocentric case position");
+            Common.VectorsAreEqual(expectedVelB, moon.OrbitState.LocalVelocity, 1, "Heliocentric case velocity");
         }
     }
 }

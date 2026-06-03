@@ -1,7 +1,6 @@
-// VindemiatrixCollective.Universe.Tests © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+// VindemiatrixCollective.Universe.Tests © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using System.Linq;
 using NUnit.Framework;
@@ -35,7 +34,7 @@ namespace VindemiatrixCollective.Universe.Tests
             Galaxy galaxy = dataHelper.LoadSol();
 
             Planet mars    = (Planet)galaxy["Sol"][0]["Mars"];
-            Planet marsExp = Common.Mars;
+            Planet marsExp = Planet.Mars;
 
             Assert.IsFalse(mars.IsSatellite, nameof(Planet.IsSatellite));
             CelestialBodyTests.ComparePlanet(marsExp, mars);
@@ -98,8 +97,10 @@ namespace VindemiatrixCollective.Universe.Tests
 
             // Sol + 8 planets + Moon, Phobos, Deimos, Io, Europa, Triton, Naiad, Pluto = 17
             Assert.AreEqual(17, systemBodies.Length);
-            Assert.AreEqual("Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Phobos, Deimos, Io, Europa, Triton, Naiad, ",
-                            levelOrderVisit, nameof(levelOrderVisit));
+            Assert.AreEqual(
+                "Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Moon, Phobos, Deimos, Io, Europa, Triton, Naiad, ",
+                levelOrderVisit,
+                nameof(levelOrderVisit));
         }
 
         [Test]
@@ -114,8 +115,10 @@ namespace VindemiatrixCollective.Universe.Tests
 
             // Sol + 8 planets + Moon, Deimos, Phobos, Io, Europa, Triton, Naiad, Pluto, = 17
             Assert.AreEqual(17, systemBodies.Length);
-            Assert.AreEqual("Sun, Mercury, Venus, Earth, Moon, Mars, Phobos, Deimos, Jupiter, Io, Europa, Saturn, Uranus, Neptune, Triton, Naiad, Pluto, ",
-                            preOrderVisit, nameof(preOrderVisit));
+            Assert.AreEqual(
+                "Sun, Mercury, Venus, Earth, Moon, Mars, Phobos, Deimos, Jupiter, Io, Europa, Saturn, Uranus, Neptune, Triton, Naiad, Pluto, ",
+                preOrderVisit,
+                nameof(preOrderVisit));
         }
     }
 }

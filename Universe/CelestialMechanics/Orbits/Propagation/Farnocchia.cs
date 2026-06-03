@@ -1,7 +1,6 @@
-﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using System;
 using UnitsNet;
@@ -46,10 +45,9 @@ namespace VindemiatrixCollective.Universe.CelestialMechanics.Orbits.Propagation
         /// <param name="nu">True anomaly (rad)</param>
         /// <param name="e">Eccentricity</param>
         /// <param name="muM3S2">Gravitational Parameter (M3/S2)</param>
-        /// <param name="q">
-        ///     Periapsis distance (m)/param>
-        ///     <param name="delta"></param>
-        ///     <returns>Time elapsed since periapsis (s)</returns>
+        /// <param name="q">Periapsis distance (m)</param>
+        /// <param name="delta"></param>
+        /// <returns>Time elapsed since periapsis (s)</returns>
         public static double DeltaTFromNu(double nu, double e, double muM3S2, double q, double delta = 1e-2)
         {
             const double pi = UniversalConstants.Tri.Pi;

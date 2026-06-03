@@ -1,14 +1,12 @@
-﻿// VindemiatrixCollective.Universe © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnitsNet;
-using Unity.Properties;
 using UnityEngine;
 
 #endregion
@@ -20,13 +18,15 @@ namespace VindemiatrixCollective.Universe.Model
         private Barycentre barycentre;
         public Barycentre Barycentre => barycentre ??= new Barycentre(this);
         public CelestialBody this[string name] => _Orbiters[name];
+        public Star this[int index] => Stars.ElementAt(index);
+
         public Galaxy Galaxy { get; internal set; }
 
         public IEnumerable<CelestialBody> Hierarchy
         {
             get
             {
-                foreach (CelestialBody body in _Orbiters.Values)
+                foreach (CelestialBody body in _Orbiters.Values.OrderBy(s => s.OrbitalData?.SemiMajorAxis))
                 {
                     foreach (ITreeNode orbiter in Tree.PreOrderVisit(body))
                     {
@@ -44,17 +44,15 @@ namespace VindemiatrixCollective.Universe.Model
 
         public int StarCount => Stars.Count();
 
-        [CreateProperty] public Length DistanceFromSol => Length.FromParsecs(Coordinates.magnitude);
+        public Length DistanceFromSol => Length.FromParsecs(Coordinates.magnitude);
 
         public Mass Mass => Mass.FromSolarMasses(Stars.Sum(star => star.CalculatePlanetaryMass().SolarMasses));
-
-        public Star this[int index] => Stars.ElementAt(index);
 
         public Star Primary => Stars.FirstOrDefault();
 
         public string Id { get; set; }
 
-        [CreateProperty] public string Name { get; set; }
+        public string Name { get; set; }
 
         public Vector3 Coordinates { get; set; }
 
@@ -116,6 +114,11 @@ namespace VindemiatrixCollective.Universe.Model
             }
         }
 
+        public CelestialBody Find(string name)
+        {
+            return Hierarchy.FirstOrDefault(body => body.Name == name);
+        }
+
         public void SetBarycentre(Barycentre barycentre)
         {
             this.barycentre = barycentre;
@@ -140,24 +143,25 @@ namespace VindemiatrixCollective.Universe.Model
 
         IEnumerator IEnumerable.GetEnumerator() => _Orbiters?.Values.GetEnumerator() ?? Enumerable.Empty<CelestialBody>().GetEnumerator();
 
-
         /// <summary>
-        ///     Returns a basic <see cref="StarSystem" /> model containing the Sun, Earth, the Moon, and Mars.
+        ///     Returns a basic <see cref="StarSystem" /> model containing the Sun, Venus, Earth, the Moon, and Mars.
         /// </summary>
         public static StarSystem Sol
         {
             get
             {
                 Star   sun   = Star.Sun;
+                Planet venus = Planet.Venus;
                 Planet earth = Planet.Earth;
                 Planet moon  = Planet.Moon;
                 Planet mars  = Planet.Mars;
 
+                sun.AddOrbiter(venus);
                 sun.AddOrbiter(earth);
                 sun.AddOrbiter(mars);
                 earth.AddOrbiter(moon);
 
-                StarSystem sol = new("Sol", sun);
+                StarSystem sol = new(nameof(Sol), sun);
                 return sol;
             }
         }

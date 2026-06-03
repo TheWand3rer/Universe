@@ -17,8 +17,8 @@ namespace VindemiatrixCollective.Universe.Data
         public GalaxyConverter()
         {
             Converter = new ObjectBuilder<Galaxy, GalaxyState>.Builder()
-               .SetProperty(nameof(CelestialBody.Name), Parse.String, (state, value) => state.Name                               = value)
-               .SetProperty(nameof(Galaxy.Systems), Parse.List<StarSystem, StarSystemConverter>, (state, value) => state.Systems = value)
+               .SetProperty(nameof(CelestialBody.Name), Parse.String, (state, value) => state.Name          = value)
+               .SetProperty(nameof(Galaxy.Systems), Parse.List<StarSystem>, (state, value) => state.Systems = value)
                .SetCreate(Creator)
                .Build();
         }

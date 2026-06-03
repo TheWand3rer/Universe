@@ -1,15 +1,12 @@
-﻿// VindemiatrixCollective.Universe.Data © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe.Data © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
-using UnityEditor;
 using UnityEngine;
 
 #endregion
@@ -33,6 +30,27 @@ namespace VindemiatrixCollective.Universe.Data
         public static bool Boolean(ref Utf8JsonReader reader, JsonSerializerOptions options) => reader.GetBoolean();
 
         public static string String(ref Utf8JsonReader reader, JsonSerializerOptions options) => reader.GetString();
+
+        public static Color Colour(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        {
+            bool result = ColorUtility.TryParseHtmlString(reader.GetString(), out Color color);
+            return result ? color : Color.magenta;
+        }
+
+        public static Color ColourRGBA10(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        {
+            string input = reader.GetString();
+            if (string.IsNullOrEmpty(input))
+            {
+                return Color.magenta;
+            }
+
+            string[] array = input.Split(",");
+            float    r     = float.Parse(array[0], CultureInfo.InvariantCulture);
+            float    g     = float.Parse(array[1], CultureInfo.InvariantCulture);
+            float    b     = float.Parse(array[2], CultureInfo.InvariantCulture);
+            return array.Length == 4 ? new Color(r, g, b, float.Parse(array[3], CultureInfo.InvariantCulture)) : new Color(r, g, b);
+        }
 
         public static Guid Guid(ref Utf8JsonReader reader, JsonSerializerOptions options) => reader.GetGuid();
 
@@ -68,7 +86,8 @@ namespace VindemiatrixCollective.Universe.Data
                 }
 
                 value = result;
-                Debug.LogWarning($"Encountered text while parsing number: \"{text}\": please change it to a number by removing the \" in the JSON file.");
+                Debug.LogWarning(
+                    $"Encountered text while parsing number: \"{text}\": please change it to a number by removing the \" in the JSON file.");
             }
             else
             {
@@ -113,7 +132,8 @@ namespace VindemiatrixCollective.Universe.Data
                 }
 
                 value = result;
-                Debug.LogWarning($"Encountered text while parsing number: \"{text}\": please change it to a number by removing the \" in the JSON file.");
+                Debug.LogWarning(
+                    $"Encountered text while parsing number: \"{text}\": please change it to a number by removing the \" in the JSON file.");
             }
             else
             {
@@ -309,7 +329,8 @@ namespace VindemiatrixCollective.Universe.Data
                 }
                 catch (InvalidCastException ex)
                 {
-                    throw new JsonException($"[{tag}] Value is <{value?.GetType().Name ?? "null"}> instead of <{typeof(TValue).Name}>");
+                    throw new JsonException(
+                        $"[{tag}] Value is <{value?.GetType().Name ?? "null"}> instead of <{typeof(TValue).Name}\n{ex.Message}>");
                 }
             }
 
@@ -326,14 +347,13 @@ namespace VindemiatrixCollective.Universe.Data
 
             if (type.Contains("Unity"))
             {
-                type = Regex.Replace(type, @"^Unity\.(.*)$", "UnityEngine.$1Module");
+                type = Regex.Replace(type, @"^Unity\.(.*)$", "UnityEngine.$1");
             }
 
             return type;
         }
 
-        public static List<T> List<T, TConverter>(ref Utf8JsonReader reader, JsonSerializerOptions options)
-            where TConverter : JsonConverter<T>, new()
+        public static List<T> List<T>(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
             if (reader.TokenType != JsonTokenType.StartArray)
             {

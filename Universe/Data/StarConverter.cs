@@ -1,9 +1,9 @@
-﻿// VindemiatrixCollective.Universe.Data © 2025 Vindemiatrix Collective
-// Website and Documentation: https://vindemiatrixcollective.com
+﻿// VindemiatrixCollective.Universe.Data © 2025-2026 Vindemiatrix Collective
 
-#region
+#region using
 
 using System.Collections.Generic;
+using UnityEngine;
 using VindemiatrixCollective.Universe.CelestialMechanics.Orbits;
 using VindemiatrixCollective.Universe.Model;
 
@@ -21,11 +21,9 @@ namespace VindemiatrixCollective.Universe.Data
                .SetProperty(nameof(CelestialBody.Attributes), Parse.Dictionary<string>, (state, value) => state.Attributes    = value, true)
                .SetProperty(nameof(CelestialBody.OrbitalData), Parse.Object<OrbitalData>, (state, value) => state.OrbitalData = value, true)
                .SetProperty(nameof(Star.StellarData), Parse.Object<StellarData>, (state, value) => state.StellarData = value, true,
-                            alternativeName: nameof(CelestialBody.PhysicalData))
-               .SetProperty(nameof(Star.SpectralClass), Parse.String, (state, value) => state.SpectralClass = value, true,
-                            alternativeName: "SC")
-               .SetProperty(nameof(StarSystem.Orbiters), Parse.List<CelestialBody, CelestialBodyConverter>,
-                            (state, value) => state.Orbiters = value, true)
+                            nameof(CelestialBody.PhysicalData))
+               .SetProperty(nameof(Star.SpectralClass), Parse.String, (state, value) => state.SpectralClass          = value, true, "SC")
+               .SetProperty(nameof(StarSystem.Orbiters), Parse.List<CelestialBody>, (state, value) => state.Orbiters = value, true)
                .SetCreate(Creator)
                .Build();
         }
@@ -35,6 +33,7 @@ namespace VindemiatrixCollective.Universe.Data
             if (state.StellarData == null)
             {
                 state.StellarData = StellarData.Null;
+                Debug.LogWarning($"Star <{state.Id ?? "no name"}> has no StellarData object");
             }
 
             Star star = new(state.Name, state.StellarData);

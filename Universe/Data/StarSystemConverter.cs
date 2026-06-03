@@ -16,9 +16,8 @@ namespace VindemiatrixCollective.Universe.Data
         public StarSystemConverter()
         {
             Converter = new ObjectBuilder<StarSystem, StarSystemState>.Builder()
-               .SetProperty(nameof(CelestialBody.Name), Parse.String, (state, value) => state.Name = value)
-               .SetProperty(nameof(StarSystem.Orbiters), Parse.List<CelestialBody, CelestialBodyConverter>,
-                            (state, value) => state.Orbiters = value)
+               .SetProperty(nameof(CelestialBody.Name), Parse.String, (state, value) => state.Name                   = value)
+               .SetProperty(nameof(StarSystem.Orbiters), Parse.List<CelestialBody>, (state, value) => state.Orbiters = value)
                .SetProperty(nameof(StarSystem.Coordinates), Parse.Vector3, (state, value) => state.Coordinates = value,
                             alternativeName: "c")
                .SetCreate(Creator)

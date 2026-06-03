@@ -16,12 +16,11 @@ namespace VindemiatrixCollective.Universe.Data
         public PlanetConverter()
         {
             Converter = new ObjectBuilder<Planet, PlanetState>.Builder()
-               .SetProperty(nameof(CelestialBody.Name), Parse.String, (state, value) => state.Name                               = value)
-               .SetProperty(nameof(CelestialBody.Attributes), Parse.Dictionary<string>, (state, value) => state.Attributes       = value)
+               .SetProperty(nameof(CelestialBody.Name), Parse.String, (state, value) => state.Name = value)
+               .SetProperty(nameof(CelestialBody.Attributes), Parse.Dictionary<string>, (state, value) => state.Attributes = value)
                .SetProperty(nameof(CelestialBody.PhysicalData), Parse.Object<PhysicalData>, (state, value) => state.PhysicalData = value)
-               .SetProperty(nameof(CelestialBody.OrbitalData), Parse.Object<OrbitalData>, (state, value) => state.OrbitalData    = value)
-               .SetProperty(nameof(StarSystem.Orbiters), Parse.List<CelestialBody, CelestialBodyConverter>,
-                            (state, value) => state.Orbiters = value, true)
+               .SetProperty(nameof(CelestialBody.OrbitalData), Parse.Object<OrbitalData>, (state, value) => state.OrbitalData = value)
+               .SetProperty(nameof(StarSystem.Orbiters), Parse.List<CelestialBody>, (state, value) => state.Orbiters = value, true)
                .SetCreate(Creator)
                .Build();
         }
